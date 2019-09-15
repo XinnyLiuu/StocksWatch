@@ -40,12 +40,10 @@ StocksWatch will be a web application aimed to offer the best experience for our
 ## Stakeholders
 
 
-* Users (Students, Amateurs, Investors)
-        * Students would want to keep up with activities of the stock market for educational purposes.
-        * Investors would want to compare and overlay different stocks on the stock market before investing their financial resources in buying or selling of stocks.
-        * All users can view not only the current prices of a stock, but be able to see the historical data to predict market trends.
-
-
+- Users (Students, Amateurs, Investors)
+	- Students would want to keep up with activities of the stock market for educational purposes.
+	- Investors would want to compare and overlay different stocks on the stock market before investing their financial resources in buying or selling of stocks.
+	- All users can view not only the current prices of a stock, but be able to see the historical data to predict market trends.
 
 
 ## Scope
