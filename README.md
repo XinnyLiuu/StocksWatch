@@ -10,15 +10,11 @@ Our application, StocksWatch, aims to provide historical snapshots of a year’s
 
 StocksWatch will be a web application aimed to offer the best experience for our stakeholders. The application will allow users to:
 
-
 * Create an account on our application to store their preferences and keep track of the stocks that choose to follow.
-
 
 * Add to their own list of stocks that is offered by our platform. (Note: The stocks offered by our platform is reliant to the data offered by the free tier of the Intrinio API. See our data sources section below)
 
-
 * Update their account preferences and edit the stocks that are currently being tracked. 
-
 
 * Enjoy seamless user experience. StocksWatch will be both desktop and mobile friendly so that our application be used anywhere with an internet connection. 
 
@@ -59,6 +55,5 @@ We plan to use the following technologies in our application:
 * __[Intrinio](https://intrinio.com/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
 * __[AlphaVantage](https://www.alphavantage.co/)__ - Alternative for Intrinio.
 * __[Electron](https://electronjs.org/)__ - Possibility after web app is done.
-
 
 ## Timeline
