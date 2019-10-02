@@ -1,8 +1,8 @@
 ## Team Members and Roles
 
 * Xin Liu - Full Stack Developer
-* Terence Biney - Front-end Developer  
-* Benjamin Thorn - Back-end Developer / DB Manager
+* Benjamin Thorn - Front-end Developer  
+* Terence Biney - Back-end Developer / DB Manager
 
 ## Background
 
@@ -45,11 +45,9 @@ The scope of this project involves users being able to search, add and track sto
 * Users cannot track the same stocks twice
 * Users need to be logged in / registered to track stocks or edit their preferences
 
-
 ## Design Patterns
 * MVC Pattern
 * Observer Pattern
-
 
 ## Technologies Used
 
