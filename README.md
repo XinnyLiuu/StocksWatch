@@ -57,9 +57,8 @@ We plan to use the following technologies in our application:
 * __[Spring Boot](https://spring.io/projects/spring-boot)__ - Java framework used for our back end. 
 * __[MySQL]()__ - Relational database used to store our data.
 * __[Intrinio](https://intrinio.com/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
-* __[AlphaVantage]()__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
-* __[Electron]()__ - 
-
+* __[AlphaVantage](https://www.alphavantage.co/)__ - Alternative for Intrinio.
+* __[Electron](https://electronjs.org/)__ - Possibility after web app is done.
 
 
 ## Timeline
