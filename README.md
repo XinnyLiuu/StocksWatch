@@ -1,8 +1,8 @@
 ## Team Members and Roles
 
-Xin Liu - Full Stack Developer
-Terrence Bailey - Front-end Developer  
-Benjamin Thorn - Back-end Developer / DB Manager
+* Xin Liu - Full Stack Developer
+* Terence Biney - Front-end Developer  
+* Benjamin Thorn - Back-end Developer / DB Manager
 
 ## Background
 
@@ -41,7 +41,14 @@ The scope of this project involves users being able to search, add and track sto
 
 * A historical line graph for the particular stock containing information such as prices and dates within a year of the current date selected. 
 
-## Business Rules 
+## Business Rules / Constraints
+* Users cannot track the same stocks twice
+* Users need to be logged in / registered to track stocks or edit their preferences
+
+
+## Design Patterns
+* MVC Pattern
+* Observer Pattern
 
 
 ## Technologies Used
@@ -50,7 +57,11 @@ We plan to use the following technologies in our application:
 * __[Angular 8](https://angular.io/)__ - JavaScript framework used for our front end.
 * __[HighCharts](https://www.highcharts.com/)__ - JavaScript library used to generate graphical charts.
 * __[Spring Boot](https://spring.io/projects/spring-boot)__ - Java framework used for our back end. 
-* __[PostgreSQL](https://www.postgresql.org/)__ - Relational database used to store our data.
+* __[MySQL]()__ - Relational database used to store our data.
 * __[Intrinio](https://intrinio.com/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
+* __[AlphaVantage]()__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
+* __[Electron]()__ - 
 
-# Timeline
+
+
+## Timeline
