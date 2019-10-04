@@ -13,7 +13,7 @@ StocksWatch will be a web application aimed to offer the best experience for our
 * Add to their own list of stocks that is offered by our platform. 
 * Edit the stocks that are currently being tracked. 
 * Enjoy seamless user experience. StocksWatch will be both desktop and mobile friendly so that our application be used anywhere with an internet connection.
-* Show the future predictions of a price of a stock throguh the use of a Python Machine Learning Library (Pandas).
+* Show the future predictions of a price of a stock through the use of a Python Machine Learning Library (Pandas).
 
 The scope of this project involves users being able to search, add and track stocks they are interested in. The stocks they follow with be projected into an interactive historical line graph using the HighCharts library. Users will be able to edit their stocks using CRUD operations via our client side application. Given that we are not using the premium features of the Intrinio API, the selection of the available stocks to track are within the restraint of stocks that are provided by the free tier API. 
 
