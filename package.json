@@ -1,0 +1,23 @@
+{
+  "name": "432_project",
+  "version": "1.0.0",
+  "description": "* Xin Liu - Full Stack Developer * Benjamin Thorn - Front-end Developer   * Terence Biney - Back-end Developer / DB Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreasyBunnies/432_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GreasyBunnies/432_Project/issues"
+  },
+  "homepage": "https://github.com/GreasyBunnies/432_Project#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1"
+  }
+}
