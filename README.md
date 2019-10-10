@@ -38,12 +38,12 @@ The scope of this project involves users being able to search, add and track sto
 	- The `View` in our application is our client. It displays data to the user through an UI. The user is able to interact with the view and send data from the client to server which will be processed by a controller and update our model.
 	- The `Controller` in our application are all business logic that handles where data should go and performs the necessary action. When an input is received, the controller will perform CRUD actions on a table in database.
 
-	__Example__: An user is on our application and is trying to add a stock to track. Upon clicking on the "`Add`" button, the name of the stock will be sent to our server through a `HTTP POST request`. The route that is mapped to the `POST request` will be associated to a controller in our server. The controller will then `insert` the stock to the user's list of tracked tracks. After the `POST request` is done being handled by the controller, the view will update the changes accordingly.
+	- __Example__: An user is on our application and is trying to add a stock to track. Upon clicking on the "`Add`" button, the name of the stock will be sent to our server through a `HTTP POST request`. The route that is mapped to the `POST request` will be associated to a controller in our server. The controller will then `insert` the stock to the user's list of tracked tracks. After the `POST request` is done being handled by the controller, the view will update the changes accordingly.
 
 * Observer Pattern 
 	- This pattern is crucial to our application as we want our UI to be interactive and seamless. Whenever the user performs an action, our UI should be notified of the change and show the changes. 
 
-	__Example__: Similar to the example above, after the `POST request` is sent, our view will be notified that the model has changed and will show the added stock in the user's list of tracked stocks.
+	- __Example__: Similar to the example above, after the `POST request` is sent, our view will be notified that the model has changed and will show the added stock in the user's list of tracked stocks.
 
 
 ## Layering
