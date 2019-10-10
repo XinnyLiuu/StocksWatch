@@ -34,20 +34,20 @@ The scope of this project involves users being able to search, add and track sto
 
 ## Design Patterns
 * MVC Pattern 
-	- The `Model` in our application will be inputs that are sent from our client to the server. When data is received by the server, it will pass the data to a controller which will then update an object representing a table in our database. The updated data will reflect on the client view.
-	- The `View` in our application is our client side application. It displays data to the user through an UI. The user is able to interact with the view and send data from the client to server which will be processed by a controller and update our model.
+	- The `Model` in our application will be data that exists in our client-server application. When data is received by the server, it will pass the data to a controller which will then update an object representing a table in our database. The updated data will reflect on the client view.
+	- The `View` in our application is our client. It displays data to the user through an UI. The user is able to interact with the view and send data from the client to server which will be processed by a controller and update our model.
 	- The `Controller` in our application are all business logic that handles where data should go and performs the necessary action. When an input is received, the controller will perform CRUD actions on a table in database.
 
-	__Example__: An user is on our application and is trying to add a stock to track. Upon clicking on the "Add" button, the name of the stock will be sent to our server through a HTTP POST request. The route that is mapped to the POST request will be associated to a controller in our server. The controller will then insert the stock to the user's list of tracked tracks. After the POST request is done being handled by the controller, the view will update the changes accordingly.
+	__Example__: An user is on our application and is trying to add a stock to track. Upon clicking on the "`Add`" button, the name of the stock will be sent to our server through a `HTTP POST request`. The route that is mapped to the `POST request` will be associated to a controller in our server. The controller will then `insert` the stock to the user's list of tracked tracks. After the `POST request` is done being handled by the controller, the view will update the changes accordingly.
 
 * Observer Pattern 
 	- This pattern is crucial to our application as we want our UI to be interactive and seamless. Whenever the user performs an action, our UI should be notified of the change and show the changes. 
 
-	__Example__: Similar to the example above, after the POST request is sent, our view will be notified that the model has changed and will show the added stock in the user's list of tracked stocks.
+	__Example__: Similar to the example above, after the `POST request` is sent, our view will be notified that the model has changed and will show the added stock in the user's list of tracked stocks.
 
 
 ## Layering
-StocksWatch is an client-server application and have the 3 following N-Tier archeticture tier:
+StocksWatch is an client-server application and have the 3 following `N-Tier archeticture` tiers:
 
 __Note__: Given that we are using a JavaScript on both client and server, we are building this application through functional programming rather than imperative programming like in Java. We are, however, directly mapping data queried from the database in __[JavaScript ES6 classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)__.
 
