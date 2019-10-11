@@ -47,22 +47,22 @@ The scope of this project involves users being able to search, add and track sto
 
 
 ## Layering
-StocksWatch is an client-server application and have the 3 following `N-Tier archeticture` tiers:
+StocksWatch is a client-server application and have the 3 following `N-Tier archeticture` tiers:
 
-__Note__: Given that we are using a JavaScript on both client and server, we are building this application through functional programming rather than imperative programming like in Java. We are, however, directly mapping data queried from the database in __[JavaScript ES6 classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)__.
+__Note__: Given that we are using a JavaScript on both client and server, we are building this application through functional programming rather than imperative programming like in Java. We are, however, directly mapping data queried from the database using __[JavaScript ES6 classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)__.
 
 * Presentation Layer
 	- Our client is the presentation layer and allows for interactions with the user. It communicates with our application layer through `HTTP (GET/POST/PUT/DELETE) methods`. Our application layer exposes API endpoints by which the presentation layer can use. 
 
-	- __Example__: User wants to see the Dow 30 companies. Our presentation layer (Angular / React) will send a `GET` request to an endpoint offered by our server (`/api/dow30`). The server will receive the request, query the Alpha Vantage API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into an charts library to show to the user.
+	- __Example__: User wants to see the Dow 30 companies - Our presentation layer (Angular / React) will send a `GET` request to an endpoint offered by our server (`/api/dow30`). The server will receive the request, query the Alpha Vantage API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into a charts library to show to the user.
 
 * Application Layer
-	- Our server is the application layer. This layer processes all HTTP requests sent from our presentation layer. It will expose API endpoints that are mapped to a controller to handle the request. The controllers perform actions on the database layer therefore updating our model. 
+	- Our server is the application layer. This layer processes all HTTP requests sent from our presentation layer. It will expose API endpoints that are mapped to a controller to handle the request. The controllers perform actions on the database layer whereby updating our model. 
 
-	- __Example__: User wants to delete a stock that they are tracking on our presentation layer (Angular / React). The client will send a `HTTP DELETE request` to an endpoint on our server (`/api/:stock`), where :stock is the symbol belonging to the stock the user wants to delete. This parameter is hidden from the user). The endpoint is mapped to a controller function - `removeStockBySymbol()`, which will query the database with a `DELETE statement` from the user's table.
+	- __Example__: User wants to delete a stock that they are tracking on our presentation layer (Angular / React). The client will send a `HTTP DELETE request` to an endpoint on our server (`/api/:stock`), where `:stock` is the symbol belonging to the stock the user wants to delete. This parameter is hidden from the user. The endpoint is mapped to a controller function - `removeStockBySymbol()`, which will query the database with a `DELETE statement` and removes the stock from the `user_stocks` table.
 
 * Database Layer
-	- Our database layer are code related to the database. Classes such as `DB`, `User`, `UserStocks` will be associated to a table in our database. The `DB` class will connect to the database and offer methods that peform CRUD actions on a table. The User class will be an Object representation of user data queried from our database. The User class will offer getters and setters that can allow our application to maintain the state of the User object. Likewise, the `UserStocks` class is an Object representing the list of stocks that the user is tracking.
+	- Our database layer are code related to the database. Classes such as `DB`, `User`, `UserStocks` will be associated to a table in our database. The `DB` class will connect to the database and offer methods that peform CRUD actions on a table. The `User` class will be an Object representation of user data queried from our database. The `User` class will offer getters and setters that can allow our application to maintain the state of the User object. Likewise, the `UserStocks` class is an Object representing the list of stocks that the user is tracking.
 
 	- __Example__: When our user adds a stock that they wish to track, the presentation layer will send a `POST` request to an endpoint exposed by our server. The endpoint (`/api/stock/:symbol`) will call the associated controller function that will create a new `UserStocks` class with the stock information and insert the data of that stock into the database using the getters and setters offered by that class. 
 
