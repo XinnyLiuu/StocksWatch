@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 const morgan = require('morgan');
+require('dotenv').config();
 
 // Create express server
 const app = express();
@@ -9,8 +10,8 @@ const app = express();
 app.use(morgan(':date[iso] :status :method :url [:response-time ms] :remote-addr'));
 
 // Start server
-app.listen(8000);
-console.log("Server running on port 8000");
+app.listen(process.env.PORT);
+console.log(`Server running on port ${process.env.PORT}`);
 
 // Services
 const monthlyDataService = require('./services/monthly.js');

@@ -9,9 +9,8 @@ const axios = require('axios');
  * 
  * Each url requires query params for `symbol`, `apikey`
  */
-let monthly_data_url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY";
-
-const API_KEY = "LJEUMU08WEO5H2NE";
+const API_KEY = process.env.API_KEY;
+let monthly_data_url = process.env.MONTHLY_URL;
 
 /**
  * Gets stock data from API using symbol
