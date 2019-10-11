@@ -9,6 +9,13 @@ const app = express();
 // Setup logger
 app.use(morgan(':date[iso] :status :method :url [:response-time ms] :remote-addr'));
 
+// Enable CORS for React
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", process.env.REACT_DEV_DOMAIN);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 // Start server
 app.listen(process.env.PORT);
 console.log(`Server running on port ${process.env.PORT}`);
@@ -18,4 +25,3 @@ const monthlyDataService = require('./services/monthly.js');
 
 // Routes
 app.get("/api/monthly/:symbol", monthlyDataService.getStockDataBySymbol);
-console.log(app._router.stack[3]["route"]["path"]);
