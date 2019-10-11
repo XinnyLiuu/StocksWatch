@@ -1,0 +1,25 @@
+{
+  "name": "stockswatch",
+  "version": "1.0.0",
+  "description": "* Xin Liu - Full Stack Developer * Benjamin Thorn - Front-end Developer   * Terence Biney - Back-end Developer / DB Manager",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^5.0.0",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"cd server/ && npm start\" \"cd client/ && npm start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreasyBunnies/432_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GreasyBunnies/432_Project/issues"
+  },
+  "homepage": "https://github.com/GreasyBunnies/432_Project#readme"
+}

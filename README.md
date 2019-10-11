@@ -82,8 +82,12 @@ The following technologies may be used later down the line as we flesh out our d
 
 
 ## Timeline
-* Milestone 3 - Layering - __due 10/11__
 * Milestone 4 - Exception Handling - __due 10/25__
 * Milestone 5 - Refactoring - __due 11/8__
 * Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
+
+
+## Installation
+- `npm install`
+- `npm start` 
