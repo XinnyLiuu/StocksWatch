@@ -17,8 +17,8 @@ app.use((req, res, next) => {
 });
 
 // Start server
-app.listen(process.env.PORT);
-console.log(`Server running on port ${process.env.PORT}`);
+app.listen(process.env.PORT || 8000);
+console.log(`Server running on port ${process.env.PORT || 8000}`);
 
 // Services
 const monthlyDataService = require('./services/monthly.js');
