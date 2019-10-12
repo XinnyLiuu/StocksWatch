@@ -1,0 +1,10 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: lightblue;
+    text-align: center;
+}
+
+svg{
+    background: white;
+    box-shadow: 5px 5px darkgray;
+}
