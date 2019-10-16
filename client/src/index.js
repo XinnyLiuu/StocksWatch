@@ -13,7 +13,9 @@ import Notfound from './notfound/Notfound';
 const routing = (
     <Router>
         <Switch>
-            <Route exact path="/" component={ Highcharts }></Route>
+            <Route exact path="/:stock" component={props => 
+                <Highcharts stock={props.match.params.stock} />}
+            ></Route>
             <Route component={ Notfound }></Route>
         </Switch> 
     </Router>
