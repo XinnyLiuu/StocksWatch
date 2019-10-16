@@ -27,14 +27,18 @@ exports.getStockDataBySymbol = (req, res) => {
             // Check response status
             if (result.status === 200) {
                 const data = result.data;
+
+                // Check if data returned from alpha vantage is an error message
+                if('Error Message' in data) {
+                    // Send error status code
+                    res.statusCode = 500; 
+                    return res.send( "Error in /api/monthly/:Stock " );
+                }
+
                 const json = parseData(data);       
 
                 res.setHeader("Content-Type", 'application/json'); 
-                res.send( JSON.stringify(json) );
-            } else {
-                // Send error status code
-                res.statusCode = 500; 
-                res.send( "Error in Server!" );
+                return res.send( JSON.stringify(json) );
             }
         })
         .catch(err => {
