@@ -35,6 +35,13 @@ exports.getStockDataBySymbol = (req, res) => {
                     return res.send( "Error in /api/monthly/:Stock " );
                 }
 
+                // Check if data limit is reached 
+                if('Note' in data) {
+                    // Send error status code
+                    res.statusCode = 500; 
+                    return res.send( "Error in /api/monthly/:Stock " );
+                }
+
                 const json = parseData(data);       
 
                 res.setHeader("Content-Type", 'application/json'); 
@@ -47,6 +54,8 @@ exports.getStockDataBySymbol = (req, res) => {
 
     // Parse the data and filter out data that we do not want
     function parseData(data) { 
+        console.log(data["Meta Data"]);
+
         const metadata = data["Meta Data"];
         const symbol = metadata["2. Symbol"];
         const timezone = metadata["4. Time Zone"];
@@ -59,24 +68,27 @@ exports.getStockDataBySymbol = (req, res) => {
             "timezone": timezone,
             "prices": {
                 "high": [], // Contains array of [date, high]
-                "low": [] // Contains array of [date, low]
+                "low": [] // Contains array of [date, low]  
             }
         }; 
 
         // Iterate through every monthly data 
         for(let key in monthlydata) {
-            const date = key;
+            let date = key;
             const monthData = monthlydata[date];
 
+            // Convert date to UTC for Highcharts
+            date = new Date( date ).getTime();
+
             // Get the highs
-            const high = monthData["2. high"];
+            const high = Math.round(parseFloat(monthData["2. high"]) * 100) / 100;
             let highArr = [];
             highArr.push( date );
             highArr.push( high );
             json["prices"]["high"].push( highArr );
 
             // Get the lows
-            const low = monthData["3. low"];
+            const low = Math.round(parseFloat(monthData["3. low"]) * 100) / 100; 
             let lowArr = [];
             lowArr.push( date );
             lowArr.push( low );

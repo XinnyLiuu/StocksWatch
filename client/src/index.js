@@ -6,17 +6,15 @@ import {
     Route
 } from "react-router-dom";
 
-import Highcharts from './highcharts/Highcharts'; 
+import StockChart from './highcharts/StockChart'; 
 import Notfound from './notfound/Notfound';
 
 // Implement Routing
 const routing = (
     <Router>
         <Switch>
-            <Route exact path="/:stock" component={props => 
-                <Highcharts stock={props.match.params.stock} />}
-            ></Route>
-            <Route component={ Notfound }></Route>
+            <Route exact path="/:stock" component={ props => <StockChart stock={ props.match.params.stock } /> } />
+            <Route component={ Notfound } />
         </Switch> 
     </Router>
 );
