@@ -1,6 +1,3 @@
-/**
- * Routes related to monthly data will be handled here
- */
 'use strict';
 const axios = require('axios');
 
@@ -9,8 +6,8 @@ const axios = require('axios');
  * 
  * Each url requires query params for `symbol`, `apikey`
  */
-const API_KEY = process.env.API_KEY;
-let monthly_data_url = process.env.MONTHLY_URL;
+const API_KEY = process.env.ALPHA_VANTAGE_KEY;
+let monthly_data_url = process.env.ALPHA_VANTAGE_MONTHLY_URL;
 
 /**
  * Gets stock data from API using symbol
