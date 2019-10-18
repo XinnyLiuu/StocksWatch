@@ -42,7 +42,7 @@ exports.getStockDataBySymbol = (req, res) => {
                 const json = parseData(data);       
 
                 res.setHeader("Content-Type", 'application/json'); 
-                return res.send( JSON.stringify(json) );
+                return res.send( json );
             }
         })
         .catch(err => {

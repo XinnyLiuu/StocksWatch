@@ -6,14 +6,29 @@ import {
     Route
 } from "react-router-dom";
 
-import StockChart from './highcharts/StockChart';
-import Notfound from './notfound/Notfound';
+import Wrapper from './components/highcharts/Wrapper';
+import Notfound from './components/notfound/Notfound';
+
+import './css/main.css';
+
+// API endpoints
+const monthly_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/monthly`;
+const dow30_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/dow30`;
 
 // Implement Routing
 const routing = (
     <Router>
         <Switch>
-            <Route exact path="/search/:stock" component={props => <StockChart stock={props.match.params.stock} />} />
+            <Route exact path="/" component={props =>
+                <Wrapper api={dow30_api} flag={"dow30"} />
+            } />
+
+            <Route exact path="/search/:stock" component={props =>
+                <Wrapper
+                    api={`${monthly_api}/${props.match.params.stock}`}
+                    flag={"single"} />
+            } />
+
             <Route component={Notfound} />
         </Switch>
     </Router>

@@ -12,9 +12,9 @@ const dow = [
     "AAPL",
     "AXP",
     "BA",
-    "CAT", 
+    "CAT",
     "CSCO",
-    "CVX", 
+    "CVX",
     "DIS",
     "DWDP",
     "GE",
@@ -31,7 +31,7 @@ const dow = [
     "MSFT",
     "NKE",
     "PFE",
-    "PG", 
+    "PG",
     "TRV",
     "UNH",
     "UTX",
@@ -57,17 +57,17 @@ exports.getStockDataForDow = (req, res) => {
         // Use axios to hit the intrinio endpoint 
         axios.get(intrinio)
             .then(response => {
-                if(response.status === 200) {
+                if (response.status === 200) {
                     const data = response.data;
 
                     const json = parseData(data);
-                    result.DOW30.push( json );
-                    
-                    if(result.DOW30.length === 30) {
+                    result.DOW30.push(json);
+
+                    if (result.DOW30.length === 30) {
                         console.log(result.DOW30);
 
                         res.setHeader("Content-Type", "application/json");
-                        return res.send( JSON.stringify(result.DOW30) );
+                        return res.send(result);
                     }
                 }
             })
@@ -77,30 +77,30 @@ exports.getStockDataForDow = (req, res) => {
     });
 
     // Parse the data returned from intrinio and return as a json
-    function parseData(data) { 
+    function parseData(data) {
         let json = {
             "symbol": data.security.ticker,
-            "prices": { 
+            "prices": {
                 "high": [], // [date, higi]
                 "low": [] // [date, low]
             }
-        }; 
+        };
 
         let prices = data.stock_prices;
         prices.forEach(p => {
-            let date = new Date( p.date ).getTime();
+            let date = new Date(p.date).getTime();
 
             let high_arr = [];
             let low_arr = [];
 
-            high_arr.push( date );
-            high_arr.push( p.high );
+            high_arr.push(date);
+            high_arr.push(p.high);
 
-            low_arr.push( date );
-            low_arr.push( p.low );
+            low_arr.push(date);
+            low_arr.push(p.low);
 
-            json.prices.high.push( high_arr );
-            json.prices.low.push( low_arr );
+            json.prices.high.push(high_arr);
+            json.prices.low.push(low_arr);
         });
 
         return json;

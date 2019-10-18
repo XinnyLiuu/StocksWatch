@@ -8,7 +8,6 @@ class StockChart extends React.Component {
 
         this.state = {
             symbol: null,
-            timezone: null,
             prices: null,
 
             // Highcharts configs
@@ -208,10 +207,10 @@ class StockChart extends React.Component {
     }
 
     prepareChart() {
-        // Update the chartOptions in state
         let high = this.state.prices.high;
         let low = this.state.prices.low;
 
+        // Update the chartOptions in state
         this.setState({
             chartOptions: {
                 title: {
@@ -237,30 +236,12 @@ class StockChart extends React.Component {
     }
 
     componentDidMount() {
-        // Get the data when the component is ready
-        const stock = this.props.stock;
-        const api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/monthly/${stock}`;
+        const data = this.props.data;
 
-        // Fire GET to /api/monthly/:stock        
-        fetch(api)
-            .then(resp => {
-                // On 200 status
-                if (resp.status === 200) {
-                    resp.json()
-                        .then(data => {
-                            // Add data pulled from api and update state then prepare the chart
-                            this.setState({
-                                symbol: data.symbol,
-                                timezone: data.timezone,
-                                prices: data.prices
-                            }, () => this.prepareChart());
-                        })
-                }
-            })
-            .catch(err => {
-                // TODO: Error handling in React
-                console.log(err);
-            })
+        this.setState({
+            symbol: data.symbol,
+            prices: data.prices
+        }, () => this.prepareChart());
     }
 
     render() {
