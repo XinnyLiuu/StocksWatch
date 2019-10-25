@@ -69,7 +69,7 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 ## Exception Handling
 Since we are using a client-server architecture with two different technologies - `React` and `Node.js` respectively, exception handling in the client will be different than that of the server.
 
-__Note__: Exceptions in JavaScript are similar to those of Java. Every exception is a variation of the `Error` object. Error objects need to be thrown and caught and dealth with. 
+__Note__: Exceptions in JavaScript are similar to those of Java. Every exception is a variation of the __[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)__ object. Error objects need to be thrown and caught and dealth with. 
 
 * __Client__: Our `React` client sends __[Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)__ calls to our `Node.js` server for any data processing. The fetch api returns a __[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)__ object that determines the result of the aysnchronous event. The asynchronous event is resolved (success) or rejected (failure). In the event that our event is rejected, our application should either:
 	* __Redirect the user to a `Not Found` page if the URL requested does not exist__
