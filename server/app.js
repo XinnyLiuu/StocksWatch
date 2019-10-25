@@ -24,6 +24,9 @@ console.log(`Server running on port ${process.env.PORT || 8000}`);
 const monthlyDataService = require('./services/monthly.js');
 const dow30Service = require('./services/dow30.js');
 
+// Database
+const mysqlController = require('./controller/mysql.js');
+
 // Routes
 app.get("/api/monthly/:symbol", monthlyDataService.getStockDataBySymbol);
 app.get("/api/dow30", dow30Service.getStockDataForDow);

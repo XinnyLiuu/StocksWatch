@@ -1,6 +1,6 @@
 'use strict';
 const axios = require('axios');
-const APIException = require('../exceptions/APIException');
+const APIException = require('../exceptions/APIException.js');
 
 /** 
  * The following uses Intrinio's API to query the Dow 30's data

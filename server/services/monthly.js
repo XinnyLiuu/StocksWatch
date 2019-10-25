@@ -1,6 +1,6 @@
 'use strict';
 const axios = require('axios');
-const APIException = require('../exceptions/APIException');
+const APIException = require('../exceptions/APIException.js');
 
 /**
  * The following is the url to Alpha Vantage's api

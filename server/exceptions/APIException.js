@@ -6,7 +6,6 @@
 class APIException extends Error {
     constructor(message, cause) {
         super(message);
-        this.message = message;
         this.cause = cause;
     }
 }
