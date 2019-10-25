@@ -21,3 +21,5 @@ class Navbar extends React.Component {
         );
     }
 }
+
+ReactDOM.render("what to render goes here","where to render content");
