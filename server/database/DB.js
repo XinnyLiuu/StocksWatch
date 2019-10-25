@@ -37,7 +37,10 @@ class DB {
     }
 
     close() {
-        this.connection.end();
+        return new Promise((resolve, reject) => {
+            this.connection.end();
+            resolve("Connection to MySQL closed!");
+        });   
     }
 }
 

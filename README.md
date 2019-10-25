@@ -66,6 +66,117 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 
 	- __Example__: When our user adds a stock that they wish to track, the presentation layer will send a `POST` request to an endpoint exposed by our server. The endpoint (`/api/stock/:symbol`) will call the associated controller function that will create a new `UserStocks` class with the stock information and insert the data of that stock into the database using the getters and setters offered by that class. 
 
+## Exception Handling
+Since we are using a client-server architecture with two different technologies - `React` and `Node.js` respectively, exception handling in the client will be different than that of the server.
+
+__Note__: Exceptions in JavaScript are similar to those of Java. Every exception is a variation of the `Error` object. Error objects need to be thrown and caught and dealth with. 
+
+* __Client__: Our `React` client sends __[Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)__ calls to our `Node.js` server for any data processing. The fetch api returns a __[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)__ object that determines the result of the aysnchronous event. The asynchronous event is resolved (success) or rejected (failure). In the event that our event is rejected, our application should either:
+	* __Redirect the user to a `Not Found` page if the URL requested does not exist__
+	* __Show the user that the data requested could not be displayed normally with a friendly error message__
+
+	* __Example__: Our client is requesting data regarding the `DOW 30` from our server, but the server is having issues aggregating the data from the free tier plan of the Intrinio API. Upon receiving a error `500` HTTP status code, our React code should redirect the user to a page that states `Service is uncurrently unavailable, please try again later!`. 
+
+The application should __NEVER__ show any stack traces to the user. 
+
+* __Server__: Our `Node.js` server deals with many things including expose endpoints for the client to consume and database operations. The database related code has been wrapped in a class called `DB.js` below:
+
+```javascript
+class DB {
+    constructor() {
+        return new Promise((resolve, reject) => {
+            this.connection = mysql.createConnection({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_DATABASE
+            });
+
+            this.connection.connect(err => {
+                if (err) reject(err);
+
+                console.log("Connected to MySQL!");
+                resolve(this);
+            });
+        });
+    }
+
+    select(sql) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql, (error, results, fields) => {
+                if (error) reject(error);
+
+                if (results.length > 0) {
+                    resolve(results[0]);
+                }
+            });
+        })
+    }
+
+    close() {
+        return new Promise((resolve, reject) => {
+            this.connection.end();
+            resolve("Connection to MySQL closed!");
+		});     
+	}
+}
+```
+
+In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action using the __[mysql](https://www.npmjs.com/package/mysql)__ npm module. On the event the database method has been rejected, a custom exception class that has been created should be thrown, caught and logged to the terminal. Below is the code for `DatabaseException.js`:
+
+```javascript
+class DatabaseException extends Error {
+	constructor(message, cause) {
+		super(message)
+		this.cause = cause;
+	}
+}
+```
+
+Below is a snippet that shows the handling of a Database exception:
+
+```javascript
+db.select("select * from users")
+	.then(resp => {
+		let users = resp;
+	})
+	.catch(err => {
+		try {
+			throw new DatabaseException("Error in query", err);
+		} catch (e) {
+			console.log(e);
+		}
+	});
+```
+In the snippet above, when `db.select("select * from users")` returns a promise that is rejected, the rejection reason is passed as`err`. `err` is then caught in the `catch` of the `then / catch` block, which is then passed into the `catch` of a `try / catch` block and throws an instance of the `DatabaseException` exception. When the exception is thrown and caught, the program logs the rejection reason and the stack trace to the console. Since the server is hidden from the eyes of users, logging to the console is fine. However, in the case that the server is used by the client such and requires an immediate response such as an API endpoint, we need to handle things differently.
+
+Below is code that is used to expose an endpoint for the client to consume data regarding the monthly prices of a stock. 
+
+```javascript
+axios.get(monthly_data_url)
+	.then(result => {
+		...
+	})
+	.catch(err => {
+		try {
+			if (err) throw new APIException("Error in api service monthly.js", err);
+		} catch (e) {
+			console.log(e);
+			return res.status(500).json({ Error: e.message });
+		}
+	})
+```
+
+When the server runs into an error and cannot return the data requested to the client, the rejection reason is caught and passed into a newly thrown `APIException` which is then logged into the console and `Express.js` (the library used for our web server) returns a `500` HTTP status code and a JSON message to the client: 
+
+```json
+{
+	"Error": "Error in api service monthly.js"
+}
+```
+
+Our code in the client, would then check if a status code of 500 is returned and if so - redirect the user to a `Service Unavailable` page or another one of the reasons stated in the client section above.
+
 
 ## Technologies Used
 We plan to use the following technologies in our application: 
@@ -82,7 +193,6 @@ The following technologies may be used later down the line as we flesh out our d
 
 
 ## Timeline
-* Milestone 4 - Exception Handling - __due 10/25__
 * Milestone 5 - Refactoring - __due 11/8__
 * Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
