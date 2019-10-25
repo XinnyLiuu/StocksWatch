@@ -26,5 +26,4 @@ const dow30Service = require('./services/dow30.js');
 
 // Routes
 app.get("/api/monthly/:symbol", monthlyDataService.getStockDataBySymbol);
-
 app.get("/api/dow30", dow30Service.getStockDataForDow);

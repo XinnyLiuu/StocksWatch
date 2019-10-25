@@ -1,5 +1,6 @@
 'use strict';
 const axios = require('axios');
+const APIException = require('../exceptions/APIException');
 
 /** 
  * The following uses Intrinio's API to query the Dow 30's data
@@ -66,13 +67,19 @@ exports.getStockDataForDow = (req, res) => {
                     if (result.DOW30.length === 30) {
                         console.log(result.DOW30);
 
-                        res.setHeader("Content-Type", "application/json");
-                        return res.send(result);
+                        return res.set({
+                            "Content-Type": "application/json"
+                        }).send(result);
                     }
                 }
             })
             .catch(err => {
-                console.log(err);
+                try {
+                    if (err) throw new APIException("Error in api service dow.js", err);
+                } catch (e) {
+                    console.log(e);
+                    return res.status(500).json({ Error: e.message });
+                }
             })
     });
 
