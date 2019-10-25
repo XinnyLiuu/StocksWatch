@@ -26,6 +26,7 @@ const dow30Service = require('./services/dow30.js');
 
 // Database
 const mysqlController = require('./controller/mysql.js');
+mysqlController.getUsers();
 
 // Routes
 app.get("/api/monthly/:symbol", monthlyDataService.getStockDataBySymbol);
