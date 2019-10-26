@@ -114,13 +114,6 @@ class DB {
 	}
 	
 	...
-
-    close() {
-        return new Promise((resolve, reject) => {
-            this.connection.end();
-            resolve("Connection to MySQL closed!");
-		});     
-	}
 }
 ```
 
