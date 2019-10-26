@@ -77,9 +77,9 @@ __Note__: Exceptions in JavaScript are similar to those of Java. Every exception
 
 	* __Example__: Our client is requesting data regarding the `DOW 30` from our server, but the server is having issues aggregating the data from the free tier plan of the Intrinio API. Upon receiving a error `500` HTTP status code, our React code should redirect the user to a page that states `Service is uncurrently unavailable, please try again later!`. 
 
-The application should __NEVER__ show any stack traces to the user. 
+The client should __NEVER__ show any stack traces to the user. 
 
-* __Server__: Our `Node.js` server deals with many things including expose endpoints for the client to consume and database operations. The database related code has been wrapped in a class called `DB.js` below:
+* __Server__: Our `Node.js` server deals with many things including exposed endpoints for the client to consume and database operations. The database related code has been wrapped in a class called `DB.js` below:
 
 ```javascript
 class DB {
@@ -111,7 +111,9 @@ class DB {
                 }
             });
         })
-    }
+	}
+	
+	...
 
     close() {
         return new Promise((resolve, reject) => {
@@ -122,7 +124,7 @@ class DB {
 }
 ```
 
-In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action using the __[mysql](https://www.npmjs.com/package/mysql)__ npm module. On the event the database method has been rejected, a custom exception class that has been created should be thrown, caught and logged to the terminal. Below is the code for `DatabaseException.js`:
+In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action from the __[mysql](https://www.npmjs.com/package/mysql)__ npm module. On the event the database method has been rejected, a custom exception class that has been created should be thrown, caught and logged to the terminal. Below is the code for `DatabaseException.js`:
 
 ```javascript
 class DatabaseException extends Error {
@@ -148,7 +150,7 @@ db.select("select * from users")
 		}
 	});
 ```
-In the snippet above, when `db.select("select * from users")` returns a promise that is rejected, the rejection reason is passed as`err`. `err` is then caught in the `catch` of the `then / catch` block, which is then passed into the `catch` of a `try / catch` block and throws an instance of the `DatabaseException` exception. When the exception is thrown and caught, the program logs the rejection reason and the stack trace to the console. Since the server is hidden from the eyes of users, logging to the console is fine. However, in the case that the server is used by the client such and requires an immediate response such as an API endpoint, we need to handle things differently.
+In the snippet above, when `db.select("select * from users")` returns a promise that is rejected, the rejection reason is passed as `err`. `err` is then caught in the `catch` of the `then / catch` block, which is then passed and thrown in an instance of the `DatabaseException` exception. When the exception is caught, the program logs the rejection reason and the stack trace to the console. Since the server is hidden from the eyes of users, logging to the console is fine. However, in the case that the server is used by the client that requires an immediate response such as an API endpoint, we need to handle things differently.
 
 Below is code that is used to expose an endpoint for the client to consume data regarding the monthly prices of a stock. 
 

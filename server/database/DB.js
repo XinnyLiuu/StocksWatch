@@ -36,6 +36,8 @@ class DB {
         })
     }
 
+    // TODO: Update, Insert, Delete
+
     close() {
         return new Promise((resolve, reject) => {
             this.connection.end();
