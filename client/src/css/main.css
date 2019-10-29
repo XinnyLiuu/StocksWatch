@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #343a40!important;
 }
 
 .error {
@@ -9,4 +10,10 @@ body {
   color: darkred;
   margin: 5px;
   border: 1px darkred solid;
+}
+
+#loading {
+  margin: 5px;
+  padding: 10px;
+  color: white;
 }

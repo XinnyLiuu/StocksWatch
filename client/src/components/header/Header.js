@@ -1,39 +1,71 @@
 import React from 'react';
 import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button
+	Navbar,
+	Nav,
+	Form,
+	FormControl,
+	Button
 } from "react-bootstrap";
+import {
+	withRouter
+} from "react-router-dom";
 
 class Header extends React.Component {
-  render() {
-    return (
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Navbar.Brand href="/">StocksWatch</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            {/* <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link> */}
-            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-            </NavDropdown> */}
-          </Nav>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-info">Search</Button>
-          </Form>
-        </Navbar.Collapse>
-      </Navbar>
-    )
-  }
+	constructor(props) {
+		super(props);
+
+		// Search value will be stored in state
+		this.state = {
+			symbol: '',
+			url: ''
+		};
+
+		// Bind, so that 'this' can be used in the callback
+		this.searchStock = this.searchStock.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+	}
+
+	// Dynamically updates the `symbol` stored in state on input change
+	handleChange(event) {
+		this.setState({
+			symbol: event.target.value
+		});
+	}
+
+	// Fires when form is submitted
+	searchStock(e) {
+		e.preventDefault();
+
+		// Cleanup `symbol`
+		let symbol = this.state.symbol;
+		symbol = symbol.toUpperCase().trim(); // TODO: More validations
+
+		// Update `url` flag in state 
+		this.setState({
+			url: `/search/${symbol}`
+		}, () => {
+			// Redirect to url so that the component can be rebuilt
+			this.props.history.push(this.state.url);
+		});
+	}
+
+	render() {
+		return (
+			<Navbar bg="dark" variant="dark" expand="lg">
+				<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
+				<Navbar.Toggle aria-controls="basic-navbar-nav" />
+				<Navbar.Collapse id="basic-navbar-nav">
+					<Nav className="mr-auto">
+						<Nav.Link href="#home">Login</Nav.Link>
+					</Nav>					
+					<Form inline onSubmit={this.searchStock}>
+						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+						<Button variant="outline-info" type="submit">Search</Button>
+					</Form>
+				</Navbar.Collapse>
+			</Navbar>
+		)
+	}
 }
 
-export default Header;
+export default withRouter(Header);
