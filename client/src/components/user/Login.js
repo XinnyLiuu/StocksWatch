@@ -24,6 +24,7 @@ class Login extends React.Component {
         // Bind methods
         this.handleChange = this.handleChange.bind(this);
         this.login = this.login.bind(this);
+        this.toRegister = this.toRegister.bind(this);
     }
 
     handleChange(e) {
@@ -35,6 +36,7 @@ class Login extends React.Component {
         });
     }
 
+    // Takes the input values from the form to authenticate user
     login(e) {
         e.preventDefault();
 
@@ -76,6 +78,11 @@ class Login extends React.Component {
         })
     }
 
+    // Redirects user to /register
+    toRegister() {
+        this.props.history.push("/register");
+    }
+
     render() {
         return (
             <div id="login">
@@ -96,7 +103,7 @@ class Login extends React.Component {
 
                     <span className="space"></span>
 
-                    <Button variant="outline-info">
+                    <Button variant="outline-info" onClick={this.toRegister}>
                         Register
                     </Button>
                 </Form>

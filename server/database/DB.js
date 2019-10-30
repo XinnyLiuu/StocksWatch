@@ -24,8 +24,10 @@ class DB {
         });
     }
 
-    select(sql) {
+    select(sql, params) {
         return new Promise((resolve, reject) => {
+            sql = mysql.format(sql, params);
+
             this.connection.query(sql, (error, results, fields) => {
                 if (error) reject(error);
 
@@ -34,7 +36,17 @@ class DB {
         })
     }
 
-    // TODO: Update, Insert, Delete
+    insert(sql, params) {
+        return new Promise((resolve, reject) => {
+            sql = mysql.format(sql, params);
+
+            this.connection.query(sql, (error, results, fields) => {
+                if (error) reject(error);
+
+                resolve(results);
+            });
+        })
+    }
 
     close() {
         return new Promise((resolve, reject) => {
