@@ -12,7 +12,8 @@ import {
 
 import {
 	isAuthenticated,
-	getUserInfo
+	getUserInfo,
+	destroySession
 } from '../utils/auth';
 
 class Header extends React.Component {
@@ -60,6 +61,7 @@ class Header extends React.Component {
 	// On click, log the user out
 	logout() {
 		// TODO:
+			  destroySession();
 	}
 
 	render() {
@@ -77,9 +79,7 @@ class Header extends React.Component {
 								<span id="name">{user.getFirstName()} {user.getLastName()}</span>
 							</Nav.Link>
 							<Nav.Link href="/settings">Settings</Nav.Link>
-							<Nav.Link>
-								Logout
-							</Nav.Link>
+							<Nav.Link onClick={this.logout} href="/">Logout</Nav.Link>
 						</Nav>
 						<Form inline onSubmit={this.searchStock}>
 							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />

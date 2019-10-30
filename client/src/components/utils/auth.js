@@ -1,5 +1,5 @@
 /**
- * Authentication + session helper 
+ * Authentication + session helper
  */
 import User from '../../model/User';
 
