@@ -12,6 +12,7 @@ import Wrapper from './components/highcharts/Wrapper';
 import Notfound from './components/notfound/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
+import Setting from './components/user/Setting';
 
 // CSS
 import './css/main.css';
@@ -37,8 +38,11 @@ const routing = (
 			<Route exact path="/login" component={props =>
 				<Login />
 			} />
-			<Route exact path="/register" component={props => 
-				<Register /> 	
+			<Route exact path="/register" component={props =>
+				<Register />
+			} />
+			<Route exact path="/settings" component={props =>
+				<Setting />
 			} />
 			<Route component={Notfound} />
 		</Switch>

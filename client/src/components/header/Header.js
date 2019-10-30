@@ -48,7 +48,7 @@ class Header extends React.Component {
 		let symbol = this.state.symbol;
 		symbol = symbol.toUpperCase().trim(); // TODO: More validations
 
-		// Update `url` flag in state 
+		// Update `url` flag in state
 		this.setState({
 			url: `/search/${symbol}`
 		}, () => {

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: #343a40!important;
+  background-color: #343a40 !important;
 }
 
 .error {
@@ -19,10 +19,16 @@ body {
 }
 
 .spinner {
-    margin: 20% 0 0 50%;
+  margin: 20% 0 0 45%;
+
 }
 
-#login {
+.spin {
+  padding: 3rem;
+}
+
+#login,
+#settings {
   margin: 80px;
   padding: 50px;
   background-color: white;
@@ -30,7 +36,22 @@ body {
   border: 1px solid #ced4da
 }
 
-.space { 
+#settings {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.left {
+  margin: 10rem auto 0 auto;
+  text-align: center;
+}
+
+.user-img {
+  border-radius: 50%;
+}
+
+.space {
   margin: 10px;
 }
 
@@ -38,8 +59,12 @@ body {
   color: #17a2b8 !important;
 }
 
-#name > a {
+#name>a {
   color: none;
   text-decoration: none;
   background-color: none;
+}
+
+.cancel {
+  margin-left: 2rem;
 }

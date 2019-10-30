@@ -14,7 +14,7 @@ class LoadingSpinner extends React.Component {
     render() {
         return (
             <div className="spinner">
-                <Spinner animation="border" variant="info">
+                <Spinner className="spin" animation="border" variant="info" size="lg">
                     <span className="sr-only">Loading...</span>
                 </Spinner>
             </div>
