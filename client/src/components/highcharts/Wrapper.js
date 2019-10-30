@@ -1,6 +1,6 @@
 import React from 'react';
 import StockChart from './StockChart';
-import LoadingModal from '../utils/Modal';
+import LoadingSpinner from '../utils/LoadingSpinner';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -71,7 +71,8 @@ class Wrapper extends React.Component {
 		}
 
 		// Temporary DOM element until the date is ready
-		return <LoadingModal />; 
+		// TODO:
+		return <LoadingSpinner />
 	}
 }
 
