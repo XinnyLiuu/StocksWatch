@@ -10,6 +10,8 @@ import Header from './components/header/Header';
 // Components
 import Wrapper from './components/highcharts/Wrapper';
 import Notfound from './components/notfound/Notfound';
+import Login from './components/user/Login';
+import Register from './components/user/Register';
 
 // Utils
 import appendErr from './components/utils/ErrorMessage';
@@ -30,12 +32,18 @@ const routing = (
 		<Switch>
 			<Route exact path="/" component={props =>
 				<Wrapper api={dow30_api}
-					symbol="" />} 
+					symbol="" />}
 			/>
 			<Route exact path="/search/:stock" component={props =>
-				<Wrapper api={`${monthly_api}`} 
-					symbol={`${props.match.params.stock}`} />} 
+				<Wrapper api={`${monthly_api}`}
+					symbol={`${props.match.params.stock}`} />}
 			/>
+			<Route exact path="/login" component={props =>
+				<Login />
+			} />
+			<Route exact path="/register" component={props => 
+				<Register /> 	
+			} />
 			<Route component={Notfound} />
 		</Switch>
 	</Router>

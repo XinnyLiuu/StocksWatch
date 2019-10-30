@@ -1,6 +1,9 @@
 import React from 'react';
 import StockChart from './StockChart';
+<<<<<<< HEAD
 import LoadingSpinner from '../utils/LoadingSpinner';
+=======
+>>>>>>> created login/register component
 
 class Wrapper extends React.Component {
 	constructor(props) {

@@ -19,6 +19,17 @@ body {
 }
 
 .spinner {
-
     margin: 20% 0 0 50%;
+}
+
+#login {
+  margin: 80px;
+  padding: 50px;
+  background-color: white;
+  border-radius: .25rem;
+  border: 1px solid #ced4da
+}
+
+.space { 
+  margin: 10px;
 }

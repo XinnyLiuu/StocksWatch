@@ -56,8 +56,8 @@ class Header extends React.Component {
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="mr-auto">
-						<Nav.Link href="#home">Login</Nav.Link>
-					</Nav>					
+						<Nav.Link href="/login">Login</Nav.Link>
+					</Nav>
 					<Form inline onSubmit={this.searchStock}>
 						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
 						<Button variant="outline-info" type="submit">Search</Button>
