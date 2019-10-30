@@ -1,7 +1,7 @@
 /**
  * Authentication + session helper
  */
-import User from '../../model/User';
+import User from '../model/User';
 
 /**
  * Check if user is authenticated

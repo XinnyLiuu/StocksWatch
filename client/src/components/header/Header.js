@@ -14,7 +14,7 @@ import {
 	isAuthenticated,
 	getUserInfo,
 	destroySession
-} from '../utils/auth';
+} from '../../utils/auth';
 
 class Header extends React.Component {
 	constructor(props) {
@@ -68,11 +68,27 @@ class Header extends React.Component {
 	}
 
 	render() {
+		let navbar = (
+			<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
+				<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
+				<Navbar.Toggle aria-controls="basic-navbar-nav" />
+				<Navbar.Collapse id="basic-navbar-nav">
+					<Nav className="mr-auto">
+						<Nav.Link href="/login">Login</Nav.Link>
+					</Nav>
+					<Form inline onSubmit={this.searchStock}>
+						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+						<Button variant="outline-info" type="submit">Search</Button>
+					</Form>
+				</Navbar.Collapse>
+			</Navbar>
+		);
+
 		// Check if an user is logged in
 		if (isAuthenticated()) {
 			const user = getUserInfo();
 
-			return (
+			navbar = (
 				<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
 					<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -81,6 +97,7 @@ class Header extends React.Component {
 							<Nav.Link disabled>
 								<span id="name">{user.getFirstName()} {user.getLastName()}</span>
 							</Nav.Link>
+							<Nav.Link href="/watchlist">Watchlist</Nav.Link>
 							<Nav.Link href="/settings">Settings</Nav.Link>
 							<Nav.Link onClick={this.logout} href="/">Logout</Nav.Link>
 						</Nav>
@@ -90,24 +107,10 @@ class Header extends React.Component {
 						</Form>
 					</Navbar.Collapse>
 				</Navbar>
-			)
-		} else {
-			return (
-				<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
-					<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
-					<Navbar.Toggle aria-controls="basic-navbar-nav" />
-					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav className="mr-auto">
-							<Nav.Link href="/login">Login</Nav.Link>
-						</Nav>
-						<Form inline onSubmit={this.searchStock}>
-							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
-							<Button variant="outline-info" type="submit">Search</Button>
-						</Form>
-					</Navbar.Collapse>
-				</Navbar>
-			)
+			);
 		}
+
+		return navbar;
 	}
 }
 

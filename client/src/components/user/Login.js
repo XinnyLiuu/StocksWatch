@@ -10,7 +10,7 @@ import {
 import User from '../../model/User';
 import {
     setSession
-} from '../utils/auth';
+} from '../../utils/auth';
 
 class Login extends React.Component {
     constructor(props) {
