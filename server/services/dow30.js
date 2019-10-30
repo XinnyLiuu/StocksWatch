@@ -43,6 +43,8 @@ const dow = [
 ];
 
 /**
+ * GET /api/dow30
+ * 
  * Gets all stock data of all dow 30 using symbol
  */
 exports.getStockDataForDow = (req, res) => {
@@ -56,31 +58,29 @@ exports.getStockDataForDow = (req, res) => {
         intrinio = `${URL}/${symbol}/prices?api_key=${API_KEY}`;
 
         // Use axios to hit the intrinio endpoint 
-        axios.get(intrinio)
-            .then(response => {
-                if (response.status === 200) {
-                    const data = response.data;
+        axios.get(intrinio).then(response => {
+            if (response.status === 200) {
+                const data = response.data;
 
-                    const json = parseData(data);
-                    result.DOW30.push(json);
+                const json = parseData(data);
+                result.DOW30.push(json);
 
-                    if (result.DOW30.length === 30) {
-                        console.log(result.DOW30);
+                if (result.DOW30.length === 30) {
+                    console.log(result.DOW30);
 
-                        return res.set({
-                            "Content-Type": "application/json"
-                        }).send(result);
-                    }
+                    return res.set({
+                        "Content-Type": "application/json"
+                    }).send(result);
                 }
-            })
-            .catch(err => {
-                try {
-                    if (err) throw new APIException("Error in api service dow.js", err);
-                } catch (e) {
-                    console.log(e);
-                    return res.status(500).json({ Error: e.message });
-                }
-            })
+            }
+        }).catch(err => {
+            try {
+                if (err) throw new APIException("Error in api service dow.js", err);
+            } catch (e) {
+                console.log(e);
+                return res.status(500).json({ Error: e.message });
+            }
+        })
     });
 
     // Parse the data returned from intrinio and return as a json

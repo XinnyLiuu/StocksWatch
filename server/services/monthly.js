@@ -11,6 +11,8 @@ const API_KEY = process.env.ALPHA_VANTAGE_KEY;
 let monthly_data_url = process.env.ALPHA_VANTAGE_MONTHLY_URL;
 
 /**
+ * GET /api/monthly/:stock
+ * 
  * Gets stock data from API using symbol
  */
 exports.getStockDataBySymbol = (req, res) => {
@@ -20,38 +22,37 @@ exports.getStockDataBySymbol = (req, res) => {
     monthly_data_url += `&symbol=${symbol}`;
     monthly_data_url += `&apikey=${API_KEY}`;
 
-    axios.get(monthly_data_url)
-        .then(result => {
-            // Check response status
-            if (result.status === 200) {
-                const data = result.data;
+    axios.get(monthly_data_url).then(result => {
+        // Check response status
+        if (result.status === 200) {
+            const data = result.data;
 
-                // Check if data returned from alpha vantage is an error message
-                if ('Error Message' in data) {
-                    // Send error status code
-                    return res.status(500).json({ Error: "Error in /api/monthly/:Stock" });
-                }
-
-                // Check if data limit is reached 
-                if ('Note' in data) {
-                    // Send error status code
-                    return res.status(500).json({ Error: "Error in /api/monthly/:Stock" });
-                }
-
-                const json = parseData(data);
-
-                res.setHeader("Content-Type", 'application/json');
-                return res.send(json);
+            // Check if data returned from alpha vantage is an error message
+            if ('Error Message' in data) {
+                // Send error status code
+                return res.status(500).json({ Error: "Error in /api/monthly/:Stock" });
             }
-        })
-        .catch(err => {
-            try {
-                if (err) throw new APIException("Error in api service monthly.js", err);
-            } catch (e) {
-                console.log(e);
-                return res.status(500).json({ Error: e.message });
+
+            // Check if data limit is reached 
+            if ('Note' in data) {
+                // Send error status code
+                return res.status(500).json({ Error: "Error in /api/monthly/:Stock" });
             }
-        });
+
+            const json = parseData(data);
+
+            return res.set({
+                "Content-Type": "application/json"
+            }).send(json);
+        }
+    }).catch(err => {
+        try {
+            if (err) throw new APIException("Error in api service monthly.js", err);
+        } catch (e) {
+            console.log(e);
+            return res.status(500).json({ Error: e.message });
+        }
+    });
 
     // Parse the data and filter out data that we do not want
     function parseData(data) {

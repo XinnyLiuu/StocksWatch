@@ -5,8 +5,9 @@ USE stockswatch;
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	user_id INT(4) NOT NULL AUTO_INCREMENT,
-	firstName VARCHAR(200),
-	lastName VARCHAR(200),
+	username VARCHAR(50),
+	firstname VARCHAR(100),
+	lastname VARCHAR(100),
 	password VARCHAR(200),
 	PRIMARY KEY(user_id)
 );
@@ -20,6 +21,6 @@ CREATE TABLE user_stocks (
 	PRIMARY KEY(user_stocks_id)
 );
 
-insert into users (firstName, lastName, password) values (
-	"DUMMY", "DUMMY", SHA2("password", 256) 
+insert into users (username, firstname, lastname, password) values (
+	"xinnyliuu", "Xin", "Liu", SHA2("password", 256) 
 );

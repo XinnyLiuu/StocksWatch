@@ -13,13 +13,9 @@ import Notfound from './components/notfound/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 
-// Utils
-import appendErr from './components/utils/ErrorMessage';
-
 // CSS
 import './css/main.css';
 import 'bootstrap/dist/css/bootstrap.min.css'; // https://react-bootstrap.github.io/getting-started/introduction/
-
 
 // API endpoints
 const monthly_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/monthly`;
@@ -50,4 +46,3 @@ const routing = (
 );
 
 ReactDOM.render(routing, document.getElementById('root'));
-// appendErr({ text: "Test error" }, document.getElementById('root'));

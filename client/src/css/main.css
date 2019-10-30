@@ -33,3 +33,13 @@ body {
 .space { 
   margin: 10px;
 }
+
+#name {
+  color: #17a2b8 !important;
+}
+
+#name > a {
+  color: none;
+  text-decoration: none;
+  background-color: none;
+}

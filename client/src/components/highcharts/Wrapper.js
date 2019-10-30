@@ -1,6 +1,6 @@
 import React from 'react';
 import StockChart from './StockChart';
-import LoadingSpinner from '../utils/LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -16,23 +16,22 @@ class Wrapper extends React.Component {
 		const api = this.props.api + "/" + this.props.symbol;
 
 		// GET data from server
-		fetch(api)
-			.then(resp => {
-				// On 200 status
-				if (resp.status === 200) {
-					resp.json()
-						.then(data => {
-							// Set the data returned from fetch in state
-							this.setState({
-								data: data
-							})
-						})
-				}
-			})
-			.catch(err => {
-				// TODO: Error handling in React
-				console.log(err);
-			})
+		fetch(api).then(resp => {
+			// On 200 status
+			if (resp.status === 200) {
+				resp.json().then(data => {
+					// Set the data returned from fetch in state
+					this.setState({
+						data: data
+					})
+				}).catch(err => {
+					console.log(err);
+				})
+			}
+		}).catch(err => {
+			// TODO: Error handling in React
+			console.log(err);
+		})
 	}
 
 	componentDidMount() {

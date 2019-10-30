@@ -1,17 +1,18 @@
-/**
- * Class representing user table
- */
-'use strict';
-
 class User {   
-    constructor(id, firstName, lastName) {
+    constructor(id, username, firstName, lastName, isAuth) {
         this.id = id;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.isAuth = isAuth;
     }
 
     getId() { 
         return this.id;
+    }
+
+    getUsername() {
+        return this.username;
     }
 
     getFirstName() {
@@ -22,6 +23,10 @@ class User {
         return this.lastName;
     }
 
+    getIsAuth() {
+        return this.isAuth;
+    }
+
     setFirstName(firstName) {
         this.firstName = firstName;
     } 
@@ -30,3 +35,5 @@ class User {
         this.lastName = lastName;
     }
 }
+
+export default User;

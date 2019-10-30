@@ -10,6 +10,11 @@ import {
 	withRouter
 } from "react-router-dom";
 
+import {
+	isAuthenticated,
+	getUserInfo
+} from '../utils/auth';
+
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,7 +22,10 @@ class Header extends React.Component {
 		// Search value will be stored in state
 		this.state = {
 			symbol: '',
-			url: ''
+			url: '',
+			firstname: '',
+			lastname: '',
+			username: ''
 		};
 
 		// Bind, so that 'this' can be used in the callback
@@ -49,22 +57,53 @@ class Header extends React.Component {
 		});
 	}
 
+	// On click, log the user out
+	logout() {
+		// TODO:
+	}
+
 	render() {
-		return (
-			<Navbar bg="dark" variant="dark" expand="lg">
-				<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
-				<Navbar.Toggle aria-controls="basic-navbar-nav" />
-				<Navbar.Collapse id="basic-navbar-nav">
-					<Nav className="mr-auto">
-						<Nav.Link href="/login">Login</Nav.Link>
-					</Nav>
-					<Form inline onSubmit={this.searchStock}>
-						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
-						<Button variant="outline-info" type="submit">Search</Button>
-					</Form>
-				</Navbar.Collapse>
-			</Navbar>
-		)
+		// Check if an user is logged in
+		if (isAuthenticated()) {
+			const user = getUserInfo();
+
+			return (
+				<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
+					<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
+					<Navbar.Toggle aria-controls="basic-navbar-nav" />
+					<Navbar.Collapse id="basic-navbar-nav">
+						<Nav className="mr-auto">
+							<Nav.Link disabled>
+								<span id="name">{user.getFirstName()} {user.getLastName()}</span>
+							</Nav.Link>
+							<Nav.Link>
+								Logout
+							</Nav.Link>
+						</Nav>
+						<Form inline onSubmit={this.searchStock}>
+							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+							<Button variant="outline-info" type="submit">Search</Button>
+						</Form>
+					</Navbar.Collapse>
+				</Navbar>
+			)
+		} else {
+			return (
+				<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
+					<Navbar.Brand href="/">StocksWatch</Navbar.Brand>
+					<Navbar.Toggle aria-controls="basic-navbar-nav" />
+					<Navbar.Collapse id="basic-navbar-nav">
+						<Nav className="mr-auto">
+							<Nav.Link href="/login">Login</Nav.Link>
+						</Nav>
+						<Form inline onSubmit={this.searchStock}>
+							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+							<Button variant="outline-info" type="submit">Search</Button>
+						</Form>
+					</Navbar.Collapse>
+				</Navbar>
+			)
+		}
 	}
 }
 
