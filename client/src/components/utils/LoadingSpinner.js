@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-      Spinner
+    Spinner
 
 } from 'react-bootstrap';
 
@@ -13,11 +13,11 @@ class LoadingSpinner extends React.Component {
 
     render() {
         return (
-        <div className = "spinner">
-          <Spinner animation="border" variant="info">
-             <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>  
+            <div className="spinner">
+                <Spinner animation="border" variant="info">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            </div>
         )
     }
 }

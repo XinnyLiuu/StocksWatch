@@ -71,7 +71,6 @@ class Wrapper extends React.Component {
 		}
 
 		// Temporary DOM element until the date is ready
-		// TODO:
 		return <LoadingSpinner />
 	}
 }
