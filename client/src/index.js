@@ -13,6 +13,7 @@ import Notfound from './components/error/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Setting from './components/user/Setting';
+import Watchlist from './components/user/Watchlist';
 
 // CSS
 import './css/main.css';
@@ -67,6 +68,9 @@ if (isAuthenticated()) {
 				/>
 				<Route exact path="/settings" component={props =>
 					<Setting />
+				} />
+				<Route exact path="/watchlist" component={props =>
+					<Watchlist />
 				} />
 				<Route component={Notfound} />
 			</Switch>

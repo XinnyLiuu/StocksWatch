@@ -14,13 +14,15 @@ CREATE TABLE users (
 
 DROP TABLE IF EXISTS user_stocks;
 CREATE TABLE user_stocks (
-	user_stocks_id INT(4) NOT NULL AUTO_INCREMENT,
 	symbol VARCHAR(5),
 	user_id INT(4) NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(user_id),
-	PRIMARY KEY(user_stocks_id)
+	PRIMARY KEY(symbol, user_id)
 );
 
 insert into users (username, firstname, lastname, password) values (
 	"xinnyliuu", "Xin", "Liu", SHA2("password", 256) 
+);
+insert into user_stocks (symbol, user_id) values (
+	"HUBS", 1
 );

@@ -40,3 +40,4 @@ app.get("/api/dow30", dow30Service.getStockDataForDow);
 // Database
 app.post("/api/login", mysqlController.postUserLogin);
 app.post("/api/register", mysqlController.postUserRegister);
+app.post("/api/watchlist/add", mysqlController.postAddStockWatchList);

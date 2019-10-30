@@ -28,7 +28,8 @@ body {
 }
 
 #login,
-#settings {
+#settings,
+#watchlist {
   margin: 80px;
   padding: 50px;
   background-color: white;

@@ -23,6 +23,7 @@ export const setSession = (user) => {
     localStorage.setItem('username', user.getUsername());
     localStorage.setItem('firstname', user.getFirstName());
     localStorage.setItem('lastname', user.getLastName());
+    localStorage.setItem('stocks', JSON.stringify(user.getStocks()));
 }
 
 /**
@@ -41,6 +42,7 @@ export const getUserInfo = () => {
         localStorage.getItem('username'),
         localStorage.getItem('firstname'),
         localStorage.getItem('lastname'),
-        localStorage.getItem('isAuth')
+        localStorage.getItem('isAuth'),
+        JSON.parse(localStorage.getItem('stocks'))
     );
 }

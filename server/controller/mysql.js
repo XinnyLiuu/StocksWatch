@@ -14,8 +14,8 @@ exports.postUserLogin = (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
 
-    const query = `select user_id, username, firstname, lastname from users where username = ? and password = sha2(?, 256)`;
-    const params = [username, password];
+    let query = `select user_id, username, firstname, lastname from users where username = ? and password = sha2(?, 256)`;
+    let params = [username, password];
 
     // Query DB to check if user exists
     mysql.then(db => {
@@ -23,15 +23,34 @@ exports.postUserLogin = (req, res) => {
             // Check length
             if (resp.length === 0) {
                 console.log("No user found!");
+                // TODO: Send something to the client so that they can know their login info does not exist
             }
 
             if (resp.length === 1) {
                 let userData = resp[0];
+                userData["stocks"] = [];
+                const userId = userData.user_id;
 
-                // Return user data
-                return res.set({
-                    "Content-Type": "application/json"
-                }).send(userData);
+                // Find if the user has any symbols in user_stocks
+                query = 'select symbol from user_stocks where user_id = ?';
+                params = [userId];
+
+                db.select(query, params).then(resp => {
+                    resp.forEach(d => {
+                        userData.stocks.push(d.symbol);
+                    });
+
+                    // Return user data
+                    return res.set({
+                        "Content-Type": "application/json"
+                    }).send(userData);
+                }).catch(err => {
+                    try {
+                        throw new DatabaseException("Error in query", err);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                })
             }
         }).catch(err => {
             try {
@@ -74,6 +93,46 @@ exports.postUserRegister = (req, res) => {
                     "Content-Type": "application/json"
                 }).send({
                     "id": lastInsertId
+                });
+            }
+        }).catch(err => {
+            try {
+                throw new DatabaseException("Error in query", err);
+            } catch (e) {
+                console.log(e);
+            }
+        })
+    }).catch(err => {
+        try {
+            throw new DatabaseException("Error in query", err);
+        } catch (e) {
+            console.log(e);
+        }
+    })
+}
+
+/**
+ * POST /api/watchlist/add
+ * 
+ * Adds a stock to user_stocks
+ */
+exports.postAddStockWatchList = (req, res) => {
+    let stock = req.body.stock;
+    let userId = req.body.userId;
+
+    const query = `insert into user_stocks (symbol, user_id) values (?, ?)`;
+    const params = [stock, userId];
+
+    mysql.then(db => {
+        db.insert(query, params).then(resp => {
+            let affected = resp.affectedRows;
+
+            // Check affected rows
+            if (affected === 1) {
+                return res.set({
+                    "Content-Type": "application/json"
+                }).send({
+                    "symbol": stock
                 });
             }
         }).catch(err => {

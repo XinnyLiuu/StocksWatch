@@ -1,13 +1,14 @@
-class User {   
-    constructor(id, username, firstName, lastName, isAuth) {
+class User {
+    constructor(id, username, firstName, lastName, isAuth, stocks) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isAuth = isAuth;
+        this.stocks = stocks;
     }
 
-    getId() { 
+    getId() {
         return this.id;
     }
 
@@ -27,9 +28,17 @@ class User {
         return this.isAuth;
     }
 
+    getStocks() {
+        return this.stocks;
+    }
+
+    addStock(stock) {
+        this.stocks.push(stock);
+    }
+
     setFirstName(firstName) {
         this.firstName = firstName;
-    } 
+    }
 
     setLastName(lastName) {
         this.lastName = lastName;

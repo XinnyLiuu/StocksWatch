@@ -63,7 +63,9 @@ class Login extends React.Component {
         }).then(resp => {
             resp.json().then(resp => {
                 // Instantiate User
-                const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true);
+                const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true, resp.stocks);
+
+                console.log(user);
 
                 // Set user session
                 setSession(user);
