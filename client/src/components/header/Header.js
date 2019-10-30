@@ -32,6 +32,7 @@ class Header extends React.Component {
 		// Bind, so that 'this' can be used in the callback
 		this.searchStock = this.searchStock.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.logout = this.logout.bind(this);
 	}
 
 	// Dynamically updates the `symbol` stored in state on input change
@@ -60,8 +61,10 @@ class Header extends React.Component {
 
 	// On click, log the user out
 	logout() {
-		// TODO:
-			  destroySession();
+		destroySession();
+
+		// Redirect to home
+		this.props.history.push("/");
 	}
 
 	render() {
