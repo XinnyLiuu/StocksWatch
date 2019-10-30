@@ -9,7 +9,7 @@ import Header from './components/header/Header';
 
 // Components
 import Wrapper from './components/highcharts/Wrapper';
-import Notfound from './components/notfound/Notfound';
+import Notfound from './components/error/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Setting from './components/user/Setting';

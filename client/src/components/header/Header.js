@@ -76,6 +76,7 @@ class Header extends React.Component {
 							<Nav.Link disabled>
 								<span id="name">{user.getFirstName()} {user.getLastName()}</span>
 							</Nav.Link>
+							<Nav.Link href="/settings">Settings</Nav.Link>
 							<Nav.Link>
 								Logout
 							</Nav.Link>
