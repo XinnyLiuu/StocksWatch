@@ -65,13 +65,11 @@ class Login extends React.Component {
                 // Instantiate User
                 const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true, resp.stocks);
 
-                console.log(user);
-
                 // Set user session
                 setSession(user);
 
                 // Redirect to home
-                this.props.history.push("/");
+                this.props.history.push("/watchlist");
             }).catch(err => {
                 console.log(err);
             })
