@@ -12,7 +12,7 @@ app.use(morgan(':date[iso] :status :method :url [:response-time ms] :remote-addr
 
 // Enable CORS for React
 const corsOptions = {
-    origin: process.env.REACT_DEV_DOMAIN
+    // origin: process.env.REACT_DEV_DOMAIN
 };
 
 app.use(cors(corsOptions));

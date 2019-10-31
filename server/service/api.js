@@ -172,6 +172,9 @@ exports.getStockDataBySymbol = (req, res) => {
             json.prices.low.push(low_arr);
         });
 
+        json.prices.high.reverse();
+        json.prices.low.reverse();
+
         return json;
     }
 }
@@ -206,7 +209,7 @@ exports.postWatchlistStocks = (req, res) => {
 
                 // Check the length of results.watchlist and watchlist
                 if (watchlist.length === results.watchlist.length) {
-                    console.log(results);
+                    console.log(results.watchlist[0].prices.high);
 
                     return res.set({
                         "Content-Type": "application/json"
@@ -247,6 +250,9 @@ exports.postWatchlistStocks = (req, res) => {
             json.prices.high.push(high_arr);
             json.prices.low.push(low_arr);
         });
+
+        json.prices.high.reverse();
+        json.prices.low.reverse();
 
         return json;
     }
