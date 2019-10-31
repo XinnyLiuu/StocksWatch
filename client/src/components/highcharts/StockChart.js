@@ -214,7 +214,7 @@ class StockChart extends React.Component {
 		this.setState({
 			chartOptions: {
 				title: {
-					text: `${this.state.symbol} - $${this.state.prices.high[0][1]}`,
+					text: `${this.state.symbol}`,
 					style: {
 						color: '#E0E0E3',
 						textTransform: 'uppercase',

@@ -1,6 +1,9 @@
 import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
+import {
+	Alert
+} from 'react-bootstrap';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -29,7 +32,6 @@ class Wrapper extends React.Component {
 				})
 			}
 		}).catch(err => {
-			// TODO: Error handling in React
 			console.log(err);
 		})
 	}
@@ -53,8 +55,15 @@ class Wrapper extends React.Component {
 
 			// Check if json is DOW30
 			if (json.hasOwnProperty("DOW30")) {
-				let stockCharts = []; // Array of StockChart components
+				let stockCharts = [];
 				let dow = json["DOW30"];
+
+				stockCharts.push(
+					<Alert variant="info">
+						<Alert.Heading>Dow 30</Alert.Heading>
+						<p>Login or Register to build your personalized watchlist</p>
+					</Alert>
+				)
 
 				// Render each DOW stock as its own StockChart component
 				dow.forEach(d => {

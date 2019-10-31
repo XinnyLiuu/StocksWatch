@@ -9,6 +9,7 @@ import {
 // Components
 import Header from './components/header/Header';
 import Wrapper from './components/highcharts/Wrapper';
+import WatchlistCharts from './components/highcharts/WatchlistCharts';
 import Notfound from './components/error/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
@@ -27,6 +28,7 @@ import {
 // API endpoints
 const monthly_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/monthly`;
 const dow30_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/dow30`;
+const watchlist_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/stocks`;
 
 // Implement Routing
 let routing = (
@@ -35,12 +37,12 @@ let routing = (
 		<Switch>
 			<Route exact path="/" component={props =>
 				<Wrapper api={dow30_api}
-					symbol="" />}
-			/>
+					symbol="" />
+			} />
 			<Route exact path="/search/:stock" component={props =>
-				<Wrapper api={`${monthly_api}`}
-					symbol={`${props.match.params.stock}`} />}
-			/>
+				<Wrapper api={monthly_api}
+					symbol={props.match.params.stock} />
+			} />
 			<Route exact path="/login" component={props =>
 				<Login />
 			} />
@@ -52,20 +54,19 @@ let routing = (
 	</Router>
 );
 
-// Check if the user is authenticated. Some routes should be hidden
+// Check if the user is authenticated
 if (isAuthenticated()) {
 	routing = (
 		<Router>
 			<Header />
 			<Switch>
 				<Route exact path="/" component={props =>
-					<Wrapper api={dow30_api}
-						symbol="" />}
-				/>
+					<WatchlistCharts api={watchlist_api} />
+				} />
 				<Route exact path="/search/:stock" component={props =>
-					<Wrapper api={`${monthly_api}`}
-						symbol={`${props.match.params.stock}`} />}
-				/>
+					<Wrapper api={monthly_api}
+						symbol={props.match.params.stock} />
+				} />
 				<Route exact path="/settings" component={props =>
 					<Setting />
 				} />

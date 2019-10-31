@@ -26,16 +26,16 @@ app.listen(process.env.PORT || 8000);
 console.log(`Server running on port ${process.env.PORT || 8000}`);
 
 // Services
-const monthlyDataService = require('./services/monthly.js');
-const dow30Service = require('./services/dow30.js');
+const apiService = require('./service/api');
 
 // Database
 const mysqlController = require('./controller/mysql.js');
 
 // Routes
 // Stock Data
-app.get("/api/monthly/:symbol", monthlyDataService.getStockDataBySymbol);
-app.get("/api/dow30", dow30Service.getStockDataForDow);
+app.get("/api/monthly/:symbol", apiService.getStockDataBySymbol);
+app.get("/api/dow30", apiService.getStockDataForDow);
+app.post("/api/watchlist/stocks", apiService.postWatchlistStocks);
 
 // Database
 app.post("/api/login", mysqlController.postUserLogin);
