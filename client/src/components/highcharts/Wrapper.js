@@ -10,7 +10,8 @@ class Wrapper extends React.Component {
 		super(props);
 
 		this.state = {
-			data: ""
+			data: "",
+			error: false
 		};
 	}
 
@@ -30,6 +31,13 @@ class Wrapper extends React.Component {
 				}).catch(err => {
 					console.log(err);
 				})
+			}
+
+			// On 500 status
+			if (resp.status === 500) {
+				this.setState({
+					error: true
+				});
 			}
 		}).catch(err => {
 			console.log(err);
@@ -76,6 +84,16 @@ class Wrapper extends React.Component {
 			else {
 				return <StockChart data={json} type="single" />;
 			}
+		}
+
+		// Check for error from server
+		if (this.state.error) {
+			return (
+				<Alert variant="danger">
+					<Alert.Heading>Service Unavailable</Alert.Heading>
+					<p>There has been an error. Please try again.</p>
+				</Alert>
+			)
 		}
 
 		// Temporary DOM element until the date is ready

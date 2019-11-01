@@ -11,7 +11,8 @@ class WatchlistCharts extends React.Component {
 
         this.state = {
             watchlist: [],
-            data: ""
+            data: "",
+            error: false
         };
     }
 
@@ -29,14 +30,23 @@ class WatchlistCharts extends React.Component {
                 "watchlist": localStorage.getItem("stocks")
             })
         }).then(resp => {
-            resp.json().then(resp => {
-                // Set state
+            // Check HTTP status codes
+            if (resp.status === 200) {
+                resp.json().then(resp => {
+                    // Set state
+                    this.setState({
+                        data: resp
+                    });
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+
+            if (resp.status === 500) {
                 this.setState({
-                    data: resp
+                    error: true
                 });
-            }).catch(err => {
-                console.log(err);
-            })
+            }
         }).catch(err => {
             console.log(err);
         })
@@ -78,6 +88,16 @@ class WatchlistCharts extends React.Component {
                     <p>
                         Go <a href="/watchlist">here</a> to start building your watchlist
                     </p>
+                </Alert>
+            )
+        }
+
+        // Check for error from server
+        if (this.state.error) {
+            return (
+                <Alert variant="danger">
+                    <Alert.Heading>Service Unavailable</Alert.Heading>
+                    <p>There has been an error. Please try again.</p>
                 </Alert>
             )
         }

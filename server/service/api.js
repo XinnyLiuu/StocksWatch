@@ -47,41 +47,43 @@ exports.getStockDataForDow = (req, res) => {
         "WMT",
         "XOM"
     ];
-
-    let result = {
-        "DOW30": []
-    };
+    let result = { "DOW30": [] };
     let intrinio;
 
     // Iterate through each dow symbol and query intrinio for the data
-    dow.forEach(symbol => {
-        intrinio = `${INTRINIO_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
+    let getDow = new Promise((resolve, reject) => {
+        dow.forEach(symbol => {
+            intrinio = `${INTRINIO_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
 
-        // Use axios to hit the intrinio endpoint 
-        axios.get(intrinio).then(response => {
-            if (response.status === 200) {
-                const data = response.data;
+            // Use axios to hit the intrinio endpoint 
+            axios.get(intrinio).then(response => {
+                if (response.status === 200) {
+                    const data = response.data;
+                    const json = parseData(data);
+                    result.DOW30.push(json);
 
-                const json = parseData(data);
-                result.DOW30.push(json);
-
-                if (result.DOW30.length === 30) {
-                    console.log(result.DOW30);
-
-                    return res.set({
-                        "Content-Type": "application/json"
-                    }).send(result);
+                    if (result.DOW30.length === 30) {
+                        resolve();
+                    }
                 }
-            }
-        }).catch(err => {
-            try {
-                if (err) throw new APIException("Error in api service", err);
-            } catch (e) {
-                console.log(e);
-                return res.status(500).json({ Error: e.message });
-            }
-        })
+            }).catch(err => {
+                reject(err);
+            })
+        });
     });
+
+    getDow.then(() => {
+        return res.set({
+            "Content-Type": "application/json"
+        }).send(result);
+    }).catch(err => {
+        try {
+            if (err) throw new APIException("Error in api service", err);
+        } catch (e) {
+            console.log(e);
+            return res.status(500).json({ Error: e.message });
+        }
+    })
 
     // Parse the data returned from intrinio and return as a json
     function parseData(data) {
@@ -131,7 +133,6 @@ exports.getStockDataBySymbol = (req, res) => {
         // Check response status
         if (result.status === 200) {
             const data = result.data;
-
             const json = parseData(data, symbol);
 
             return res.set({
@@ -192,39 +193,43 @@ exports.postWatchlistStocks = (req, res) => {
     };
 
     // Iterate through every symbol in the user's watchlist
-    watchlist.forEach(s => {
-        // Build URL
-        let monthly_data_url = IEX_URL;
-        monthly_data_url += `/${s}/chart/1y`;
-        monthly_data_url += `?token=${IEX_KEY}`;
+    let getWatchlist = new Promise((resolve, reject) => {
+        watchlist.forEach(s => {
+            // Build URL
+            let monthly_data_url = IEX_URL;
+            monthly_data_url += `/${s}/chart/1y`;
+            monthly_data_url += `?token=${IEX_KEY}`;
 
-        axios.get(monthly_data_url).then(result => {
-            // Check response status
-            if (result.status === 200) {
-                const data = result.data;
+            axios.get(monthly_data_url).then(result => {
+                // Check response status
+                if (result.status === 200) {
+                    const data = result.data;
+                    const json = parseData(data, s);
+                    results.watchlist.push(json);
 
-                // Parse the data and add to result array
-                const json = parseData(data, s);
-                results.watchlist.push(json);
-
-                // Check the length of results.watchlist and watchlist
-                if (watchlist.length === results.watchlist.length) {
-                    console.log(results.watchlist[0].prices.high);
-
-                    return res.set({
-                        "Content-Type": "application/json"
-                    }).send(results);
+                    // Check the length of results.watchlist and watchlist
+                    if (watchlist.length === results.watchlist.length) {
+                        resolve();
+                    }
                 }
-            }
-        }).catch(err => {
-            try {
-                if (err) throw new APIException("Error in api service", err);
-            } catch (e) {
-                console.log(e);
-                return res.status(500).json({ Error: e.message });
-            }
+            }).catch(err => {
+                reject(err);
+            });
         });
     });
+
+    getWatchlist.then(() => {
+        return res.set({
+            "Content-Type": "application/json"
+        }).send(results);
+    }).catch(err => {
+        try {
+            if (err) throw new APIException("Error in api service", err);
+        } catch (e) {
+            console.log(e);
+            return res.status(500).json({ Error: e.message });
+        }
+    })
 
     function parseData(data, s) {
         let json = {
