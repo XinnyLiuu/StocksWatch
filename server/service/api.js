@@ -73,15 +73,13 @@ exports.getStockDataForDow = (req, res) => {
     });
 
     getDow.then(() => {
-        return res.set({
-            "Content-Type": "application/json"
-        }).send(result);
+        return res.json(result);
     }).catch(err => {
         try {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     })
 
@@ -135,16 +133,14 @@ exports.getStockDataBySymbol = (req, res) => {
             const data = result.data;
             const json = parseData(data, symbol);
 
-            return res.set({
-                "Content-Type": "application/json"
-            }).send(json);
+            return res.json(json);
         }
     }).catch(err => {
         try {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     });
 
@@ -221,15 +217,13 @@ exports.postWatchlistStocks = (req, res) => {
     });
 
     getWatchlist.then(() => {
-        return res.set({
-            "Content-Type": "application/json"
-        }).send(results);
+        return res.json(results);
     }).catch(err => {
         try {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     })
 
@@ -265,3 +259,21 @@ exports.postWatchlistStocks = (req, res) => {
     }
 }
 
+/**
+ * Sends a HEAD request to IEX to see if the stock exists 
+ */
+exports.checkValidStock = (stock) => {
+    let monthly_data_url = IEX_URL;
+    monthly_data_url += `/${stock}/chart/1y`;
+    monthly_data_url += `?token=${IEX_KEY}`;
+
+    return new Promise((resolve, reject) => {
+        axios.head(monthly_data_url).then(result => {
+            if (result.status === 200) {
+                resolve();
+            }
+        }).catch(err => {
+            reject(err);
+        })
+    })
+}

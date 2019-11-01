@@ -17,9 +17,10 @@ class DB {
 
             this.connection.connect(err => {
                 if (err) reject(err);
-
-                console.log("Connected to MySQL!");
-                resolve(this);
+                else {
+                    console.log("Connected to MySQL!");
+                    resolve(this);
+                }
             });
         });
     }
@@ -30,8 +31,7 @@ class DB {
 
             this.connection.query(sql, (error, results, fields) => {
                 if (error) reject(error);
-
-                resolve(results);
+                else resolve(results);
             });
         })
     }
@@ -42,8 +42,18 @@ class DB {
 
             this.connection.query(sql, (error, results, fields) => {
                 if (error) reject(error);
+                else resolve(results.affectedRows);
+            });
+        })
+    }
 
-                resolve(results);
+    delete(sql, params) {
+        return new Promise((resolve, reject) => {
+            sql = mysql.format(sql, params);
+
+            this.connection.query(sql, (error, results, fields) => {
+                if (error) reject(error);
+                else resolve(results.affectedRows);
             });
         })
     }

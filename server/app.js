@@ -41,3 +41,4 @@ app.post("/api/watchlist/stocks", apiService.postWatchlistStocks);
 app.post("/api/login", mysqlController.postUserLogin);
 app.post("/api/register", mysqlController.postUserRegister);
 app.post("/api/watchlist/add", mysqlController.postAddStockWatchList);
+app.delete("/api/watchlist/remove", mysqlController.deleteRemoveStockWatchList);

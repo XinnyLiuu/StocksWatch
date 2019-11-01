@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 
 import GenericError from '../error/GenericError';
+import '../../css/main.css';
 
 class Watchlist extends React.Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class Watchlist extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.addUserStock = this.addUserStock.bind(this);
+        this.deleteUserStock = this.deleteUserStock.bind(this);
     }
 
     handleChange(e) {
@@ -72,8 +74,8 @@ class Watchlist extends React.Component {
 
                     let stocks = JSON.parse(localStorage.getItem("stocks"));
                     stocks.push(symbol);
-                    stocks = JSON.stringify(stocks);
 
+                    stocks = JSON.stringify(stocks);
                     localStorage.setItem("stocks", stocks);
 
                     // Update state
@@ -99,7 +101,67 @@ class Watchlist extends React.Component {
         })
     }
 
-    // TODO: Delete stock from watchlist
+    deleteUserStock(e) {
+        e.preventDefault();
+
+        // Validate
+        let stock = e.target.dataset.stock;
+        let userId = localStorage.getItem("id");
+        stock = stock.trim().toUpperCase();
+
+        // Fire DELETE
+        let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/remove`;
+
+        fetch(url, {
+            method: "DELETE",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "userId": userId,
+                "stock": stock
+            })
+        }).then(resp => {
+            if (resp.status === 200) {
+                resp.json().then(resp => {
+                    // Remove stock from localStorage / session
+                    let symbol = resp.symbol;
+                    let stocks = JSON.parse(localStorage.getItem("stocks"));
+
+                    // Remove 
+                    for (let i = 0; i < stocks.length; i++) {
+                        if (stocks[i] === symbol) {
+                            stocks.splice(i, 1);
+                        }
+                    }
+
+                    stocks = JSON.stringify(stocks);
+                    localStorage.setItem("stocks", stocks);
+
+                    // Update state
+                    this.setState({
+                        prevStocks: JSON.parse(localStorage.getItem('stocks'))
+                    })
+                }).catch(err => {
+                    this.setState({
+                        error: true
+                    });
+                })
+            }
+
+            if (resp.status === 500) {
+                this.setState({
+                    error: true
+                });
+            }
+        }).catch(err => {
+            this.setState({
+                error: true
+            });
+        })
+    }
+
 
     render() {
         // Check if error
@@ -130,7 +192,16 @@ class Watchlist extends React.Component {
             // Each stock in prevStocks will exist in a ListGroup component
             let lists = [];
             this.state.prevStocks.forEach(s => {
-                lists.push(<ListGroup.Item variant="info">{s}</ListGroup.Item>);
+                lists.push(
+                    <React.Fragment>
+                        <ListGroup.Item variant="info">
+                            <span>{s}</span>
+                            <span className="float-right">
+                                <Button data-stock={s} variant="danger" size="sm" onClick={this.deleteUserStock}>Remove</Button>
+                            </span>
+                        </ListGroup.Item>
+                    </React.Fragment>
+                );
             });
 
             // Add the lists to a Card component

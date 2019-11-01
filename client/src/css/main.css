@@ -3,14 +3,6 @@ body {
   background-color: #343a40 !important;
 }
 
-.error {
-  padding: 10px;
-  font-family: Helvetica;
-  background: azure;
-  color: darkred;
-  margin: 5px;
-  border: 1px darkred solid;
-}
 
 #loading {
   margin: 5px;
@@ -68,4 +60,8 @@ body {
 
 .cancel {
   margin-left: 2rem;
+}
+
+.float-right {
+  float: right;
 }

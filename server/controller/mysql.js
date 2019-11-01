@@ -2,6 +2,9 @@
 const DB = require('../database/DB.js');
 const DatabaseException = require("../exceptions/DatabaseException");
 
+// API
+const apiService = require("../service/api");
+
 // Instantiate a global DB reference
 const mysql = new DB();
 
@@ -23,7 +26,7 @@ exports.postUserLogin = (req, res) => {
             // Check length
             if (resp.length === 0) {
                 // Return error to the client
-                return res.status(500);
+                return res.sendStatus(500);
             }
 
             if (resp.length === 1) {
@@ -41,15 +44,13 @@ exports.postUserLogin = (req, res) => {
                     });
 
                     // Return user data
-                    return res.set({
-                        "Content-Type": "application/json"
-                    }).send(userData);
+                    return res.json(userData);
                 }).catch(err => {
                     try {
                         throw new DatabaseException("Error in query", err);
                     } catch (e) {
                         console.log(e);
-                        return res.status(500);
+                        return res.sendStatus(500);
                     }
                 })
             }
@@ -58,7 +59,7 @@ exports.postUserLogin = (req, res) => {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
-                return res.status(500);
+                return res.sendStatus(500);
             }
         })
     }).catch(err => {
@@ -66,7 +67,7 @@ exports.postUserLogin = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     })
 }
@@ -92,18 +93,16 @@ exports.postUserRegister = (req, res) => {
 
             // Check affected rows
             if (affected === 1) {
-                return res.set({
-                    "Content-Type": "application/json"
-                }).send({ "id": lastInsertId });
+                return res.json({ "id": lastInsertId });
             } else {
-                return res.status(500);
+                return res.sendStatus(500);
             }
         }).catch(err => {
             try {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
-                return res.status(500);
+                return res.sendStatus(500);
             }
         })
     }).catch(err => {
@@ -111,7 +110,7 @@ exports.postUserRegister = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     })
 }
@@ -128,24 +127,62 @@ exports.postAddStockWatchList = (req, res) => {
     const query = `insert into user_stocks (symbol, user_id) values (?, ?)`;
     const params = [stock, userId];
 
-    mysql.then(db => {
-        db.insert(query, params).then(resp => {
-            let affected = resp.affectedRows;
+    // Check if the stock actually exists
+    apiService.checkValidStock(stock).then(() => {
+        mysql.then(db => {
+            db.insert(query, params).then(resp => {
+                // Check affected rows
+                if (resp === 1) {
+                    return res.json({ "symbol": stock });
+                }
+            }).catch(err => {
+                try {
+                    throw new DatabaseException("Error in query", err);
+                } catch (e) {
+                    console.log(e);
+                    return res.sendStatus(500);
+                }
+            })
+        }).catch(err => {
+            try {
+                throw new DatabaseException("Error in query", err);
+            } catch (e) {
+                console.log(e);
+                return res.sendStatus(500);
+            }
+        })
+    }).catch(err => {
+        console.log(err);
+        return res.sendStatus(500);
+    })
+}
 
+/** 
+ * DELETE /api/watchlist/remove
+ * 
+ * Removes a stock from user_stocks
+ */
+exports.deleteRemoveStockWatchList = (req, res) => {
+    let stock = req.body.stock;
+    let userId = req.body.userId;
+
+    const query = 'delete from user_stocks where symbol = ? and user_id = ?';
+    const params = [stock, userId];
+
+    mysql.then(db => {
+        db.delete(query, params).then(resp => {
             // Check affected rows
-            if (affected === 1) {
-                return res.set({
-                    "Content-Type": "application/json"
-                }).send({ "symbol": stock });
+            if (resp === 1) {
+                return res.json({ "symbol": stock });
             } else {
-                return res.status(500);
+                return res.sendStatus(500);
             }
         }).catch(err => {
             try {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
-                return res.status(500);
+                return res.sendStatus(500);
             }
         })
     }).catch(err => {
@@ -153,7 +190,7 @@ exports.postAddStockWatchList = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
-            return res.status(500);
+            return res.sendStatus(500);
         }
     })
 }

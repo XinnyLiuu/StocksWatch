@@ -39,8 +39,7 @@ const routing = (
                 isAuthenticated() === true ? <WatchlistCharts api={watchlist_api} /> : <Wrapper api={dow30_api} symbol="" />
             } />
             <Route exact path="/search/:stock" component={props =>
-                <Wrapper api={monthly_api}
-                    symbol={props.match.params.stock} />
+                <Wrapper api={monthly_api} symbol={props.match.params.stock} />
             } />
             <Route exact path="/login" component={props =>
                 isAuthenticated() === false ? <Login /> : <Notfound />
