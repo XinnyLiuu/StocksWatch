@@ -48,15 +48,12 @@ class Header extends React.Component {
 
 		// Cleanup `symbol`
 		let symbol = this.state.symbol;
-		symbol = symbol.toUpperCase().trim(); // TODO: More validations
+		symbol = symbol.toUpperCase().trim();
 
 		// Update `url` flag in state
 		this.setState({
 			url: `/search/${symbol}`
-		}, () => {
-			// Redirect to url so that the component can be rebuilt
-			this.props.history.push(this.state.url);
-		});
+		}, () => this.props.history.push(this.state.url));
 	}
 
 	// On click, log the user out

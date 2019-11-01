@@ -1,6 +1,7 @@
 import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
+import Unavailable from '../error/Unavailable';
 import {
     Alert
 } from 'react-bootstrap';
@@ -38,7 +39,9 @@ class WatchlistCharts extends React.Component {
                         data: resp
                     });
                 }).catch(err => {
-                    console.log(err);
+                    this.setState({
+                        error: true
+                    });
                 })
             }
 
@@ -48,7 +51,9 @@ class WatchlistCharts extends React.Component {
                 });
             }
         }).catch(err => {
-            console.log(err);
+            this.setState({
+                error: true
+            });
         })
     }
 
@@ -58,9 +63,7 @@ class WatchlistCharts extends React.Component {
 
         this.setState({
             watchlist: stocks
-        }, () => {
-            this.fetchData();
-        })
+        }, () => this.fetchData());
     }
 
     render() {
@@ -94,12 +97,7 @@ class WatchlistCharts extends React.Component {
 
         // Check for error from server
         if (this.state.error) {
-            return (
-                <Alert variant="danger">
-                    <Alert.Heading>Service Unavailable</Alert.Heading>
-                    <p>There has been an error. Please try again.</p>
-                </Alert>
-            )
+            return <Unavailable />;
         }
 
         // Default to render a spinner

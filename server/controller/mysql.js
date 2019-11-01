@@ -22,8 +22,8 @@ exports.postUserLogin = (req, res) => {
         db.select(query, params).then(resp => {
             // Check length
             if (resp.length === 0) {
-                console.log("No user found!");
-                // TODO: Send something to the client so that they can know their login info does not exist
+                // Return error to the client
+                return res.status(500);
             }
 
             if (resp.length === 1) {
@@ -49,6 +49,7 @@ exports.postUserLogin = (req, res) => {
                         throw new DatabaseException("Error in query", err);
                     } catch (e) {
                         console.log(e);
+                        return res.status(500);
                     }
                 })
             }
@@ -57,6 +58,7 @@ exports.postUserLogin = (req, res) => {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
+                return res.status(500);
             }
         })
     }).catch(err => {
@@ -64,6 +66,7 @@ exports.postUserLogin = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
+            return res.status(500);
         }
     })
 }
@@ -91,15 +94,16 @@ exports.postUserRegister = (req, res) => {
             if (affected === 1) {
                 return res.set({
                     "Content-Type": "application/json"
-                }).send({
-                    "id": lastInsertId
-                });
+                }).send({ "id": lastInsertId });
+            } else {
+                return res.status(500);
             }
         }).catch(err => {
             try {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
+                return res.status(500);
             }
         })
     }).catch(err => {
@@ -107,6 +111,7 @@ exports.postUserRegister = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
+            return res.status(500);
         }
     })
 }
@@ -131,15 +136,16 @@ exports.postAddStockWatchList = (req, res) => {
             if (affected === 1) {
                 return res.set({
                     "Content-Type": "application/json"
-                }).send({
-                    "symbol": stock
-                });
+                }).send({ "symbol": stock });
+            } else {
+                return res.status(500);
             }
         }).catch(err => {
             try {
                 throw new DatabaseException("Error in query", err);
             } catch (e) {
                 console.log(e);
+                return res.status(500);
             }
         })
     }).catch(err => {
@@ -147,6 +153,7 @@ exports.postAddStockWatchList = (req, res) => {
             throw new DatabaseException("Error in query", err);
         } catch (e) {
             console.log(e);
+            return res.status(500);
         }
     })
 }

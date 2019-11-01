@@ -6,13 +6,16 @@ import {
     ListGroup
 } from 'react-bootstrap';
 
+import GenericError from '../error/GenericError';
+
 class Watchlist extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             stock: '',
-            prevStocks: []
+            prevStocks: [],
+            error: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -62,31 +65,48 @@ class Watchlist extends React.Component {
                 "stock": stock
             })
         }).then(resp => {
-            resp.json().then(resp => {
-                // Add stock to localStorage / session
-                let symbol = resp.symbol;
+            if (resp.status === 200) {
+                resp.json().then(resp => {
+                    // Add stock to localStorage / session
+                    let symbol = resp.symbol;
 
-                let stocks = JSON.parse(localStorage.getItem("stocks"));
-                stocks.push(symbol);
-                stocks = JSON.stringify(stocks);
+                    let stocks = JSON.parse(localStorage.getItem("stocks"));
+                    stocks.push(symbol);
+                    stocks = JSON.stringify(stocks);
 
-                localStorage.setItem("stocks", stocks);
+                    localStorage.setItem("stocks", stocks);
 
-                // Update state
-                this.setState({
-                    prevStocks: JSON.parse(localStorage.getItem('stocks'))
+                    // Update state
+                    this.setState({
+                        prevStocks: JSON.parse(localStorage.getItem('stocks'))
+                    })
+                }).catch(err => {
+                    this.setState({
+                        error: true
+                    });
                 })
-            }).catch(err => {
-                console.log(err);
-            })
+            }
+
+            if (resp.status === 500) {
+                this.setState({
+                    error: true
+                });
+            }
         }).catch(err => {
-            console.log(err);
+            this.setState({
+                error: true
+            });
         })
     }
 
     // TODO: Delete stock from watchlist
 
     render() {
+        // Check if error
+        if (this.state.error) {
+            return <GenericError />;
+        }
+
         let watchlist = (
             <Form onSubmit={this.addUserStock}>
                 <Form.Group>

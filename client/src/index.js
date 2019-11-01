@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
-	BrowserRouter as Router,
-	Switch,
-	Route
+    BrowserRouter as Router,
+    Switch,
+    Route
 } from "react-router-dom";
 
 // Components
@@ -22,7 +22,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // https://react-bootstrap.github
 
 // Utils 
 import {
-	isAuthenticated
+    isAuthenticated
 } from './utils/auth';
 
 // API endpoints
@@ -31,52 +31,31 @@ const dow30_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/dow30`;
 const watchlist_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/stocks`;
 
 // Implement Routing
-let routing = (
-	<Router>
-		<Header />
-		<Switch>
-			<Route exact path="/" component={props =>
-				<Wrapper api={dow30_api}
-					symbol="" />
-			} />
-			<Route exact path="/search/:stock" component={props =>
-				<Wrapper api={monthly_api}
-					symbol={props.match.params.stock} />
-			} />
-			<Route exact path="/login" component={props =>
-				<Login />
-			} />
-			<Route exact path="/register" component={props =>
-				<Register />
-			} />
-			<Route component={Notfound} />
-		</Switch>
-	</Router>
+const routing = (
+    <Router>
+        <Header />
+        <Switch>
+            <Route exact path="/" component={props =>
+                isAuthenticated() === true ? <WatchlistCharts api={watchlist_api} /> : <Wrapper api={dow30_api} symbol="" />
+            } />
+            <Route exact path="/search/:stock" component={props =>
+                <Wrapper api={monthly_api}
+                    symbol={props.match.params.stock} />
+            } />
+            <Route exact path="/login" component={props =>
+                isAuthenticated() === false ? <Login /> : <Notfound />
+            } />
+            <Route exact path="/register" component={props =>
+                isAuthenticated() === false ? <Register /> : <Notfound />
+            } />
+            <Route exact path="/settings" component={props =>
+                isAuthenticated() === true ? <Setting /> : <Notfound />
+            } />
+            <Route exact path="/watchlist" component={props =>
+                isAuthenticated() === true ? <Watchlist /> : <Notfound />
+            } />
+        </Switch>
+    </Router>
 );
 
-// Check if the user is authenticated
-if (isAuthenticated()) {
-	routing = (
-		<Router>
-			<Header />
-			<Switch>
-				<Route exact path="/" component={props =>
-					<WatchlistCharts api={watchlist_api} />
-				} />
-				<Route exact path="/search/:stock" component={props =>
-					<Wrapper api={monthly_api}
-						symbol={props.match.params.stock} />
-				} />
-				<Route exact path="/settings" component={props =>
-					<Setting />
-				} />
-				<Route exact path="/watchlist" component={props =>
-					<Watchlist />
-				} />
-				<Route component={Notfound} />
-			</Switch>
-		</Router>
-	);
-}
-
-ReactDOM.render(routing, document.getElementById('root'));
+ReactDOM.render(routing, document.getElementById("root"));

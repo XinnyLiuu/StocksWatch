@@ -1,6 +1,7 @@
 import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
+import Unavailable from '../error/Unavailable';
 import {
 	Alert
 } from 'react-bootstrap';
@@ -29,7 +30,9 @@ class Wrapper extends React.Component {
 						data: data
 					})
 				}).catch(err => {
-					console.log(err);
+					this.setState({
+						error: true
+					});
 				})
 			}
 
@@ -40,7 +43,9 @@ class Wrapper extends React.Component {
 				});
 			}
 		}).catch(err => {
-			console.log(err);
+			this.setState({
+				error: true
+			});
 		})
 	}
 
@@ -88,16 +93,11 @@ class Wrapper extends React.Component {
 
 		// Check for error from server
 		if (this.state.error) {
-			return (
-				<Alert variant="danger">
-					<Alert.Heading>Service Unavailable</Alert.Heading>
-					<p>There has been an error. Please try again.</p>
-				</Alert>
-			)
+			return <Unavailable />;
 		}
 
 		// Temporary DOM element until the date is ready
-		return <LoadingSpinner />
+		return <LoadingSpinner />;
 	}
 }
 

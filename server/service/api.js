@@ -81,7 +81,7 @@ exports.getStockDataForDow = (req, res) => {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500).json({ Error: e.message });
+            return res.status(500);
         }
     })
 
@@ -144,7 +144,7 @@ exports.getStockDataBySymbol = (req, res) => {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500).json({ Error: e.message });
+            return res.status(500);
         }
     });
 
@@ -194,28 +194,30 @@ exports.postWatchlistStocks = (req, res) => {
 
     // Iterate through every symbol in the user's watchlist
     let getWatchlist = new Promise((resolve, reject) => {
-        watchlist.forEach(s => {
-            // Build URL
-            let monthly_data_url = IEX_URL;
-            monthly_data_url += `/${s}/chart/1y`;
-            monthly_data_url += `?token=${IEX_KEY}`;
+        if (watchlist.length > 0) {
+            watchlist.forEach(s => {
+                // Build URL
+                let monthly_data_url = IEX_URL;
+                monthly_data_url += `/${s}/chart/1y`;
+                monthly_data_url += `?token=${IEX_KEY}`;
 
-            axios.get(monthly_data_url).then(result => {
-                // Check response status
-                if (result.status === 200) {
-                    const data = result.data;
-                    const json = parseData(data, s);
-                    results.watchlist.push(json);
+                axios.get(monthly_data_url).then(result => {
+                    // Check response status
+                    if (result.status === 200) {
+                        const data = result.data;
+                        const json = parseData(data, s);
+                        results.watchlist.push(json);
 
-                    // Check the length of results.watchlist and watchlist
-                    if (watchlist.length === results.watchlist.length) {
-                        resolve();
+                        // Check the length of results.watchlist and watchlist
+                        if (watchlist.length === results.watchlist.length) {
+                            resolve();
+                        }
                     }
-                }
-            }).catch(err => {
-                reject(err);
+                }).catch(err => {
+                    reject(err);
+                });
             });
-        });
+        }
     });
 
     getWatchlist.then(() => {
@@ -227,7 +229,7 @@ exports.postWatchlistStocks = (req, res) => {
             if (err) throw new APIException("Error in api service", err);
         } catch (e) {
             console.log(e);
-            return res.status(500).json({ Error: e.message });
+            return res.status(500);
         }
     })
 

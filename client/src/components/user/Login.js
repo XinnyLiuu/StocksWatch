@@ -7,6 +7,7 @@ import {
     withRouter
 } from 'react-router-dom';
 
+import GenericError from '../error/GenericError';
 import User from '../../model/User';
 import {
     setSession
@@ -18,7 +19,8 @@ class Login extends React.Component {
 
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            error: false
         };
 
         // Bind methods
@@ -61,20 +63,32 @@ class Login extends React.Component {
                 "password": password
             })
         }).then(resp => {
-            resp.json().then(resp => {
-                // Instantiate User
-                const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true, resp.stocks);
+            if (resp.status === 200) {
+                resp.json().then(resp => {
+                    // Instantiate User
+                    const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true, resp.stocks);
 
-                // Set user session
-                setSession(user);
+                    // Set user session
+                    setSession(user);
 
-                // Redirect to home
-                this.props.history.push("/watchlist");
-            }).catch(err => {
-                console.log(err);
-            })
+                    // Redirect to home
+                    this.props.history.push("/");
+                }).catch(err => {
+                    this.setState({
+                        error: true
+                    });
+                })
+            }
+
+            if (resp.status === 500) {
+                this.setState({
+                    error: true
+                });
+            }
         }).catch(err => {
-            console.log(err);
+            this.setState({
+                error: true
+            });
         })
     }
 
@@ -84,6 +98,11 @@ class Login extends React.Component {
     }
 
     render() {
+        // Check if error
+        if (this.state.error) {
+            return <GenericError />;
+        }
+
         return (
             <div id="login">
                 <Form onSubmit={this.login}>
