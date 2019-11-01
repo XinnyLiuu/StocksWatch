@@ -71,7 +71,7 @@ class Register extends React.Component {
                 let id = resp.id;
 
                 // Instantiate User
-                const user = new User(id, username, firstname, lastname, true);
+                const user = new User(id, username, firstname, lastname, true, JSON.stringify("[]"));
 
                 // Set user session
                 setSession(user);
