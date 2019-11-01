@@ -101,7 +101,7 @@ class Watchlist extends React.Component {
         );
 
         // If there are stocks in the user's watchlist already, show them here
-        if (this.state.prevStocks.length > 0) {
+        if (this.state.prevStocks instanceof Array && this.state.prevStocks.length > 0) {
             // Build the component(s) to be rendered
             let temp = watchlist;
             watchlist = [];
