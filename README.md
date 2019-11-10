@@ -188,11 +188,15 @@ The following technologies may be used later down the line as we flesh out our d
 
 
 ## Timeline
-* Milestone 5 - Refactoring - __due 11/8__
+* Milestone 5 - Refactoring - __due 11/15__
 * Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
 
 
 ## Installation
-- `npm install`
-- `npm start` 
+Ensure that MySQL is running and `/server/.env` is correct before running:
+```
+npm install 
+
+npm start
+``` 

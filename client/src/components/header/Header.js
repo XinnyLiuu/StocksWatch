@@ -74,7 +74,7 @@ class Header extends React.Component {
 						<Nav.Link href="/login">Login</Nav.Link>
 					</Nav>
 					<Form inline onSubmit={this.searchStock}>
-						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search a Symbol" className="mr-sm-2" />
 						<Button variant="outline-info" type="submit">Search</Button>
 					</Form>
 				</Navbar.Collapse>
@@ -99,7 +99,7 @@ class Header extends React.Component {
 							<Nav.Link onClick={this.logout} href="/">Logout</Nav.Link>
 						</Nav>
 						<Form inline onSubmit={this.searchStock}>
-							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search" className="mr-sm-2" />
+							<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search a Symbol" className="mr-sm-2" />
 							<Button variant="outline-info" type="submit">Search</Button>
 						</Form>
 					</Navbar.Collapse>
