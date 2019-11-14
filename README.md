@@ -5,7 +5,7 @@
 
 
 ## Background
-Our application, StocksWatch, aims to provide historical snapshots of a year’s worth of stock data for our users. The application will provide a pretty UI and allows users to create accounts with us to keep track of the stocks they are interested in.
+Our application, StocksWatch, aims to provide historical snapshots of a year’s worth of stock data for our users. The application will provide an attractive UI and allows users to create accounts with us to keep track of the stocks they are interested in.
 
 
 ## Project Description 
@@ -17,13 +17,13 @@ StocksWatch will be a web application aimed to offer the best experience for our
 * Enjoy seamless user experience. StocksWatch will be both desktop and mobile friendly so that our application be used anywhere with an internet connection.
 * Show the future predictions of a price of a stock through the use of a Python Machine Learning Library (Pandas).
 
-The scope of this project involves users being able to search, add and track stocks they are interested in. The stocks they follow with be projected into an interactive historical line graph using the HighCharts library. Users will be able to edit their stocks using CRUD operations via our client side application. Given that we are not using the premium features of the Alpha Vantage API, the selection of the available stocks to track are within the restraint of stocks that are provided by the free tier API. 
+The scope of this project involves users being able to search, add and track stocks they are interested in. The stocks they follow with be projected into an interactive historical line graph using the HighCharts library. Users will be able to edit their stocks using CRUD operations via our client side application. Given that we are not using the premium features of various 3rd party stock APIs, the selection of the available stocks to track are within the restraint of stocks that are provided by the free tier API. 
 
 
 ## Project Requirements
-* Companies names and stock tickers will be used to query the Alpha Vantage API to return the data for that particular stock.
+* Companies names and stock tickers will be used to query the 3rd party APIs to return the data for that particular stock.
 * All stocks will have a follow button to allow users to add that stock to their list and keep track of the stock’s prices for that company.
-* Searches will be sent to our server which we will be sanitized and queried against the data from the Alpha Vantage API. The selected data will be sent back to our client side in JSON format to be used with the HighCharts API to render a historical line graph for the user. 
+* Searches will be sent to our server which will be sanitized and queried. The selected data will be sent back to our client side in JSON format to be used with the HighCharts API to render a historical line graph for the user. 
 * A historical line graph for the particular stock containing information such as prices and dates within a specific date range. 
 
 
@@ -54,7 +54,7 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 * Presentation Layer
 	- Our client is the presentation layer and allows for interactions with the user. It communicates with our application layer through `HTTP (GET/POST/PUT/DELETE) methods`. Our application layer exposes API endpoints by which the presentation layer can use. 
 
-	- __Example__: User wants to see the Dow 30 companies - Our presentation layer  (React) will send a `GET` request to an endpoint offered by our server (`/api/dow30`). The server will receive the request, query the Alpha Vantage API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into a charts library to show to the user.
+	- __Example__: User wants to see the Dow 30 companies - Our presentation layer  (React) will send a `GET` request to an endpoint offered by our server (`/api/dow30`). The server will receive the request, query an API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into a charts library to show to the user.
 
 * Application Layer
 	- Our server is the application layer. This layer processes all HTTP requests sent from our presentation layer. It will expose API endpoints that are mapped to a controller to handle the request. The controllers perform actions on the database layer whereby updating our model. 
@@ -62,9 +62,9 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 	- __Example__: User wants to delete a stock that they are tracking on our presentation layer (React). The client will send a `HTTP DELETE request` to an endpoint on our server (`/api/:stock`), where `:stock` is the symbol belonging to the stock the user wants to delete. This parameter is hidden from the user. The endpoint is mapped to a controller function - `removeStockBySymbol()`, which will query the database with a `DELETE statement` and removes the stock from the `user_stocks` table.
 
 * Database Layer
-	- Our database layer are code related to the database. Classes such as `DB`, `User`, `UserStocks` will be associated to a table in our database. The `DB` class will connect to the database and offer methods that peform CRUD actions on a table. The `User` class will be an Object representation of user data queried from our database. The `User` class will offer getters and setters that can allow our application to maintain the state of the User object. Likewise, the `UserStocks` class is an Object representing the list of stocks that the user is tracking.
+	- Our database layer are code related to the database. The `DB` class will connect to the database and offer methods that peform CRUD actions on a table. 
 
-	- __Example__: When our user adds a stock that they wish to track, the presentation layer will send a `POST` request to an endpoint exposed by our server. The endpoint (`/api/stock/:symbol`) will call the associated controller function that will create a new `UserStocks` class with the stock information and insert the data of that stock into the database using the getters and setters offered by that class. 
+	- __Example__: When our user adds a stock that they wish to track, the presentation layer will send a `POST` request to an endpoint exposed by our server. The endpoint (`/api/stock/:symbol`) will call the associated controller function insert the data of that stock into the database.
 
 ## Exception Handling
 Since we are using a client-server architecture with two different technologies - `React` and `Node.js` respectively, exception handling in the client will be different than that of the server.
@@ -85,6 +85,134 @@ The client should __NEVER__ show any stack traces to the user.
 class DB {
     constructor() {
         return new Promise((resolve, reject) => {
+            this.connection = new Client({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_DATABASE
+            });
+
+            this.connection.connect(err => {
+                if (err) reject(err);
+                else {
+                    console.log("Connected to PostgreSQL!");
+                    resolve(this);
+                }
+            });
+        });
+    }
+
+    select(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(query, (error, results) => {
+                if (error) reject(error);
+                else resolve(results.rows);
+            });
+        })
+    }
+
+	...
+}
+```
+
+In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action from the __[node-postgres](https://node-postgres.com/)__ npm module. On the event the database method has been rejected, the error will be caught and logged to the terminal; The server will then return a status code of `500` to the client. Below is the code for a snippet of this:
+
+```javascript
+...
+
+catch (err) {
+	console.log(err);
+	return res.sendStatus(500);
+}
+```
+Our code in the client, would then check if a status code of `500` is returned and if so - redirect the user to a `Service Unavailable` page or another one of the reasons stated in the client section above.
+
+
+## Performance and Refactoring
+In terms of code practies for refactoring, originally we were handling `Promises` with `then / catch`, but an issue arose where code became ugly and difficult to maintain as we added more and more features. As such, we replaced promise handling with __[async / await](https://javascript.info/async-await)__ to better manage the resolution of promises for asynchronous actions. 
+
+Below is a snippet of code where `then / catch` were used:
+```javascript
+fetch(api).then(resp => {
+	if (resp.status === 200) {
+		resp.json().then(data => {
+			this.setState({
+				data: data
+			})
+		}).catch(err => {
+			this.setState({
+				error: true
+			});
+		})
+	}
+
+	if (resp.status === 500) {
+		this.setState({
+			error: true
+		});
+	}
+}).catch(err => {
+	this.setState({
+		error: true
+	});
+})
+
+```
+Below does the same as the code above, but with `async / await`:
+```javascript
+try {
+	const resp = await fetch(api);
+
+	if (resp.status === 200) {
+		const json = await resp.json();
+		this.setState({
+			data: json
+		})
+	}
+
+	if (resp.status === 500) {
+		this.setState({
+			error: true
+		});
+	}
+} catch (err) {
+	this.setState({
+		error: true
+	})
+}
+```
+Above can be found in `client/src/components/highcharts/Wrapper.js`. With `async / await`, the resolution of promises is called by `await` and if the promise returns a rejection, it is caught in a `try / catch` statement.
+
+For performance refactoring, originally when the user would add a stock to their watchlist, we would validate the stock with a `GET` request to the 3rd party API each time to ensure that the user stock exists. We soon discovered that there is a __[HEAD](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD)__ which is similar to a `GET`, but only requests the headers of the resource. This is crucial in the sense that instead of our server downloading the entire body and header returned from the API, we simply need to query the API for the stock and check the header for a status code `200`. If the `HEAD` request to the API returns a `200` for the stock, then the resource exists and therefore the stock does too.
+
+Below is a snippet of the `HEAD` request found in `server/service/api.js`:
+```javascript
+let monthly_data_url = IEX_URL;
+monthly_data_url += `/${stock}/chart/1y`;
+monthly_data_url += `?token=${IEX_KEY}`;
+
+return new Promise((resolve, reject) => {
+	axios.head(monthly_data_url).then(result => {
+		if (result.status === 200) {
+			resolve(true);
+		}
+	}).catch(err => {
+		reject(err);
+	})
+})
+```
+ 
+In addition to both code and performance refactoring, we switched databases from `MySQL` to `PostgreSQL` as per instructions. Due to the fact that we wrote alot of our database related code inside of its own class to decouple its logic from other methods, the conversion was smooth. 
+
+We only have to switch database drivers and with the help of npm, we replaced the `mysql` module with the `node-postgres` module.
+
+Below is the database class we originally had for MySQL:
+```javascript
+const mysql = require('mysql');
+
+class DB {
+    constructor() {
+        return new Promise((resolve, reject) => {
             this.connection = mysql.createConnection({
                 host: process.env.DB_HOST,
                 user: process.env.DB_USER,
@@ -99,78 +227,52 @@ class DB {
                 resolve(this);
             });
         });
-    }
+	}
 
-    select(sql) {
+...
+```
+
+Below is the updated class for PostgreSQL:
+```javascript
+const { Client } = require('pg');
+
+class DB {
+    constructor() {
         return new Promise((resolve, reject) => {
-            this.connection.query(sql, (error, results, fields) => {
-                if (error) reject(error);
+            this.connection = new Client({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_DATABASE
+            });
 
-                if (results.length > 0) {
-                    resolve(results[0]);
+            this.connection.connect(err => {
+                if (err) reject(err);
+                else {
+                    console.log("Connected to PostgreSQL!");
+                    resolve(this);
                 }
             });
-        })
+        });
 	}
-	
-	...
+
+...
+```
+
+With security becoming a major concern, we were wary of the management of user passwords. When we were using MySQL, we hashed the password string with the built in functionality of `sha256`, but that was not enough. As a result, we decided to use the __[crypto](https://nodejs.org/api/crypto.html)__ to help use generate a random salt of `32 bytes` before storing the hashed salt and password combination with `sha512` into the database. Upon registering onto our platform, users are given a salt that is unique to them.
+
+Below is the code snippet of methods relating to the hashing and encryption of user passwords:
+```javascript
+exports.encrypt = (password, salt) => {
+    password = salt + password;
+    password = crypto.createHash("sha512").update(password).digest("hex");
+    return password;
+}
+
+exports.getSalt = () => {
+    return crypto.randomBytes(32).toString('hex');
 }
 ```
-
-In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action from the __[mysql](https://www.npmjs.com/package/mysql)__ npm module. On the event the database method has been rejected, a custom exception class that has been created should be thrown, caught and logged to the terminal. Below is the code for `DatabaseException.js`:
-
-```javascript
-class DatabaseException extends Error {
-	constructor(message, cause) {
-		super(message)
-		this.cause = cause;
-	}
-}
-```
-
-Below is a snippet that shows the handling of a Database exception:
-
-```javascript
-db.select("select * from users")
-	.then(resp => {
-		let users = resp;
-	})
-	.catch(err => {
-		try {
-			throw new DatabaseException("Error in query", err);
-		} catch (e) {
-			console.log(e);
-		}
-	});
-```
-In the snippet above, when `db.select("select * from users")` returns a promise that is rejected, the rejection reason is passed as `err`. `err` is then caught in the `catch` of the `then / catch` block, which is then passed and thrown in an instance of the `DatabaseException` exception. When the exception is caught, the program logs the rejection reason and the stack trace to the console. Since the server is hidden from the eyes of users, logging to the console is fine. However, in the case that the server is used by the client that requires an immediate response such as an API endpoint, we need to handle things differently.
-
-Below is code that is used to expose an endpoint for the client to consume data regarding the monthly prices of a stock. 
-
-```javascript
-axios.get(monthly_data_url)
-	.then(result => {
-		...
-	})
-	.catch(err => {
-		try {
-			if (err) throw new APIException("Error in api service monthly.js", err);
-		} catch (e) {
-			console.log(e);
-			return res.status(500).json({ Error: e.message });
-		}
-	})
-```
-
-When the server runs into an error and cannot return the data requested to the client, the rejection reason is caught and passed into a newly thrown `APIException` which is then logged into the console and `Express.js` (the library used for our web server) returns a `500` HTTP status code and a JSON message to the client: 
-
-```json
-{
-	"Error": "Error in api service monthly.js"
-}
-```
-
-Our code in the client, would then check if a status code of 500 is returned and if so - redirect the user to a `Service Unavailable` page or another one of the reasons stated in the client section above.
 
 
 ## Technologies Used
@@ -179,8 +281,9 @@ We plan to use the following technologies in our application:
 * __[React](https://reactjs.org/)__ - JavaScript framework used for our front end.
 * __[HighCharts](https://www.highcharts.com/)__ - JavaScript library used to generate graphical charts.
 * __[Node.js](https://nodejs.org/en/)__ - Javascript framework used for our back end. 
-* __[MySQL](https://www.mysql.com/)__ - Relational database used to store our data.
-* __[Alpha Vantage](https://www.alphavantage.co/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
+* __[PostgreSQL](https://www.postgresql.org/)__ - Relational database used to store our data.
+* __[Intrinio](https://intrinio.com/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
+* __[IEX](https://iexcloud.io/docs/api/)__ - Another financial data API.
 
 The following technologies may be used later down the line as we flesh out our design more:
 * __[Electron](https://electronjs.org/)__ - An JavaScript desktop wrapper that enables web application to function as a desktop applicaiton. (Nice for resume).
@@ -188,13 +291,12 @@ The following technologies may be used later down the line as we flesh out our d
 
 
 ## Timeline
-* Milestone 5 - Refactoring - __due 11/15__
 * Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
 
 
 ## Installation
-Ensure that MySQL is running and `/server/.env` is correct before running:
+Ensure that `PostgreSQL` is running and `/server/.env` is correct before running:
 
 First usage:
 ```
@@ -206,7 +308,7 @@ Anytime after:
 npm start
 ```
 
-## Export PostgreSQL
+## PostgreSQL dump
 ```
 pg_dump stockswatch > stockswatch.sql
 ```
