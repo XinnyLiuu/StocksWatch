@@ -195,8 +195,13 @@ The following technologies may be used later down the line as we flesh out our d
 
 ## Installation
 Ensure that MySQL is running and `/server/.env` is correct before running:
-```
-npm install 
 
-npm start
+First usage:
+```
+npm run initialize
 ``` 
+
+Anytime after:
+```
+npm start
+```
