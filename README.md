@@ -202,9 +202,11 @@ return new Promise((resolve, reject) => {
 })
 ```
  
-In addition to both code and performance refactoring, we switched databases from `MySQL` to `PostgreSQL` as per instructions. Due to the fact that we wrote alot of our database related code inside of its own class to decouple its logic from other methods, the conversion was smooth. 
+In addition to both code and performance refactoring, we switched databases from `MySQL` to `PostgreSQL` as per instructions. Due to the fact that we wrote alot of our database related code inside of its own class to decouple its logic from other methods, the migrating from `MySQL` to `PostgreSQL` was smooth and achieved within a short time. 
 
 We only have to switch database drivers and with the help of npm, we replaced the `mysql` module with the `node-postgres` module.
+
+In addition to performance, we used `prepared statements` to precompile SQL statements to ensure faster execution of quries and to resue the same SQL statments in batches.
 
 Below is the database class we originally had for MySQL:
 ```javascript
@@ -234,6 +236,16 @@ class DB {
 
 Below is the updated class for PostgreSQL:
 ```javascript
+   query = {
+                name: "validate-user",
+                text: "select user_id, username, firstname, lastname from users where username = $1 and password = $2",
+                values: [username, password]
+			}
+...
+```
+
+
+```javascript
 const { Client } = require('pg');
 
 class DB {
@@ -258,6 +270,9 @@ class DB {
 
 ...
 ```
+
+Below is a code snippet of how we use prepared for our SQL statements
+
 
 With security becoming a major concern, we were wary of the management of user passwords. When we were using MySQL, we hashed the password string with the built in functionality of `sha256`, but that was not enough. As a result, we decided to use the __[crypto](https://nodejs.org/api/crypto.html)__ to help use generate a random salt of `32 bytes` before storing the hashed salt and password combination with `sha512` into the database. Upon registering onto our platform, users are given a salt that is unique to them.
 
@@ -288,6 +303,7 @@ We plan to use the following technologies in our application:
 The following technologies may be used later down the line as we flesh out our design more:
 * __[Electron](https://electronjs.org/)__ - An JavaScript desktop wrapper that enables web application to function as a desktop applicaiton. (Nice for resume).
 * __[Pandas](https://pandas.pydata.org/)__ - Pandas is a data analytics and machine learning library written in Python. The machine learning will only be as good as it is trained, but it will be a cool feature nonetheless.
+
 
 
 ## Timeline
