@@ -2,7 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-require('dotenv').config();
+require("custom-env").env(true);
 
 // Create express server
 const app = express();
