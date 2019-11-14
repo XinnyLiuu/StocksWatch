@@ -187,26 +187,28 @@ The following technologies may be used later down the line as we flesh out our d
 * __[Pandas](https://pandas.pydata.org/)__ - Pandas is a data analytics and machine learning library written in Python. The machine learning will only be as good as it is trained, but it will be a cool feature nonetheless.
 
 
+## Performance
+* Used prepared statements to pre-process intial queries and speed up repetitive queries issued by clients to request information from the database. Below is a code snippet from `TODO: put filename of code here ` showing the use of  prepared statements in querying inforamtion from the database:
+
+``` 
+   TODO:// insert javascript code
+```
+
+* Utilized `aync/await` (asynchronous JavaScript) to prevent blocking of threads and making page unresponsive while making requests to API calls.
+
+```
+	TODO:// insert javascript code
+```
+
+## Refactor
+
+
 ## Timeline
-* Milestone 5 - Refactoring - __due 11/15__
+* Milestone 5 - Refactoring - __due 11/8__
 * Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
 
 
 ## Installation
-Ensure that MySQL is running and `/server/.env` is correct before running:
-
-First usage:
-```
-npm run initialize
-``` 
-
-Anytime after:
-```
-npm start
-```
-
-## Export PostgreSQL
-```
-pg_dump stockswatch > stockswatch.sql
-```
+- `npm install`
+- `npm start` 
