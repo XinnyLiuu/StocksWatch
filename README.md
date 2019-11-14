@@ -205,3 +205,8 @@ Anytime after:
 ```
 npm start
 ```
+
+## Export PostgreSQL
+```
+pg_dump stockswatch > stockswatch.sql
+```

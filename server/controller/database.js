@@ -187,3 +187,64 @@ exports.deleteRemoveStockWatchList = async (req, res) => {
         return res.sendStatus(500);
     }
 }
+
+/**
+ * PUT /api/user
+ * 
+ * Receives data from PUT request and updates user information
+ */
+exports.putUserSettings = async (req, res) => {
+    const ogUsername = req.body.ogUsername;
+    const username = req.body.username;
+    let password = req.body.password;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+
+    // Get user's salt
+    let query = {
+        name: "get-user-salt",
+        text: "select salt from users where username = $1",
+        values: [ogUsername]
+    }
+
+    try {
+        const db = await postgres;
+        let results = await db.select(query);
+
+        // Check length
+        if (results.length === 0) return res.sendStatus(500);
+        if (results.length === 1) {
+            const salt = results[0].salt;
+
+            // Hash password
+            password = encryptHelper.encrypt(password, salt);
+
+            // Update user
+            query = {
+                name: 'update-user',
+                text: "update users set username = $1, password = $2, firstname = $3, lastname = $4",
+                values: [username, password, firstname, lastname]
+            }
+
+            results = await db.update(query);
+
+            // Get affected rows
+            const affected = results.rowCount;
+
+            if (affected === 1) {
+                return res.json({
+                    username: username,
+                    firstname: firstname,
+                    lastname: lastname
+                })
+            }
+
+            return res.sendStatus(500);
+        }
+
+        return res.sendStatus(500);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}

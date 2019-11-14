@@ -7,7 +7,7 @@ import {
     withRouter
 } from 'react-router-dom';
 
-import GenericError from '../error/GenericError';
+import GenericError from '../alert/GenericError';
 import User from '../../model/User';
 import {
     setSession

@@ -1,7 +1,7 @@
 import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
-import Unavailable from '../error/Unavailable';
+import Unavailable from '../alert/Unavailable';
 import {
     Alert
 } from 'react-bootstrap';
@@ -26,7 +26,9 @@ class WatchlistCharts extends React.Component {
                 method: 'POST',
                 mode: 'cors',
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ "watchlist": localStorage.getItem("stocks") })
+                body: JSON.stringify(
+                    { "watchlist": localStorage.getItem("stocks") }
+                )
             });
 
             // Check HTTP status code

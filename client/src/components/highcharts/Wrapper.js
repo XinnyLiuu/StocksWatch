@@ -1,7 +1,7 @@
 import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
-import Unavailable from '../error/Unavailable';
+import Unavailable from '../alert/Unavailable';
 import {
 	Alert
 } from 'react-bootstrap';

@@ -72,6 +72,7 @@ class Header extends React.Component {
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="mr-auto">
 						<Nav.Link href="/login">Login</Nav.Link>
+						<Nav.Link href="/register">Register</Nav.Link>
 					</Nav>
 					<Form inline onSubmit={this.searchStock}>
 						<FormControl type="text" value={this.state.symbol} onChange={this.handleChange} placeholder="Search a Symbol" className="mr-sm-2" />

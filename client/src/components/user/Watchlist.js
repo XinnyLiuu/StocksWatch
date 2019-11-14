@@ -6,7 +6,7 @@ import {
     ListGroup
 } from 'react-bootstrap';
 
-import GenericError from '../error/GenericError';
+import GenericError from '../alert/GenericError';
 import '../../css/main.css';
 
 class Watchlist extends React.Component {

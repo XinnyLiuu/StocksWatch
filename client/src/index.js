@@ -10,7 +10,7 @@ import {
 import Header from './components/header/Header';
 import Wrapper from './components/highcharts/Wrapper';
 import WatchlistCharts from './components/highcharts/WatchlistCharts';
-import Notfound from './components/error/Notfound';
+import Notfound from './components/alert/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Setting from './components/user/Setting';

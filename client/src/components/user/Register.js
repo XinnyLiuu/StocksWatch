@@ -7,7 +7,7 @@ import {
     withRouter
 } from 'react-router-dom';
 
-import GenericError from '../error/GenericError';
+import GenericError from '../alert/GenericError';
 import User from '../../model/User';
 import {
     setSession
@@ -27,6 +27,7 @@ class Register extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.register = this.register.bind(this);
+        this.toLogin = this.toLogin.bind(this);
     }
 
     handleChange(e) {
@@ -54,7 +55,7 @@ class Register extends React.Component {
         lastname = lastname.trim();
 
         // Fire POST request
-        let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/register`;
+        const url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/register`;
 
         try {
             const resp = await fetch(url, {
@@ -99,6 +100,11 @@ class Register extends React.Component {
         }
     }
 
+    // Redirects user to /login
+    toLogin() {
+        this.props.history.push("/login");
+    }
+
     render() {
         // Check if error
         if (this.state.error) {
@@ -130,6 +136,12 @@ class Register extends React.Component {
 
                     <Button variant="info" type="submit">
                         Register
+                    </Button>
+
+                    <span className="space"></span>
+
+                    <Button variant="outline-info" onClick={this.toLogin}>
+                        Login
                     </Button>
                 </Form>
             </div>

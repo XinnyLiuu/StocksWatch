@@ -42,3 +42,4 @@ app.post("/api/login", dbController.postUserLogin);
 app.post("/api/register", dbController.postUserRegister);
 app.post("/api/watchlist/add", dbController.postAddStockWatchList);
 app.delete("/api/watchlist/remove", dbController.deleteRemoveStockWatchList);
+app.put("/api/user", dbController.putUserSettings);
