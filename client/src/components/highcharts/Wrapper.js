@@ -16,23 +16,21 @@ class Wrapper extends React.Component {
 		};
 	}
 
-	fetchData() {
+	async fetchData() {
 		// Get props
 		const api = this.props.api + "/" + this.props.symbol;
 
 		// GET data from server
-		fetch(api).then(resp => {
+		try {
+			const resp = await fetch(api);
+
 			// On 200 status
 			if (resp.status === 200) {
-				resp.json().then(data => {
-					// Set the data returned from fetch in state
-					this.setState({
-						data: data
-					})
-				}).catch(err => {
-					this.setState({
-						error: true
-					});
+				const json = await resp.json();
+
+				// Set the data returned from fetch in state
+				this.setState({
+					data: json
 				})
 			}
 
@@ -42,11 +40,11 @@ class Wrapper extends React.Component {
 					error: true
 				});
 			}
-		}).catch(err => {
+		} catch (err) {
 			this.setState({
 				error: true
-			});
-		})
+			})
+		}
 	}
 
 	componentDidMount() {

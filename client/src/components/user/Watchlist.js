@@ -45,7 +45,7 @@ class Watchlist extends React.Component {
     }
 
     // Takes the inputted stock and POSTs it to the server
-    addUserStock(e) {
+    async addUserStock(e) {
         e.preventDefault();
 
         // Validate
@@ -56,52 +56,52 @@ class Watchlist extends React.Component {
         // Fire POST 
         let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/add`;
 
-        fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "userId": userId,
-                "stock": stock
-            })
-        }).then(resp => {
+        try {
+            const resp = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "userId": userId,
+                    "stock": stock
+                })
+            });
+
+            // On 200 status
             if (resp.status === 200) {
-                resp.json().then(resp => {
-                    // Add stock to localStorage / session
-                    let symbol = resp.symbol;
+                const json = await resp.json();
 
-                    let stocks = JSON.parse(localStorage.getItem("stocks"));
-                    stocks.push(symbol);
+                // Add stock to localStorage / session
+                let symbol = json.symbol;
 
-                    stocks = JSON.stringify(stocks);
-                    localStorage.setItem("stocks", stocks);
+                let stocks = JSON.parse(localStorage.getItem("stocks"));
+                stocks.push(symbol);
 
-                    // Update state
-                    this.setState({
-                        prevStocks: JSON.parse(localStorage.getItem('stocks'))
-                    })
-                }).catch(err => {
-                    this.setState({
-                        error: true
-                    });
+                stocks = JSON.stringify(stocks);
+                localStorage.setItem("stocks", stocks);
+
+                // Update state
+                this.setState({
+                    prevStocks: JSON.parse(localStorage.getItem('stocks'))
                 })
             }
 
+            // On 500 status
             if (resp.status === 500) {
                 this.setState({
                     error: true
                 });
             }
-        }).catch(err => {
+        } catch (err) {
             this.setState({
                 error: true
             });
-        })
+        }
     }
 
-    deleteUserStock(e) {
+    async deleteUserStock(e) {
         e.preventDefault();
 
         // Validate
@@ -112,41 +112,40 @@ class Watchlist extends React.Component {
         // Fire DELETE
         let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/remove`;
 
-        fetch(url, {
-            method: "DELETE",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "userId": userId,
-                "stock": stock
-            })
-        }).then(resp => {
+        try {
+            const resp = await fetch(url, {
+                method: "DELETE",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "userId": userId,
+                    "stock": stock
+                })
+            });
+
+            // On 200 status
             if (resp.status === 200) {
-                resp.json().then(resp => {
-                    // Remove stock from localStorage / session
-                    let symbol = resp.symbol;
-                    let stocks = JSON.parse(localStorage.getItem("stocks"));
+                const json = await resp.json();
 
-                    // Remove 
-                    for (let i = 0; i < stocks.length; i++) {
-                        if (stocks[i] === symbol) {
-                            stocks.splice(i, 1);
-                        }
+                // Remove stock from localStorage / session
+                let symbol = json.symbol;
+                let stocks = JSON.parse(localStorage.getItem("stocks"));
+
+                // Remove 
+                for (let i = 0; i < stocks.length; i++) {
+                    if (stocks[i] === symbol) {
+                        stocks.splice(i, 1);
                     }
+                }
 
-                    stocks = JSON.stringify(stocks);
-                    localStorage.setItem("stocks", stocks);
+                stocks = JSON.stringify(stocks);
+                localStorage.setItem("stocks", stocks);
 
-                    // Update state
-                    this.setState({
-                        prevStocks: JSON.parse(localStorage.getItem('stocks'))
-                    })
-                }).catch(err => {
-                    this.setState({
-                        error: true
-                    });
+                // Update state
+                this.setState({
+                    prevStocks: JSON.parse(localStorage.getItem('stocks'))
                 })
             }
 
@@ -155,11 +154,11 @@ class Watchlist extends React.Component {
                     error: true
                 });
             }
-        }).catch(err => {
+        } catch (err) {
             this.setState({
                 error: true
             });
-        })
+        }
     }
 
 

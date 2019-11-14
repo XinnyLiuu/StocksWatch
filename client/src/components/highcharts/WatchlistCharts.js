@@ -17,32 +17,25 @@ class WatchlistCharts extends React.Component {
         };
     }
 
-    fetchData() {
-        // Send a POST to server, so that server can query Alpha Vantage API and then send back the data
+    async fetchData() {
         const api = this.props.api;
 
-        fetch(api, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "watchlist": localStorage.getItem("stocks")
-            })
-        }).then(resp => {
-            // Check HTTP status codes
+        try {
+            // Send a POST to server, so that server can query for the stock(s) data
+            const resp = await fetch(api, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ "watchlist": localStorage.getItem("stocks") })
+            });
+
+            // Check HTTP status code
             if (resp.status === 200) {
-                resp.json().then(resp => {
-                    // Set state
-                    this.setState({
-                        data: resp
-                    });
-                }).catch(err => {
-                    this.setState({
-                        error: true
-                    });
-                })
+                const json = await resp.json();
+
+                this.setState({
+                    data: json
+                });
             }
 
             if (resp.status === 500) {
@@ -50,11 +43,12 @@ class WatchlistCharts extends React.Component {
                     error: true
                 });
             }
-        }).catch(err => {
+
+        } catch (err) {
             this.setState({
                 error: true
-            });
-        })
+            })
+        }
     }
 
     componentDidMount() {

@@ -39,7 +39,7 @@ class Login extends React.Component {
     }
 
     // Takes the input values from the form to authenticate user
-    login(e) {
+    async login(e) {
         e.preventDefault();
 
         // Validate the inputs
@@ -52,44 +52,44 @@ class Login extends React.Component {
         // Fire POST request
         let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/login`;
 
-        fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "username": username,
-                "password": password
-            })
-        }).then(resp => {
-            if (resp.status === 200) {
-                resp.json().then(resp => {
-                    // Instantiate User
-                    const user = new User(resp.user_id, resp.username, resp.firstname, resp.lastname, true, resp.stocks);
-
-                    // Set user session
-                    setSession(user);
-
-                    // Redirect to home
-                    this.props.history.push("/");
-                }).catch(err => {
-                    this.setState({
-                        error: true
-                    });
+        try {
+            const resp = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "username": username,
+                    "password": password
                 })
+            });
+
+            // Check for 200
+            if (resp.status === 200) {
+                const json = await resp.json();
+
+                // Instantiate User
+                const user = new User(json.user_id, json.username, json.firstname, json.lastname, true, json.stocks);
+
+                // Set user session
+                setSession(user);
+
+                // Redirect to home
+                this.props.history.push("/");
             }
 
+            // On 500 status
             if (resp.status === 500) {
                 this.setState({
                     error: true
                 });
             }
-        }).catch(err => {
+        } catch (err) {
             this.setState({
                 error: true
             });
-        })
+        }
     }
 
     // Redirects user to /register

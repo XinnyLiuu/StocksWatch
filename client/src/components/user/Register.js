@@ -39,7 +39,7 @@ class Register extends React.Component {
     }
 
     // Takes the input in the form to register the user
-    register(e) {
+    async register(e) {
         e.preventDefault();
 
         // Validate inputs
@@ -56,48 +56,47 @@ class Register extends React.Component {
         // Fire POST request
         let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/register`;
 
-        fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "username": username,
-                "password": password,
-                "firstname": firstname,
-                "lastname": lastname
-            })
-        }).then(resp => {
-            if (resp.status === 200) {
-                resp.json().then(resp => {
-                    let id = resp.id;
-
-                    // Instantiate User
-                    const user = new User(id, username, firstname, lastname, true, []);
-
-                    // Set user session
-                    setSession(user);
-
-                    // Redirect to home
-                    this.props.history.push("/");
-                }).catch(err => {
-                    this.setState({
-                        error: true
-                    });
+        try {
+            const resp = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "username": username,
+                    "password": password,
+                    "firstname": firstname,
+                    "lastname": lastname
                 })
+            });
+
+            // On 200 status
+            if (resp.status === 200) {
+                const json = await resp.json();
+                let id = json.id;
+
+                // Instantiate User
+                const user = new User(id, username, firstname, lastname, true, []);
+
+                // Set user session
+                setSession(user);
+
+                // Redirect to home
+                this.props.history.push("/");
             }
 
+            // On 500 status
             if (resp.status === 500) {
                 this.setState({
                     error: true
                 });
             }
-        }).catch(err => {
+        } catch (err) {
             this.setState({
                 error: true
             });
-        })
+        }
     }
 
     render() {
