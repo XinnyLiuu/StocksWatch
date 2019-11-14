@@ -1,14 +1,16 @@
+'use strict';
+const { Client } = require('pg');
+
 /**
  * Class representing DB connection
+ * 
+ * Documentation for pg module:
+ * https://node-postgres.com/
  */
-'use strict';
-
-const mysql = require('mysql');
-
 class DB {
     constructor() {
         return new Promise((resolve, reject) => {
-            this.connection = mysql.createConnection({
+            this.connection = new Client({
                 host: process.env.DB_HOST,
                 user: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
@@ -18,42 +20,36 @@ class DB {
             this.connection.connect(err => {
                 if (err) reject(err);
                 else {
-                    console.log("Connected to MySQL!");
+                    console.log("Connected to PostgreSQL!");
                     resolve(this);
                 }
             });
         });
     }
 
-    select(sql, params) {
+    select(query) {
         return new Promise((resolve, reject) => {
-            sql = mysql.format(sql, params);
+            this.connection.query(query, (error, results) => {
+                if (error) reject(error);
+                else resolve(results.rows);
+            });
+        })
+    }
 
-            this.connection.query(sql, (error, results, fields) => {
+    insert(query) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(query, (error, results) => {
                 if (error) reject(error);
                 else resolve(results);
             });
         })
     }
 
-    insert(sql, params) {
+    delete(query) {
         return new Promise((resolve, reject) => {
-            sql = mysql.format(sql, params);
-
-            this.connection.query(sql, (error, results, fields) => {
+            this.connection.query(query, (error, results) => {
                 if (error) reject(error);
-                else resolve(results.affectedRows);
-            });
-        })
-    }
-
-    delete(sql, params) {
-        return new Promise((resolve, reject) => {
-            sql = mysql.format(sql, params);
-
-            this.connection.query(sql, (error, results, fields) => {
-                if (error) reject(error);
-                else resolve(results.affectedRows);
+                else resolve(results);
             });
         })
     }
@@ -61,10 +57,9 @@ class DB {
     close() {
         return new Promise((resolve, reject) => {
             this.connection.end();
-            resolve("Connection to MySQL closed!");
+            resolve("Connection to PostgreSQL closed!");
         });
     }
 }
 
-// Connect to MySQL
 module.exports = DB;

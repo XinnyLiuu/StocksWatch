@@ -12,13 +12,13 @@ app.use(morgan(':date[iso] :status :method :url [:response-time ms] :remote-addr
 
 // Enable CORS for React
 const corsOptions = {
-    // origin: process.env.REACT_DEV_DOMAIN
+    origin: process.env.REACT_DEV_DOMAIN
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-// Enable JSON POST
+// Enable JSON for POST
 app.use(express.json());
 
 // Start server
@@ -29,7 +29,7 @@ console.log(`Server running on port ${process.env.PORT || 8000}`);
 const apiService = require('./service/api');
 
 // Database
-const mysqlController = require('./controller/mysql.js');
+const dbController = require('./controller/database.js');
 
 // Routes
 // Stock Data
@@ -38,7 +38,7 @@ app.get("/api/dow30", apiService.getStockDataForDow);
 app.post("/api/watchlist/stocks", apiService.postWatchlistStocks);
 
 // Database
-app.post("/api/login", mysqlController.postUserLogin);
-app.post("/api/register", mysqlController.postUserRegister);
-app.post("/api/watchlist/add", mysqlController.postAddStockWatchList);
-app.delete("/api/watchlist/remove", mysqlController.deleteRemoveStockWatchList);
+app.post("/api/login", dbController.postUserLogin);
+app.post("/api/register", dbController.postUserRegister);
+app.post("/api/watchlist/add", dbController.postAddStockWatchList);
+app.delete("/api/watchlist/remove", dbController.deleteRemoveStockWatchList);

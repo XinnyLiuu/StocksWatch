@@ -1,6 +1,7 @@
 'use strict';
 const axios = require('axios');
-const APIException = require('../exceptions/APIException');
+
+const parser = require("../utils/parser");
 
 // API Keys + URLs
 const INTRINIO_KEY = process.env.INTRINIO_KEY;
@@ -14,39 +15,8 @@ const IEX_URL = process.env.IEX_URL;
  * 
  * Gets all stock data of dow 30
  */
-exports.getStockDataForDow = (req, res) => {
-    const dow = [
-        "AAPL",
-        "AXP",
-        "BA",
-        "CAT",
-        "CSCO",
-        "CVX",
-        "DIS",
-        "DWDP",
-        "GE",
-        "GS",
-        "HD",
-        "IBM",
-        "INTC",
-        "JNJ",
-        "JPM",
-        "KO",
-        "MCD",
-        "MMM",
-        "MRK",
-        "MSFT",
-        "NKE",
-        "PFE",
-        "PG",
-        "TRV",
-        "UNH",
-        "UTX",
-        "V",
-        "VZ",
-        "WMT",
-        "XOM"
-    ];
+exports.getStockDataForDow = async (req, res) => {
+    const dow = ["AAPL", "AXP", "BA", "CAT", "CSCO", "CVX", "DIS", "DWDP", "GE", "GS", "HD", "IBM", "INTC", "JNJ", "JPM", "KO", "MCD", "MMM", "MRK", "MSFT", "NKE", "PFE", "PG", "TRV", "UNH", "UTX", "V", "VZ", "WMT", "XOM"];
     let result = { "DOW30": [] };
     let intrinio;
 
@@ -55,62 +25,32 @@ exports.getStockDataForDow = (req, res) => {
         dow.forEach(symbol => {
             intrinio = `${INTRINIO_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
 
-            // Use axios to hit the intrinio endpoint 
-            axios.get(intrinio).then(response => {
-                if (response.status === 200) {
-                    const data = response.data;
-                    const json = parseData(data);
+            // Use axios to hit the intrinio endpoint
+            axios.get(intrinio).then(resp => {
+                if (resp.status === 200) {
+                    const data = resp.data;
+                    const json = parser.intrinioParser(data);
                     result.DOW30.push(json);
 
                     if (result.DOW30.length === 30) {
-                        resolve();
+                        resolve(true);
                     }
                 }
             }).catch(err => {
+                console.log(err);
                 reject(err);
             })
         });
     });
 
-    getDow.then(() => {
-        return res.json(result);
-    }).catch(err => {
-        try {
-            if (err) throw new APIException("Error in api service", err);
-        } catch (e) {
-            console.log(e);
-            return res.sendStatus(500);
-        }
-    })
+    // Check if dow data has been fetched
+    try {
+        const fetched = await getDow;
 
-    // Parse the data returned from intrinio and return as a json
-    function parseData(data) {
-        let json = {
-            "symbol": data.security.ticker,
-            "prices": {
-                "high": [], // [date, high]
-                "low": [] // [date, low]
-            }
-        };
-
-        let prices = data.stock_prices;
-        prices.forEach(p => {
-            let date = new Date(p.date).getTime();
-
-            let high_arr = [];
-            let low_arr = [];
-
-            high_arr.push(date);
-            high_arr.push(p.high);
-
-            low_arr.push(date);
-            low_arr.push(p.low);
-
-            json.prices.high.push(high_arr);
-            json.prices.low.push(low_arr);
-        });
-
-        return json;
+        if (fetched) return res.json(result);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
 }
 
@@ -119,7 +59,7 @@ exports.getStockDataForDow = (req, res) => {
  * 
  * Gets data for a specified stock
  */
-exports.getStockDataBySymbol = (req, res) => {
+exports.getStockDataBySymbol = async (req, res) => {
     const symbol = req.params.symbol;
 
     // Build URL
@@ -127,52 +67,18 @@ exports.getStockDataBySymbol = (req, res) => {
     monthly_data_url += `/${symbol}/chart/1y`;
     monthly_data_url += `?token=${IEX_KEY}`;
 
-    axios.get(monthly_data_url).then(result => {
-        // Check response status
+    try {
+        const result = await axios.get(monthly_data_url);
+
         if (result.status === 200) {
             const data = result.data;
-            const json = parseData(data, symbol);
+            const json = parser.IEXParser(data, symbol);
 
             return res.json(json);
         }
-    }).catch(err => {
-        try {
-            if (err) throw new APIException("Error in api service", err);
-        } catch (e) {
-            console.log(e);
-            return res.sendStatus(500);
-        }
-    });
-
-    function parseData(data, s) {
-        let json = {
-            "symbol": s,
-            "prices": {
-                "high": [], // [date, high]
-                "low": [] // [date, low]
-            }
-        };
-
-        data.forEach(p => {
-            let date = new Date(p.date).getTime();
-
-            let high_arr = [];
-            let low_arr = [];
-
-            high_arr.push(date);
-            high_arr.push(p.high);
-
-            low_arr.push(date);
-            low_arr.push(p.low);
-
-            json.prices.high.push(high_arr);
-            json.prices.low.push(low_arr);
-        });
-
-        json.prices.high.reverse();
-        json.prices.low.reverse();
-
-        return json;
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
 }
 
@@ -181,12 +87,9 @@ exports.getStockDataBySymbol = (req, res) => {
  * 
  * Receives a list of the user's watchlists from client and queries them through intrinio, aggregate the data and return it to the client
  */
-exports.postWatchlistStocks = (req, res) => {
+exports.postWatchlistStocks = async (req, res) => {
     let watchlist = JSON.parse(req.body.watchlist);
-
-    let results = {
-        "watchlist": []
-    };
+    let results = { "watchlist": [] };
 
     // Iterate through every symbol in the user's watchlist
     let getWatchlist = new Promise((resolve, reject) => {
@@ -201,12 +104,12 @@ exports.postWatchlistStocks = (req, res) => {
                     // Check response status
                     if (result.status === 200) {
                         const data = result.data;
-                        const json = parseData(data, s);
+                        const json = parser.IEXParser(data, s);
                         results.watchlist.push(json);
 
                         // Check the length of results.watchlist and watchlist
                         if (watchlist.length === results.watchlist.length) {
-                            resolve();
+                            resolve(true);
                         }
                     }
                 }).catch(err => {
@@ -216,46 +119,13 @@ exports.postWatchlistStocks = (req, res) => {
         }
     });
 
-    getWatchlist.then(() => {
-        return res.json(results);
-    }).catch(err => {
-        try {
-            if (err) throw new APIException("Error in api service", err);
-        } catch (e) {
-            console.log(e);
-            return res.sendStatus(500);
-        }
-    })
+    try {
+        const fetched = await getWatchlist;
 
-    function parseData(data, s) {
-        let json = {
-            "symbol": s,
-            "prices": {
-                "high": [], // [date, high]
-                "low": [] // [date, low]
-            }
-        };
-
-        data.forEach(p => {
-            let date = new Date(p.date).getTime();
-
-            let high_arr = [];
-            let low_arr = [];
-
-            high_arr.push(date);
-            high_arr.push(p.high);
-
-            low_arr.push(date);
-            low_arr.push(p.low);
-
-            json.prices.high.push(high_arr);
-            json.prices.low.push(low_arr);
-        });
-
-        json.prices.high.reverse();
-        json.prices.low.reverse();
-
-        return json;
+        if (fetched) return res.json(results);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
     }
 }
 
@@ -270,7 +140,7 @@ exports.checkValidStock = (stock) => {
     return new Promise((resolve, reject) => {
         axios.head(monthly_data_url).then(result => {
             if (result.status === 200) {
-                resolve();
+                resolve(true);
             }
         }).catch(err => {
             reject(err);
