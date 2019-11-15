@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "initialize": "cd client/ && npm install && cd ../server/ && npm install && cd ../ && npm install && concurrently \"cd server/ && npm start\" \"cd client/ && npm start\"",
     "start": "concurrently \"cd server/ && npm start\" \"cd client/ && npm start\"",
-    "react-build": "cd client/ && npm run build"
+    "react-deploy": "cd client/ && npm install && npm run build"
   },
   "repository": {
     "type": "git",
