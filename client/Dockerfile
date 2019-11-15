@@ -4,10 +4,10 @@
 FROM node:10.17-alpine AS build 
 
 WORKDIR /client
-COPY package.json /client
-COPY package-lock.json /client
+COPY ./ /client
 RUN npm install
 RUN npm run build
+COPY ./ /client
 COPY build/ /client
 
 ## Prepare nginx to serve build files
