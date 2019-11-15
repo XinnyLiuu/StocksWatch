@@ -64,3 +64,24 @@ body {
 .float-right {
   float: right;
 }
+
+/**
+  Media Queries 
+*/
+@media only screen and (max-width: 600px) {
+  #login,
+  #settings,
+  #watchlist {
+    margin: 50px;
+    padding: 20px;
+    width: inherit;
+  }
+
+  #searchBtn {
+    margin-top: .8rem;
+  }
+
+  .spinner {
+    margin: 50% 0 0 35%;
+  }
+}
