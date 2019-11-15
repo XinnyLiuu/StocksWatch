@@ -2,9 +2,7 @@ import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
 import Unavailable from '../alert/Unavailable';
-import {
-	Alert
-} from 'react-bootstrap';
+import Info from '../alert/Info';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -30,7 +28,8 @@ class Wrapper extends React.Component {
 
 				// Set the data returned from fetch in state
 				this.setState({
-					data: json
+					data: json,
+					error: false
 				})
 			}
 
@@ -60,6 +59,11 @@ class Wrapper extends React.Component {
 	}
 
 	render() {
+		// Check for error from server
+		if (this.state.error) {
+			return <Unavailable message={"There is an error getting the data for that stock!"} />;
+		}
+
 		// Check if data in state is still an empty string
 		if (this.state.data !== "") {
 			let json = this.state.data;
@@ -70,10 +74,7 @@ class Wrapper extends React.Component {
 				let dow = json["DOW30"];
 
 				stockCharts.push(
-					<Alert variant="info">
-						<Alert.Heading>Dow 30</Alert.Heading>
-						<p>Login or Register to build your personalized watchlist</p>
-					</Alert>
+					<Info header={"Dow 30"} message={"Login or Register to build your personalized watchlist"} />
 				)
 
 				// Render each DOW stock as its own StockChart component
@@ -87,11 +88,6 @@ class Wrapper extends React.Component {
 			else {
 				return <StockChart data={json} type="single" />;
 			}
-		}
-
-		// Check for error from server
-		if (this.state.error) {
-			return <Unavailable />;
 		}
 
 		// Temporary DOM element until the date is ready

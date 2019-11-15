@@ -8,7 +8,7 @@ class Unavailable extends React.Component {
         return (
             <Alert variant="danger">
                 <Alert.Heading>Service Unavailable</Alert.Heading>
-                <p>There has been an error. Please try again.</p>
+                <p>{this.props.message}</p>
             </Alert>
         )
     }

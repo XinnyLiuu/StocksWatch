@@ -6,8 +6,7 @@ import {
     ListGroup
 } from 'react-bootstrap';
 
-import GenericError from '../alert/GenericError';
-import '../../css/main.css';
+import Error from '../alert/Error';
 
 class Watchlist extends React.Component {
     constructor(props) {
@@ -165,7 +164,7 @@ class Watchlist extends React.Component {
     render() {
         // Check if error
         if (this.state.error) {
-            return <GenericError />;
+            return <Error message={"Please double check the name of that stock!"} />;
         }
 
         let watchlist = (

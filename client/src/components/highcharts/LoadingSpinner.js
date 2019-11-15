@@ -3,8 +3,6 @@ import {
     Spinner
 } from 'react-bootstrap';
 
-import '../../css/main.css';
-
 class LoadingSpinner extends React.Component {
     render() {
         return (

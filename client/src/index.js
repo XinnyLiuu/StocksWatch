@@ -10,6 +10,7 @@ import {
 import Header from './components/header/Header';
 import Wrapper from './components/highcharts/Wrapper';
 import WatchlistCharts from './components/highcharts/WatchlistCharts';
+import LoadingSpinner from './components/highcharts/LoadingSpinner';
 import Notfound from './components/alert/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
@@ -53,6 +54,7 @@ const routing = (
             <Route exact path="/watchlist" component={props =>
                 isAuthenticated() === true ? <Watchlist /> : <Notfound />
             } />
+            <Route component={Notfound} />
         </Switch>
     </Router>
 );

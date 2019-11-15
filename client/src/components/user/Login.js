@@ -7,7 +7,7 @@ import {
     withRouter
 } from 'react-router-dom';
 
-import GenericError from '../alert/GenericError';
+import Error from '../alert/Error';
 import User from '../../model/User';
 import {
     setSession
@@ -100,7 +100,7 @@ class Login extends React.Component {
     render() {
         // Check if error
         if (this.state.error) {
-            return <GenericError />;
+            return <Error message={"There has been an error attemping to log you in. Please try again later!"} />;
         }
 
         return (

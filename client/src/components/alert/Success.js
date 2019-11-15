@@ -4,10 +4,6 @@ import {
 } from 'react-bootstrap';
 
 class Success extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <Alert variant="success">

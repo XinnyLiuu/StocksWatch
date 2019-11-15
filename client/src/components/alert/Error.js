@@ -3,15 +3,15 @@ import {
     Alert
 } from 'react-bootstrap';
 
-class GenericError extends React.Component {
+class Error extends React.Component {
     render() {
         return (
             <Alert variant="danger">
                 <Alert.Heading>An Error Has Occurred</Alert.Heading>
-                <p>There has been an error. Please try again.</p>
+                <p>{this.props.message}</p>
             </Alert>
         )
     }
 }
 
-export default GenericError;
+export default Error;

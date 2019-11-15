@@ -2,9 +2,7 @@ import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
 import Unavailable from '../alert/Unavailable';
-import {
-    Alert
-} from 'react-bootstrap';
+import Warning from '../alert/Warning';
 
 class WatchlistCharts extends React.Component {
     constructor(props) {
@@ -63,6 +61,11 @@ class WatchlistCharts extends React.Component {
     }
 
     render() {
+        // Check for error from server
+        if (this.state.error) {
+            return <Unavailable message={"Could not load your watchlist at this time!"} />;
+        }
+
         // Check if the user has stocks listed in their watchlist
         if (this.state.watchlist.length > 0 && this.state.data !== "") {
             let json = this.state.data;
@@ -82,18 +85,8 @@ class WatchlistCharts extends React.Component {
         // Show alert message to let users know about adding to watchlist
         if (this.state.watchlist.length === 0) {
             return (
-                <Alert variant="warning">
-                    <Alert.Heading>Your watchlist is empty!</Alert.Heading>
-                    <p>
-                        Go <a href="/watchlist">here</a> to start building your watchlist
-                    </p>
-                </Alert>
+                <Warning header={"Your watchlist is empty!"} message={<p>Go <a href="/watchlist">here</a> to start building your watchlist</p>} />
             )
-        }
-
-        // Check for error from server
-        if (this.state.error) {
-            return <Unavailable />;
         }
 
         // Default to render a spinner
