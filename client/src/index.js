@@ -26,9 +26,9 @@ import {
 } from './utils/auth';
 
 // API endpoints
-const monthly_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/monthly`;
-const dow30_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/dow30`;
-const watchlist_api = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/stocks`;
+const monthly_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/monthly`;
+const dow30_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/dow30`;
+const watchlist_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/watchlist/stocks`;
 
 // Implement Routing
 const routing = (

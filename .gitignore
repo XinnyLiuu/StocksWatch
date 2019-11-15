@@ -1,5 +1,5 @@
-# Environment
-*.env
+# Postgres
+postgres-data/
 
 # Logs
 logs

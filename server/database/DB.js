@@ -6,21 +6,20 @@ const { Client } = require('pg');
  * 
  * Documentation for pg module:
  * https://node-postgres.com/
+ * https://github.com/docker-library/postgres/issues/297
  */
 class DB {
     constructor() {
         return new Promise((resolve, reject) => {
             this.connection = new Client({
-                host: process.env.DB_HOST,
-                user: process.env.DB_USER,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_DATABASE
+                connectionString: process.env.DB_CONNECTION_STRING
             });
 
             this.connection.connect(err => {
                 if (err) reject(err);
                 else {
                     console.log("Connected to PostgreSQL!");
+                    console.log(process.env.DB_CONNECTION_STRING); 
                     resolve(this);
                 }
             });

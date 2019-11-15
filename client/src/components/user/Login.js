@@ -50,7 +50,7 @@ class Login extends React.Component {
         password = password.trim();
 
         // Fire POST request
-        let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/login`;
+        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/login`;
 
         try {
             const resp = await fetch(url, {

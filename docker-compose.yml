@@ -1,0 +1,33 @@
+version: "3"
+
+# List all services (1 service = 1 container)
+services: 
+
+  # Restore from stockswatch.sql: cat server/database/stockswatch.sql | docker exec -i stockswatch_postgres_1 psql -U stockswatch
+  postgres:
+    image: postgres:10.10-alpine
+    environment:
+      - POSTGRES_USER=stockswatch
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=stockswatch
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  server: 
+    build: server/
+    # NODE_ENV grabs the configs from .env.prod
+    environment:
+      - NODE_ENV=prod 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+ 
+  client:
+    build: client/
+    ports:
+      - "80:80"
+    depends_on:
+      - server

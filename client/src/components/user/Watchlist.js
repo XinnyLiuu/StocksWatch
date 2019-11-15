@@ -54,7 +54,7 @@ class Watchlist extends React.Component {
         stock = stock.trim().toUpperCase();
 
         // Fire POST 
-        let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/add`;
+        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/watchlist/add`;
 
         try {
             const resp = await fetch(url, {
@@ -110,7 +110,7 @@ class Watchlist extends React.Component {
         stock = stock.trim().toUpperCase();
 
         // Fire DELETE
-        let url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/watchlist/remove`;
+        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/watchlist/remove`;
 
         try {
             const resp = await fetch(url, {

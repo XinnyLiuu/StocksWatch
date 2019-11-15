@@ -64,7 +64,7 @@ class Setting extends React.Component {
 
       if (!error) {
          // Send UPDATE to server
-         const url = `${process.env.REACT_APP_SERVER_DEV_DOMAIN}/api/user`;
+         const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user`;
 
          try {
             const resp = await fetch(url, {
