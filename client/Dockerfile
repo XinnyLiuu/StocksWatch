@@ -8,7 +8,6 @@ COPY ./ /client
 RUN npm install
 RUN npm run build
 COPY ./ /client
-COPY build/ /client
 
 ## Prepare nginx to serve build files
 FROM nginx:1.17.5-alpine
