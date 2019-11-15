@@ -4,10 +4,11 @@
 FROM node:10.17-alpine AS build 
 
 WORKDIR /client
-COPY ./ /client
+COPY package.json /client
+COPY package-lock.json /client
 RUN npm install
-
-## `npm run build` takes too much memory on the AWS EC2 instance, build before deploying
+RUN npm run build
+COPY build/ /client
 
 ## Prepare nginx to serve build files
 FROM nginx:1.17.5-alpine
