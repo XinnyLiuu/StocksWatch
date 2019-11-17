@@ -212,11 +212,13 @@ class StockChart extends React.Component {
 		let high = this.state.prices.high;
 		let low = this.state.prices.low;
 
+		console.log(this.state.companyName);
+
 		// Update the chartOptions in state
 		this.setState({
 			chartOptions: {
 				title: {
-					text: `${this.state.companyName} (${this.state.symbol}) <br/><br/> $${this.state.currentPrice}`,
+					text: this.state.companyName === undefined ? `${this.state.symbol} <br/><br/> $${this.state.currentPrice}` : `${this.state.companyName} (${this.state.symbol}) <br/><br/> $${this.state.currentPrice}`,
 					style: {
 						color: '#E0E0E3',
 						textTransform: 'uppercase',

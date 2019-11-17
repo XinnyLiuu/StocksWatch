@@ -5,9 +5,9 @@ const parser = require("../utils/parser");
 
 // API Keys + URLs
 const INTRINIO_KEY = process.env.INTRINIO_KEY;
-const IEX_KEY = process.env.IEX_KEY;
+const INTRINIO_PRICES_URL = process.env.INTRINIO_PRICES_URL;
 
-const INTRINIO_URL = process.env.INTRINIO_URL;
+const IEX_KEY = process.env.IEX_KEY;
 const IEX_URL = process.env.IEX_URL;
 
 /**
@@ -17,27 +17,29 @@ const IEX_URL = process.env.IEX_URL;
  */
 exports.getStockDataForDow = async (req, res) => {
     const dow = ["AAPL", "AXP", "BA", "CAT", "CSCO", "CVX", "DIS", "DWDP", "GE", "GS", "HD", "IBM", "INTC", "JNJ", "JPM", "KO", "MCD", "MMM", "MRK", "MSFT", "NKE", "PFE", "PG", "TRV", "UNH", "UTX", "V", "VZ", "WMT", "XOM"];
-    let result = { "DOW30": [] };
-    let intrinio;
+    let results = { "DOW30": [] };
 
     // Iterate through each dow symbol and query intrinio for the data
     let getDow = new Promise((resolve, reject) => {
         dow.forEach(symbol => {
-            intrinio = `${INTRINIO_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
+            const intrinio_prices_url = `${INTRINIO_PRICES_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
 
-            // Use axios to hit the intrinio endpoint
-            axios.get(intrinio).then(resp => {
-                if (resp.status === 200) {
-                    const data = resp.data;
-                    const json = parser.intrinioParser(data);
-                    result.DOW30.push(json);
+            axios.get(intrinio_prices_url).then(resp => {
+                const pricesResp = resp;
 
-                    if (result.DOW30.length === 30) {
+                if (pricesResp.status === 200) {
+                    let data = pricesResp.data;
+                    let json = parser.intrinioParser(data);
+                    json["currentPrice"] = data.stock_prices[0].high;
+
+                    results.DOW30.push(json);
+
+                    // Check the lengths
+                    if (dow.length === results.DOW30.length) {
                         resolve(true);
                     }
                 }
             }).catch(err => {
-                console.log(err);
                 reject(err);
             })
         });
@@ -47,7 +49,7 @@ exports.getStockDataForDow = async (req, res) => {
     try {
         const fetched = await getDow;
 
-        if (fetched) return res.json(result);
+        if (fetched) return res.json(results);
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -108,6 +110,7 @@ exports.postWatchlistStocks = async (req, res) => {
     let getWatchlist = new Promise((resolve, reject) => {
         if (watchlist.length > 0) {
             watchlist.forEach(s => {
+
                 // Build URLs
                 let yearly_data_url = IEX_URL;
                 yearly_data_url += `/${s}/chart/1y`;
