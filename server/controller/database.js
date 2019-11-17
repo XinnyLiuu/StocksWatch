@@ -3,7 +3,7 @@ const DB = require('../database/DB');
 const encryptHelper = require("../utils/encrypt");
 
 // API
-const apiService = require("../service/api");
+const stockService = require("../service/stock");
 
 // Instantiate a global DB reference
 const postgres = new DB();
@@ -143,7 +143,7 @@ exports.postAddStockWatchList = async (req, res) => {
 
     try {
         // Check if the stock actually exists
-        const exists = await apiService.checkValidStock(stock);
+        const exists = await stockService.checkValidStock(stock);
 
         if (exists) {
             const db = await postgres;
@@ -243,6 +243,128 @@ exports.putUserSettings = async (req, res) => {
         }
 
         return res.sendStatus(500);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+/**
+ * GET /api/symbols
+ * 
+ * Returns all the symbols the database has for companies from database
+ */
+exports.getSymbols = async (req, res) => {
+    const query = {
+        name: "get-symbols",
+        text: "select symbol from companies"
+    }
+
+    try {
+        const db = await postgres;
+        const results = await db.select(query);
+
+        if (results.length === 0) return res.sendStatus(500);
+        if (results.length > 0) {
+            // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
+            let data = [];
+            results.forEach(d => {
+                data.push(d.symbol);
+            });
+            data.sort();
+
+            return res.json(data);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+/**
+ * GET /api/companies
+ * 
+ * Returns all the names the database has for companies from database
+ */
+exports.getCompanies = async (req, res) => {
+    const query = {
+        name: "get-companies",
+        text: "select name from companies"
+    }
+
+    try {
+        const db = await postgres;
+        const results = await db.select(query);
+
+        if (results.length === 0) return res.sendStatus(500);
+        if (results.length > 0) {
+            // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
+            let data = [];
+            results.forEach(d => {
+                data.push(d.name);
+            });
+            data.sort();
+
+            return res.json(data);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+/**
+ * GET /api/convert/company/:company
+ *
+ * Returns the symbol of a stock for the company
+ */
+exports.getSymbolByCompany = async (req, res) => {
+    const company = req.params.company;
+
+    const query = {
+        name: "get-symbol-for-company",
+        text: "select symbol from companies where name = $1",
+        values: [company]
+    }
+
+    try {
+        const db = await postgres;
+        const results = await db.select(query);
+
+        if (results.length === 0) return res.sendStatus(500);
+        if (results.length === 1) {
+            const symbol = results[0].symbol;
+            return res.json(symbol);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+/**
+ * GET /api/convert/symbol/:symbol
+ *
+ * Returns the name of a company for the symbol
+ */
+exports.getCompanyBySymbol = async (req, res) => {
+    const symbol = req.params.symbol;
+
+    const query = {
+        name: "get-company-for-symbol",
+        text: "select name from companies where symbol = $1",
+        values: [symbol]
+    }
+
+    try {
+        const db = await postgres;
+        const results = await db.select(query);
+
+        if (results.length === 0) return res.sendStatus(500);
+        if (results.length === 1) {
+            const name = results[0].name;
+            return res.json(name);
+        }
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);

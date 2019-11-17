@@ -65,10 +65,24 @@ body {
   float: right;
 }
 
+#toggleGroup {
+  margin-right: 10px;
+}
+
+#toggleGroupWatchlist {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#watchlistInput {
+  margin-right: 10px;
+}
+
 /**
   Media Queries 
 */
 @media only screen and (max-width: 600px) {
+
   #login,
   #settings,
   #watchlist {
@@ -77,11 +91,19 @@ body {
     width: inherit;
   }
 
-  #searchBtn {
-    margin-top: .8rem;
-  }
-
   .spinner {
     margin: 50% 0 0 35%;
+  }
+
+  #searchBtn {
+    margin-left: 10px;
+  }
+
+  #toggleGroup {
+    margin-bottom: 10px;
+  }
+
+  #toggleGroupWatchlist {
+    margin-left: 0px;
   }
 }

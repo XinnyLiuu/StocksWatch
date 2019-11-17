@@ -49,7 +49,6 @@ body {
 #name {
   color: #17a2b8 !important;
 }
-
 #name a {
   color: none;
   text-decoration: none;
@@ -64,25 +63,45 @@ body {
   float: right;
 }
 
+#toggleGroup {
+  margin-right: 10px;
+}
+
+#toggleGroupWatchlist {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#watchlistInput {
+  margin-right: 10px;
+}
+
 /**
   Media Queries 
 */
 @media only screen and (max-width: 600px) {
-
   #login,
-  #settings,
-  #watchlist {
+#settings,
+#watchlist {
     margin: 50px;
     padding: 20px;
     width: inherit;
   }
 
-  #searchBtn {
-    margin-top: 0.8rem;
-  }
-
   .spinner {
     margin: 50% 0 0 35%;
+  }
+
+  #searchBtn {
+    margin-left: 10px;
+  }
+
+  #toggleGroup {
+    margin-bottom: 10px;
+  }
+
+  #toggleGroupWatchlist {
+    margin-left: 0px;
   }
 }
 

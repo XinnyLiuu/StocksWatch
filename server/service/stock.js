@@ -63,16 +63,29 @@ exports.getStockDataBySymbol = async (req, res) => {
     const symbol = req.params.symbol;
 
     // Build URL
-    let monthly_data_url = IEX_URL;
-    monthly_data_url += `/${symbol}/chart/1y`;
-    monthly_data_url += `?token=${IEX_KEY}`;
+    let yearly_data_url = IEX_URL;
+    yearly_data_url += `/${symbol}/chart/1y`;
+    yearly_data_url += `?token=${IEX_KEY}`;
 
     try {
-        const result = await axios.get(monthly_data_url);
+        let result = await axios.get(yearly_data_url);
 
         if (result.status === 200) {
-            const data = result.data;
+            let data = result.data;
             const json = parser.IEXParser(data, symbol);
+
+            // Get the stock's company name + current price
+            let current_data_url = IEX_URL;
+            current_data_url += `/${symbol}/quote`;
+            current_data_url += `?token=${IEX_KEY}`;
+
+            result = await axios.get(current_data_url);
+
+            if (result.status === 200) {
+                data = result.data;
+                json["company"] = data.companyName;
+                json["currentPrice"] = data.latestPrice;
+            }
 
             return res.json(json);
         }
@@ -95,16 +108,35 @@ exports.postWatchlistStocks = async (req, res) => {
     let getWatchlist = new Promise((resolve, reject) => {
         if (watchlist.length > 0) {
             watchlist.forEach(s => {
-                // Build URL
-                let monthly_data_url = IEX_URL;
-                monthly_data_url += `/${s}/chart/1y`;
-                monthly_data_url += `?token=${IEX_KEY}`;
+                // Build URLs
+                let yearly_data_url = IEX_URL;
+                yearly_data_url += `/${s}/chart/1y`;
+                yearly_data_url += `?token=${IEX_KEY}`;
 
-                axios.get(monthly_data_url).then(result => {
-                    // Check response status
-                    if (result.status === 200) {
-                        const data = result.data;
-                        const json = parser.IEXParser(data, s);
+                let current_data_url = IEX_URL;
+                current_data_url += `/${s}/quote`;
+                current_data_url += `?token=${IEX_KEY}`;
+
+                // Fire both axios calls
+                return Promise.all([
+                    axios.get(yearly_data_url), // Gets the years worth of data 
+                    axios.get(current_data_url) // Gets a quote 
+                ]).then(resp => {
+
+                    // Get both axios responses
+                    const yearlyResp = resp[0];
+                    const currentResp = resp[1];
+
+                    if (yearlyResp.status === 200) {
+                        let data = yearlyResp.data;
+                        let json = parser.IEXParser(data, s);
+
+                        if (currentResp.status === 200) {
+                            data = currentResp.data;
+                            json["company"] = data.companyName;
+                            json["currentPrice"] = data.latestPrice;
+                        }
+
                         results.watchlist.push(json);
 
                         // Check the length of results.watchlist and watchlist
@@ -114,7 +146,7 @@ exports.postWatchlistStocks = async (req, res) => {
                     }
                 }).catch(err => {
                     reject(err);
-                });
+                })
             });
         }
     });
@@ -133,12 +165,12 @@ exports.postWatchlistStocks = async (req, res) => {
  * Sends a HEAD request to IEX to see if the stock exists 
  */
 exports.checkValidStock = (stock) => {
-    let monthly_data_url = IEX_URL;
-    monthly_data_url += `/${stock}/chart/1y`;
-    monthly_data_url += `?token=${IEX_KEY}`;
+    let yearly_data_url = IEX_URL;
+    yearly_data_url += `/${stock}/chart/1y`;
+    yearly_data_url += `?token=${IEX_KEY}`;
 
     return new Promise((resolve, reject) => {
-        axios.head(monthly_data_url).then(result => {
+        axios.head(yearly_data_url).then(result => {
             if (result.status === 200) {
                 resolve(true);
             }

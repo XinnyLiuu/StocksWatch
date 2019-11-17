@@ -3,7 +3,7 @@ version: "3"
 # List all services (1 service = 1 container)
 services: 
 
-  # Restore from stockswatch.sql: cat server/database/stockswatch.sql | docker exec -i stockswatch_postgres_1 psql -U stockswatch
+  # Restore from stockswatch.sql: cat stockswatch.sql | docker exec -i stockswatch_postgres_1 psql -U stockswatch
   postgres:
     image: postgres:10.10-alpine
     environment:

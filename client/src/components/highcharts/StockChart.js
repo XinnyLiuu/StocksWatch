@@ -9,6 +9,8 @@ class StockChart extends React.Component {
 		this.state = {
 			symbol: null,
 			prices: null,
+			currentPrice: null,
+			companyName: null,
 
 			// Highcharts configs
 			chartOptions: {
@@ -214,7 +216,7 @@ class StockChart extends React.Component {
 		this.setState({
 			chartOptions: {
 				title: {
-					text: `${this.state.symbol}`,
+					text: `${this.state.companyName} (${this.state.symbol}) <br/><br/> $${this.state.currentPrice}`,
 					style: {
 						color: '#E0E0E3',
 						textTransform: 'uppercase',
@@ -241,7 +243,9 @@ class StockChart extends React.Component {
 
 		this.setState({
 			symbol: data.symbol,
-			prices: data.prices
+			prices: data.prices,
+			currentPrice: data.currentPrice,
+			companyName: data.company
 		}, () => this.prepareChart());
 	}
 
@@ -258,7 +262,9 @@ class StockChart extends React.Component {
 				// Update the state and then reload the chart
 				this.setState({
 					symbol: data.symbol,
-					prices: data.prices
+					prices: data.prices,
+					currentPrice: data.currentPrice,
+					companyName: data.company
 				}, () => this.prepareChart());
 			}
 		}

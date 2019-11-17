@@ -19,7 +19,6 @@ class DB {
                 if (err) reject(err);
                 else {
                     console.log("Connected to PostgreSQL!");
-                    console.log(process.env.DB_CONNECTION_STRING); 
                     resolve(this);
                 }
             });

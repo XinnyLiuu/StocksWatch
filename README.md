@@ -187,12 +187,12 @@ For performance refactoring, originally when the user would add a stock to their
 
 Below is a snippet of the `HEAD` request found in `server/service/api.js`:
 ```javascript
-let monthly_data_url = IEX_URL;
-monthly_data_url += `/${stock}/chart/1y`;
-monthly_data_url += `?token=${IEX_KEY}`;
+let yearly_data_url = IEX_URL;
+yearly_data_url += `/${stock}/chart/1y`;
+yearly_data_url += `?token=${IEX_KEY}`;
 
 return new Promise((resolve, reject) => {
-	axios.head(monthly_data_url).then(result => {
+	axios.head(yearly_data_url).then(result => {
 		if (result.status === 200) {
 			resolve(true);
 		}

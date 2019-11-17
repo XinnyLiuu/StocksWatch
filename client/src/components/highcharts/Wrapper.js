@@ -35,14 +35,10 @@ class Wrapper extends React.Component {
 
 			// On 500 status
 			if (resp.status === 500) {
-				this.setState({
-					error: true
-				});
+				this.setState({ error: true });
 			}
 		} catch (err) {
-			this.setState({
-				error: true
-			})
+			this.setState({ error: true })
 		}
 	}
 
