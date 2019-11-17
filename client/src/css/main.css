@@ -76,6 +76,10 @@ body {
   margin-right: 10px;
 }
 
+.center {
+  justify-content: center !important;
+}
+
 /**
   Media Queries 
 */

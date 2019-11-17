@@ -212,8 +212,6 @@ class StockChart extends React.Component {
 		let high = this.state.prices.high;
 		let low = this.state.prices.low;
 
-		console.log(this.state.companyName);
-
 		// Update the chartOptions in state
 		this.setState({
 			chartOptions: {

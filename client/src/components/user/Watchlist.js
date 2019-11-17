@@ -91,9 +91,7 @@ class Watchlist extends React.Component {
                     this.setState({ symbols: json })
                 }
 
-                if (resp.status === 500) {
-                    this.setState({ error: true })
-                }
+                if (resp.status === 500) this.setState({ error: true });
             } catch (err) {
                 this.setState({ error: true })
             }
@@ -118,9 +116,7 @@ class Watchlist extends React.Component {
                     this.setState({ companies: json })
                 }
 
-                if (resp.status === 500) {
-                    this.setState({ error: true })
-                }
+                if (resp.status === 500) this.setState({ error: true });
             } catch (err) {
                 this.setState({ error: true })
             }
@@ -151,9 +147,7 @@ class Watchlist extends React.Component {
                 return symbol;
             }
 
-            if (resp.status === 500) {
-                this.setState({ error: true });
-            }
+            if (resp.status === 500) this.setState({ error: true });
         } catch (err) {
             this.setState({ error: true });
         }
@@ -163,20 +157,19 @@ class Watchlist extends React.Component {
     async addUserStock(e) {
         e.preventDefault();
 
-		/**
-		 * Check the data type, for `company` we have to query for the symbol
-		 */
+        /**
+         * Check the data type, for `company` we have to query for the symbol
+         */
         if (this.state.dataType === "company") {
             try {
                 const symbol = await this.getSymbolForCompany(this.state.searchValue);
-
                 this.setState({ searchValue: symbol });
             } catch (err) {
                 this.setState({ error: true });
             }
         }
 
-        // Validate
+        // Get values
         let stock = this.state.searchValue;
         let userId = localStorage.getItem("id");
 
@@ -202,10 +195,8 @@ class Watchlist extends React.Component {
 
                 // Add stock to localStorage / session
                 let symbol = json.symbol;
-
                 let stocks = JSON.parse(localStorage.getItem("stocks"));
                 stocks.push(symbol);
-
                 stocks = JSON.stringify(stocks);
                 localStorage.setItem("stocks", stocks);
 
@@ -216,9 +207,7 @@ class Watchlist extends React.Component {
             }
 
             // On 500 status
-            if (resp.status === 500) {
-                this.setState({ error: true });
-            }
+            if (resp.status === 500) this.setState({ error: true });
         } catch (err) {
             this.setState({ error: true });
         }
@@ -271,9 +260,7 @@ class Watchlist extends React.Component {
                 })
             }
 
-            if (resp.status === 500) {
-                this.setState({ error: true });
-            }
+            if (resp.status === 500) this.setState({ error: true });
         } catch (err) {
             this.setState({ error: true });
         }
@@ -285,11 +272,7 @@ class Watchlist extends React.Component {
         // Get the stocks of the user in localStorage 
         const stocks = JSON.parse(localStorage.getItem('stocks'));
 
-        if (stocks.length > 0) {
-            this.setState({
-                prevStocks: stocks
-            })
-        }
+        if (stocks.length > 0) this.setState({ prevStocks: stocks });
     }
 
     render() {
@@ -306,12 +289,12 @@ class Watchlist extends React.Component {
                     <Form.Group>
                         <Typeahead id="watchlistInput" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
                         <ToggleButtonGroup id="toggleGroupWatchlist" type="radio" name="search-option" defaultValue={1} onChange={this.toggleChange}>
-                            <ToggleButton variant="info" value={1}>Symbol</ToggleButton>
-                            <ToggleButton variant="info" value={2}>Company</ToggleButton>
+                            <ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
+                            <ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
                         </ToggleButtonGroup>
                     </Form.Group>
 
-                    <Button variant="info" type="submit">
+                    <Button variant="outline-success" type="submit">
                         Add
                     </Button>
                 </Form>
@@ -331,9 +314,9 @@ class Watchlist extends React.Component {
                 lists.push(
                     <React.Fragment>
                         <ListGroup.Item variant="info">
-                            <span>{s}</span>
+                            <span><a href={`/search/${s}`}>{s}</a></span>
                             <span className="float-right">
-                                <Button data-stock={s} variant="danger" size="sm" onClick={this.deleteUserStock}>Remove</Button>
+                                <Button data-stock={s} variant="outline-danger" size="sm" onClick={this.deleteUserStock}>Remove</Button>
                             </span>
                         </ListGroup.Item>
                     </React.Fragment>
@@ -354,6 +337,7 @@ class Watchlist extends React.Component {
             );
 
             watchlist.push(card);
+
             watchlist = (
                 <div id="watchlist">
                     {watchlist}

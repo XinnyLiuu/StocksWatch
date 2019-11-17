@@ -1,8 +1,17 @@
 import React from 'react';
+import {
+	ButtonToolbar,
+	Button
+} from 'react-bootstrap';
+
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
 import Unavailable from '../alert/Unavailable';
 import Info from '../alert/Info';
+
+import {
+	isAuthenticated
+} from '../../utils/auth';
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -10,10 +19,16 @@ class Wrapper extends React.Component {
 
 		this.state = {
 			data: "",
-			error: false
+			error: false,
+			btnDisable: false,
+			btnText: "Add to Watchlist"
 		};
+
+		this.addUserStock = this.addUserStock.bind(this);
+		this.checkStockInWatchlist = this.checkStockInWatchlist.bind(this);
 	}
 
+	// Grabs the data for the stock
 	async fetchData() {
 		// Get props
 		const api = this.props.api + "/" + this.props.symbol;
@@ -34,23 +49,98 @@ class Wrapper extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) {
-				this.setState({ error: true });
-			}
+			if (resp.status === 500) this.setState({ error: true });
 		} catch (err) {
 			this.setState({ error: true })
 		}
 	}
 
-	componentDidMount() {
-		// Grab the data from the server to render the graphs in the component
-		this.fetchData();
+
+	// Adds the stock to the user watchlist
+	async addUserStock(e) {
+		e.preventDefault();
+
+		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/watchlist/add`;
+
+		// Get values
+		let stock = this.props.symbol;
+		let userId = localStorage.getItem("id");
+
+		try {
+			const resp = await fetch(url, {
+				method: 'POST',
+				mode: 'cors',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					"userId": userId,
+					"stock": stock
+				})
+			});
+
+			// On 200 status
+			if (resp.status === 200) {
+				const json = await resp.json();
+
+				// Add stock to localStorage / session
+				let symbol = json.symbol;
+				let stocks = JSON.parse(localStorage.getItem("stocks"));
+				stocks.push(symbol);
+				stocks = JSON.stringify(stocks);
+				localStorage.setItem("stocks", stocks);
+
+				// Update state
+				this.setState({
+					btnDisable: true,
+					btnText: "Added!"
+				})
+			}
+
+			// On 500 status
+			if (resp.status === 500) this.setState({ error: true });
+		} catch (err) {
+			this.setState({ error: true });
+		}
 	}
 
+	// Check if the stock exists in localStorage 'stocks'
+	checkStockInWatchlist(e) {
+		if (this.props.symbol !== "") {
+			if (localStorage.getItem("stocks")) {
+				const stocks = JSON.parse(localStorage.getItem("stocks"));
+
+				if (stocks.includes(this.props.symbol)) {
+					this.setState({
+						btnDisable: true,
+						btnText: "Added!"
+					})
+				}
+			}
+		}
+	}
+
+	componentDidMount() {
+		// Grab the data from the server to render the graphs in the components
+		this.fetchData();
+		this.checkStockInWatchlist();
+	}
+
+	/**
+	 * Since this component is used repeatedly as a "wrapper" for loading single graphs, on a new /search/:symbol reload the data 
+	 */
 	componentDidUpdate(prevProps) {
 		// Check if symbol has changed
 		if (prevProps.symbol !== this.props.symbol) {
+
+			// Reset button states
+			this.setState({
+				btnDisable: false,
+				btnText: "Add to Watchlist"
+			});
+
 			this.fetchData();
+			this.checkStockInWatchlist();
 		}
 	}
 
@@ -64,26 +154,36 @@ class Wrapper extends React.Component {
 		if (this.state.data !== "") {
 			let json = this.state.data;
 
-			// Check if json is DOW30
+			// Check if json has DOW30
 			if (json.hasOwnProperty("DOW30")) {
 				let stockCharts = [];
 				let dow = json["DOW30"];
 
 				stockCharts.push(
 					<Info header={"Dow 30"} message={"Login or Register to build your personalized watchlist"} />
-				)
+				);
 
 				// Render each DOW stock as its own StockChart component
-				dow.forEach(d => {
-					stockCharts.push(<StockChart data={d} type="multiple" />);
-				});
+				dow.forEach(d => stockCharts.push(<StockChart data={d} type="multiple" />));
 
 				return stockCharts;
 			}
-			// Else, the json passed into the component is data for only one stock
-			else {
-				return <StockChart data={json} type="single" />;
+
+			// If the json does not have DOW30, then its a single stock
+			// Check if the user is logged in
+			if (isAuthenticated()) {
+				return (
+					<React.Fragment>
+						<StockChart data={json} type="single" />
+						<br />
+						<ButtonToolbar className="center">
+							<Button variant="success" onClick={this.addUserStock} disabled={this.state.btnDisable}>{this.state.btnText}</Button>
+						</ButtonToolbar>
+					</React.Fragment>
+				);
 			}
+
+			return <StockChart data={json} type="single" />;
 		}
 
 		// Temporary DOM element until the date is ready

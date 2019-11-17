@@ -32,14 +32,10 @@ class WatchlistCharts extends React.Component {
             // Check HTTP status code
             if (resp.status === 200) {
                 const json = await resp.json();
-
                 this.setState({ data: json });
             }
 
-            if (resp.status === 500) {
-                this.setState({ error: true });
-            }
-
+            if (resp.status === 500) this.setState({ error: true });
         } catch (err) {
             this.setState({ error: true })
         }

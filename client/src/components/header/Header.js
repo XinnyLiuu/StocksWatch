@@ -92,7 +92,6 @@ class Header extends React.Component {
 		if (this.state.dataType === "company") {
 			try {
 				const symbol = await this.getSymbolForCompany(this.state.searchValue);
-
 				this.setState({ searchValue: symbol });
 			} catch (err) {
 				this.setState({ error: true });
@@ -134,9 +133,7 @@ class Header extends React.Component {
 					this.setState({ symbols: json })
 				}
 
-				if (resp.status === 500) {
-					this.setState({ error: true })
-				}
+				if (resp.status === 500) this.setState({ error: true });
 			} catch (err) {
 				this.setState({ error: true })
 			}
@@ -161,9 +158,7 @@ class Header extends React.Component {
 					this.setState({ companies: json })
 				}
 
-				if (resp.status === 500) {
-					this.setState({ error: true })
-				}
+				if (resp.status === 500) this.setState({ error: true });
 			} catch (err) {
 				this.setState({ error: true })
 			}
@@ -194,9 +189,7 @@ class Header extends React.Component {
 				return symbol;
 			}
 
-			if (resp.status === 500) {
-				this.setState({ error: true });
-			}
+			if (resp.status === 500) this.setState({ error: true });
 		} catch (err) {
 			this.setState({ error: true });
 		}
@@ -223,8 +216,8 @@ class Header extends React.Component {
 					</Nav>
 					<Form inline onSubmit={this.searchStock}>
 						<ToggleButtonGroup id="toggleGroup" type="radio" name="search-option" defaultValue={1} onChange={this.toggleChange}>
-							<ToggleButton variant="info" value={1}>Symbol</ToggleButton>
-							<ToggleButton variant="info" value={2}>Company</ToggleButton>
+							<ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
+							<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 						</ToggleButtonGroup>
 						<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
 						<Button id="searchBtn" variant="outline-info" type="submit">Search</Button>
@@ -252,11 +245,11 @@ class Header extends React.Component {
 						</Nav>
 						<Form inline onSubmit={this.searchStock}>
 							<ToggleButtonGroup id="toggleGroup" type="radio" name="search-option" defaultValue={1} onChange={this.toggleChange}>
-								<ToggleButton variant="info" value={1}>Symbol</ToggleButton>
-								<ToggleButton variant="info" value={2}>Company</ToggleButton>
+								<ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
+								<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 							</ToggleButtonGroup>
 							<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
-							<Button id="searchBtn" variant="outline-info" type="submit">Search</Button>
+							<Button id="searchBtn" variant="outline-success" type="submit">Search</Button>
 						</Form>
 					</Navbar.Collapse>
 				</Navbar>
