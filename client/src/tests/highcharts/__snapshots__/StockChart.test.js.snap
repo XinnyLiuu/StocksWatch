@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StockChart should render with data 1`] = `ShallowWrapper {}`;
+
+exports[`StockChart should update when data is changed 1`] = `ReactWrapper {}`;
