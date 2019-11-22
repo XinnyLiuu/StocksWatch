@@ -60,7 +60,7 @@ class Wrapper extends React.Component {
 	async addUserStock(e) {
 		e.preventDefault();
 
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/watchlist/add`;
+		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
 
 		// Get values
 		let stock = this.props.symbol;

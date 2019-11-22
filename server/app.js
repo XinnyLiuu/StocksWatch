@@ -20,29 +20,10 @@ app.options("*", cors(corsOptions));
 // Enable JSON for POST
 app.use(express.json());
 
+// Routes
+const apiRoutes = require("./routes/index");
+app.use("/api", apiRoutes);
+
 // Start server
 app.listen(process.env.PORT || 8000);
 console.log(`Server running on port ${process.env.PORT || 8000}`);
-
-// Services
-const stockService = require('./service/stock');
-
-// Database
-const dbController = require('./controller/database');
-
-// Routes
-// Stock Data
-app.get("/api/monthly/:symbol", stockService.getStockDataBySymbol);
-app.get("/api/dow30", stockService.getStockDataForDow);
-app.post("/api/watchlist/stocks", stockService.postWatchlistStocks);
-
-// Database
-app.post("/api/login", dbController.postUserLogin);
-app.post("/api/register", dbController.postUserRegister);
-app.post("/api/watchlist/add", dbController.postAddStockWatchList);
-app.delete("/api/watchlist/remove", dbController.deleteRemoveStockWatchList);
-app.put("/api/user", dbController.putUserSettings);
-app.get("/api/symbols", dbController.getSymbols);
-app.get("/api/companies", dbController.getCompanies);
-app.get("/api/convert/company/:company", dbController.getSymbolByCompany);
-app.get("/api/convert/symbol/:symbol", dbController.getCompanyBySymbol);

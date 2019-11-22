@@ -55,7 +55,7 @@ class Register extends React.Component {
         lastname = lastname.trim();
 
         // Fire POST request
-        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/register`;
+        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/register`;
 
         try {
             const resp = await fetch(url, {

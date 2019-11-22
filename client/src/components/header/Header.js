@@ -118,7 +118,7 @@ class Header extends React.Component {
 		if (!localStorage.getItem("symbols")) {
 
 			// Get the list of symbols from the server
-			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/symbols`;
+			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/symbols`;
 
 			try {
 				const resp = await fetch(url);
@@ -143,7 +143,7 @@ class Header extends React.Component {
 		if (!localStorage.getItem("companies")) {
 
 			// Get the list of companies from the server
-			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/companies`;
+			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/companies`;
 
 			try {
 				const resp = await fetch(url);
@@ -180,7 +180,7 @@ class Header extends React.Component {
 
 	// Get the symbol for the selected company
 	async getSymbolForCompany(company) {
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/convert/company/${company}`;
+		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/convert/company/${company}`;
 
 		try {
 			const resp = await fetch(url);
