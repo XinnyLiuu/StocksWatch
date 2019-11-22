@@ -1,11 +1,9 @@
-import mockData from '../__mocks__/mock_stock.json'
-
 const localStorageMock = (() => {
   var store = {
   };
   return {
     getItem: (key) => {
-      return store[key];
+      return store[key] ? store[key] : null;
     },
     setItem: (key, value) => {
       store[key] = value.toString();
