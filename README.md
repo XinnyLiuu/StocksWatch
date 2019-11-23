@@ -290,9 +290,9 @@ exports.getSalt = () => {
 ```
 
 ## Testing
-For testing our application, we ended up using __[Jest](https://jestjs.io/)__ and __[Enzyme](https://airbnb.io/enzyme/)__ for our client React application and `jest` for our server Node.js application. 
+For testing our application, we ended up using __[Jest](https://jestjs.io/)__ and __[Enzyme](https://airbnb.io/enzyme/)__ for our client React application and `Jest` for our server Node.js application. 
 
-The usage of Jest and Enzyme allows the usage of mock data and rendering of components without having to manually render each one via a browser. Every component and utility function are tested to ensure that everything does not break during the actual deployment of the code. 
+Jest and Enzyme allows the usage of mock data and rendering of components without having to manually render each one via a browser. Every component and utility function are tested to ensure that everything does not break during the actual deployment of the code. 
 
 The following is an example of testing a basic component:
 
@@ -335,7 +335,7 @@ describe('Rendering Stockchart', () => {
 });
 ```
 
-As mentioned above, we also made sure that the utility functions used for the client are tested. Due to the fact we are caching user information into the browser's localStorage, we uased mock to representing the local storage.
+As mentioned above, we also made sure that the utility functions used for the client are tested. Due to the fact we are caching user information into the browser's localStorage, we used a mock object to representing the local storage.
 
 The mock is as follows:
 
@@ -408,7 +408,7 @@ function dumpTestSQL() {
 dumpTestSQL();
 ```
 
-The tests for our API are given mock data for any endpoints involving `POST` request and `GET` requests are tested to ensure that the JSON being returned contained properties.
+The tests for our API are given mock data for any endpoints involving `POST` request and `GET` requests are tested to ensure that the JSON being returned contained properties that are expected.
 
 ```javascript
 describe("Get monthly data for MSFT", () => {
