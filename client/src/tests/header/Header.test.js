@@ -1,15 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Header from '../../components/Header/Header.js';
+import Header from '../../components/header/Header.js';
 import { shallow, mount, render } from 'enzyme';
-import renderer from 'react-test-renderer';
 
 jest.mock('../__mocks__/fetchUser')
 
-describe('Header', () => {
-	it('should render', () => {
+describe('Rendering Header', () => {
+	it('Should render Header without errors', () => {
 		const component = shallow(<Header />);
-
 		expect(component).toMatchSnapshot();
 	});
 });

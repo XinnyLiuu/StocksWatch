@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Register should render 1`] = `ShallowWrapper {}`;
+exports[`Rendering Register Should render 1`] = `ShallowWrapper {}`;

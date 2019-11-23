@@ -6,9 +6,11 @@ import Notfound from '../../components/alert/Notfound.js';
 import 'jest-localstorage-mock';
 import renderer from 'react-test-renderer';
 
-it('renders Notfound without crashing', () => {
-	const div = document.createElement('div');
+describe("Rendering Notfound alert", () => {
+	it('Renders NotFound without crashing', () => {
+		const div = document.createElement('div');
 
-	ReactDOM.render(<Notfound />, div);
-	ReactDOM.unmountComponentAtNode(div);
+		ReactDOM.render(<Notfound />, div);
+		ReactDOM.unmountComponentAtNode(div);
+	});
 });

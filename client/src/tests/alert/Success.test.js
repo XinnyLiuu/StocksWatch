@@ -6,18 +6,21 @@ import Success from '../../components/alert/Success.js';
 import 'jest-localstorage-mock';
 import renderer from 'react-test-renderer';
 
-// Success
-it('renders Success without crashing', () => {
-	const div = document.createElement('div');
+describe("Rendering Success alert", () => {
+	it('Renders Success without crashing', () => {
+		const div = document.createElement('div');
 
-	ReactDOM.render(<Success />, div);
-	ReactDOM.unmountComponentAtNode(div);
+		ReactDOM.render(<Success />, div);
+		ReactDOM.unmountComponentAtNode(div);
+	});
 });
 
-it('displays the correct message', () => {
-	const component = renderer.create(
-		<Success message="This is a test"></Success>,
-	);
-	let tree = component.toJSON();
-	expect(tree).toMatchSnapshot();
+describe("Rendering Unavailable alert with message", () => {
+	it('Displays the correct message', () => {
+		const component = renderer.create(
+			<Success message="This is a test"></Success>,
+		);
+		let tree = component.toJSON();
+		expect(tree).toMatchSnapshot();
+	});
 });

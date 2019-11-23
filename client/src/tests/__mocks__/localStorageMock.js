@@ -1,6 +1,6 @@
 const localStorageMock = (() => {
-	var store = {
-	};
+	var store = {};
+
 	return {
 		getItem: (key) => {
 			return store[key] ? store[key] : null;

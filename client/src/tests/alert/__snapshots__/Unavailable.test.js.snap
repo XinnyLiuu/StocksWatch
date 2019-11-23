@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`displays the correct message 1`] = `
+exports[`Rendering Unavailable alert with message Displays the correct message 1`] = `
 <div
   className="fade alert alert-danger show"
   role="alert"

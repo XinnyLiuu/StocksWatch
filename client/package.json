@@ -1,49 +1,49 @@
 {
-  "name": "stockswatch_client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "bootstrap": "^4.3.1",
-    "concurrently": "^5.0.0",
-    "highcharts": "^7.2.0",
-    "highcharts-react-official": "^2.2.2",
-    "react": "^16.10.2",
-    "react-bootstrap": "^1.0.0-beta.14",
-    "react-bootstrap-typeahead": "^3.4.7",
-    "react-dom": "^16.10.2",
-    "react-highcharts": "^16.1.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
-    "react-test-renderer": "^16.12.0",
-    "sass": "^1.23.3"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "sass": "sass --watch src/css/main.scss src/css/main.css",
-    "dev": "concurrently \"npm run start\" \"npm run sass\""
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.15.1",
-    "enzyme-to-json": "^3.4.3",
-    "jest-localstorage-mock": "^2.4.0"
-  }
+	"name": "stockswatch_client",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"bootstrap": "^4.3.1",
+		"concurrently": "^5.0.0",
+		"highcharts": "^7.2.0",
+		"highcharts-react-official": "^2.2.2",
+		"react": "^16.10.2",
+		"react-bootstrap": "^1.0.0-beta.14",
+		"react-bootstrap-typeahead": "^3.4.7",
+		"react-dom": "^16.10.2",
+		"react-highcharts": "^16.1.0",
+		"react-router-dom": "^5.1.2",
+		"react-scripts": "3.2.0",
+		"react-test-renderer": "^16.12.0",
+		"sass": "^1.23.3"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"sass": "sass --watch src/css/main.scss src/css/main.css",
+		"dev": "concurrently \"npm run start\" \"npm run sass\""
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"enzyme": "^3.10.0",
+		"enzyme-adapter-react-16": "^1.15.1",
+		"enzyme-to-json": "^3.4.3",
+		"jest-localstorage-mock": "^2.4.0"
+	}
 }
