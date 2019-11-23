@@ -4,6 +4,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 require("custom-env").env(true);
 
+/**
+ * Configs for Express
+ */
+
 // Create express server
 const app = express();
 
@@ -24,6 +28,4 @@ app.use(express.json());
 const apiRoutes = require("./routes/index");
 app.use("/api", apiRoutes);
 
-// Start server
-app.listen(process.env.PORT || 8000);
-console.log(`Server running on port ${process.env.PORT || 8000}`);
+module.exports = app;

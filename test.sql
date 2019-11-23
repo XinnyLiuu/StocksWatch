@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
--- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped from database version 10.11 (Ubuntu 10.11-1.pgdg18.04+1)
+-- Dumped by pg_dump version 10.11 (Ubuntu 10.11-1.pgdg18.04+1)
 
 DELETE FROM stockswatch.user_stocks;
 DELETE FROM stockswatch.users;
@@ -8060,8 +8060,6 @@ FPL	FIRST TRUST NEW OPPORTUNITIE
 --
 
 COPY stockswatch.user_stocks (symbol, user_id) FROM stdin;
-HUBS	3
-MSFT	3
 \.
 
 
@@ -8070,7 +8068,6 @@ MSFT	3
 --
 
 COPY stockswatch.users (user_id, username, firstname, lastname, password, salt) FROM stdin;
-3	xinnyliuu	Xin	Liu	4a32e50006a57656a9bd8dd342e8e08b7fd04d89e7723084b772bd216b58053f28bc1b2e1c7b3f1ae62bc779f97e2c62ef660550c6faf556b855eb978ea545a1	f0a596d05fbb6b27df6d42c0f624b7c76adf37773500f26de6cae7f8f4d8592e
 \.
 
 

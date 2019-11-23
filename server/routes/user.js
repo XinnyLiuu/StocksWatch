@@ -44,6 +44,7 @@ router.post("/login", async (req, res) => {
  * Takes data from request body and creates an user
  */
 router.post("/register", async (req, res) => {
+    
     let username = req.body.username;
     let password = req.body.password;
     let firstname = req.body.firstname;

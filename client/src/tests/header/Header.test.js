@@ -7,9 +7,9 @@ import renderer from 'react-test-renderer';
 jest.mock('../__mocks__/fetchUser')
 
 describe('Header', () => {
-  it('should render', () => {
-    const component = shallow(<Header />);
-  
-    expect(component).toMatchSnapshot();
-  });
+	it('should render', () => {
+		const component = shallow(<Header />);
+
+		expect(component).toMatchSnapshot();
+	});
 });

@@ -5,8 +5,8 @@ import renderer from 'react-test-renderer';
 
 // Error
 it('renders component without crashing', () => {
-  const div = document.createElement('div');
-  
-  ReactDOM.render(<LoadingSpinner />, div);
-  ReactDOM.unmountComponentAtNode(div);
+	const div = document.createElement('div');
+
+	ReactDOM.render(<LoadingSpinner />, div);
+	ReactDOM.unmountComponentAtNode(div);
 });

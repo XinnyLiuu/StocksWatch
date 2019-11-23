@@ -7,16 +7,16 @@ import renderer from 'react-test-renderer';
 
 // Error
 it('renders Error without crashing', () => {
-  const div = document.createElement('div');
-  
-  ReactDOM.render(<Error />, div);
-  ReactDOM.unmountComponentAtNode(div);
+	const div = document.createElement('div');
+
+	ReactDOM.render(<Error />, div);
+	ReactDOM.unmountComponentAtNode(div);
 });
 
 it('displays the correct message', () => {
-  const component = renderer.create(
-    <Error message="This is a test"></Error>,
-  );
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+	const component = renderer.create(
+		<Error message="This is a test"></Error>,
+	);
+	let tree = component.toJSON();
+	expect(tree).toMatchSnapshot();
 });

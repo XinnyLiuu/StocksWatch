@@ -10,9 +10,9 @@ localStorageMock.setItem('stocks', JSON.stringify(mockStock));
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 describe('Watchlist', () => {
-  it('should render', () => {
-    const component = shallow(<Watchlist />);
-  
-    expect(component).toMatchSnapshot();
-  });
+	it('should render', () => {
+		const component = shallow(<Watchlist />);
+
+		expect(component).toMatchSnapshot();
+	});
 });

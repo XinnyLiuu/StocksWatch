@@ -105,6 +105,7 @@ router.get("/dow30", async (req, res) => {
  */
 router.post("/watchlist", async (req, res) => {
     let watchlist = JSON.parse(req.body.watchlist);
+
     let results = { "watchlist": [] };
 
     // Iterate through every symbol in the user's watchlist
@@ -225,7 +226,7 @@ router.get("/convert/symbol/:symbol", async (req, res) => {
 
     try {
         // Get company
-        const company = await postgres.getSymbolByCompany(symbol);
+        const company = await postgres.getCompanyBySymbol(symbol);
         return res.json(company)
     } catch (err) {
         console.log(err);

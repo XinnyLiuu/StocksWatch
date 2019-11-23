@@ -1,29 +1,42 @@
 {
-  "name": "432_project",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/GreasyBunnies/432_Project.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/GreasyBunnies/432_Project/issues"
-  },
-  "homepage": "https://github.com/GreasyBunnies/432_Project#readme",
-  "dependencies": {
-    "axios": "^0.19.0",
-    "cors": "^2.8.5",
-    "custom-env": "^1.0.2",
-    "express": "^4.17.1",
-    "morgan": "^1.9.1",
-    "nodemon": "^1.19.3",
-    "pg": "^7.12.1"
-  }
+	"name": "432_project",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest",
+		"start": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GreasyBunnies/432_Project.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/GreasyBunnies/432_Project/issues"
+	},
+	"homepage": "https://github.com/GreasyBunnies/432_Project#readme",
+	"dependencies": {
+		"axios": "^0.19.0",
+		"cors": "^2.8.5",
+		"custom-env": "^1.0.2",
+		"express": "^4.17.1",
+		"morgan": "^1.9.1",
+		"nodemon": "^1.19.3",
+		"pg": "^7.12.1"
+	},
+	"devDependencies": {
+		"jest": "^24.9.0",
+		"supertest": "^4.0.2"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"coveragePathIgnorePatterns": [
+			"/node_modules/"
+		],
+		"setupFiles": [
+			"./tests/testEnvSetup.js"
+		]
+	}
 }

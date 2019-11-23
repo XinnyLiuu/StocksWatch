@@ -7,9 +7,9 @@ import renderer from 'react-test-renderer';
 jest.mock('../__mocks__/fetchUser')
 
 describe('Login', () => {
-  it('should render', () => {
-    const component = shallow(<Setting />);
-  
-    expect(component).toMatchSnapshot();
-  });
+	it('should render', () => {
+		const component = shallow(<Setting />);
+
+		expect(component).toMatchSnapshot();
+	});
 });
