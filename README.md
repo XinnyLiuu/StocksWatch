@@ -1,3 +1,5 @@
+# StocksWatch
+
 ## Team Members and Roles
 * Xin Liu - Full Stack Developer
 * Benjamin Thorn - Front-end Developer  
@@ -15,7 +17,7 @@ StocksWatch will be a web application aimed to offer the best experience for our
 * Add to their own list of stocks that is offered by our platform. 
 * Edit the stocks that are currently being tracked. 
 * Enjoy seamless user experience. StocksWatch will be both desktop and mobile friendly so that our application be used anywhere with an internet connection.
-* Show the future predictions of a price of a stock through the use of a Python Machine Learning Library (Pandas).
+* __TBD__: Show the future predictions of a price of a stock through the use of a machine learning library.
 
 The scope of this project involves users being able to search, add and track stocks they are interested in. The stocks they follow with be projected into an interactive historical line graph using the HighCharts library. Users will be able to edit their stocks using CRUD operations via our client side application. Given that we are not using the premium features of various 3rd party stock APIs, the selection of the available stocks to track are within the restraint of stocks that are provided by the free tier API. 
 
@@ -54,7 +56,7 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 * Presentation Layer
 	- Our client is the presentation layer and allows for interactions with the user. It communicates with our application layer through `HTTP (GET/POST/PUT/DELETE) methods`. Our application layer exposes API endpoints by which the presentation layer can use. 
 
-	- __Example__: User wants to see the Dow 30 companies - Our presentation layer  (React) will send a `GET` request to an endpoint offered by our server (`/api/dow30`). The server will receive the request, query an API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into a charts library to show to the user.
+	- __Example__: User wants to see the Dow 30 companies - Our presentation layer  (React) will send a `GET` request to an endpoint offered by our server (`/api/stocks/dow30`). The server will receive the request, query an API, parse the data offered by the API, clean the data and return to the presentation layer a JSON object that the presentation layer can plug into a charts library to show to the user.
 
 * Application Layer
 	- Our server is the application layer. This layer processes all HTTP requests sent from our presentation layer. It will expose API endpoints that are mapped to a controller to handle the request. The controllers perform actions on the database layer whereby updating our model. 
@@ -62,7 +64,7 @@ __Note__: Given that we are using a JavaScript on both client and server, we are
 	- __Example__: User wants to delete a stock that they are tracking on our presentation layer (React). The client will send a `HTTP DELETE request` to an endpoint on our server (`/api/:stock`), where `:stock` is the symbol belonging to the stock the user wants to delete. This parameter is hidden from the user. The endpoint is mapped to a controller function - `removeStockBySymbol()`, which will query the database with a `DELETE statement` and removes the stock from the `user_stocks` table.
 
 * Database Layer
-	- Our database layer are code related to the database. The `DB` class will connect to the database and offer methods that peform CRUD actions on a table. 
+	- Our database layer are code related to the database. The `db` module will connect to the database and offer methods that peform CRUD actions on a table. 
 
 	- __Example__: When our user adds a stock that they wish to track, the presentation layer will send a `POST` request to an endpoint exposed by our server. The endpoint (`/api/stock/:symbol`) will call the associated controller function insert the data of that stock into the database.
 
@@ -79,43 +81,39 @@ __Note__: Exceptions in JavaScript are similar to those of Java. Every exception
 
 The client should __NEVER__ show any stack traces to the user. 
 
-* __Server__: Our `Node.js` server deals with many things including exposed endpoints for the client to consume and database operations. The database related code has been wrapped in a class called `DB.js` below:
+* __Server__: Our `Node.js` server deals with many things including exposed endpoints for the client to consume and database operations. The database related code has been wrapped in a module called `db.js` below:
 
 ```javascript
-class DB {
-    constructor() {
-        return new Promise((resolve, reject) => {
-            this.connection = new Client({
-                host: process.env.DB_HOST,
-                user: process.env.DB_USER,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_DATABASE
-            });
+const postgres = new Client({
+    connectionString: process.env.DB_CONNECTION_STRING
+});
 
-            this.connection.connect(err => {
-                if (err) reject(err);
-                else {
-                    console.log("Connected to PostgreSQL!");
-                    resolve(this);
-                }
-            });
-        });
-    }
+postgres.connect(err => {
+    if (err) console.log(err);
+    else console.log("Connected to PostgreSQL!");
+});
 
-    select(query) {
-        return new Promise((resolve, reject) => {
-            this.connection.query(query, (error, results) => {
-                if (error) reject(error);
-                else resolve(results.rows);
-            });
-        })
-    }
+module.exports = {
+    getUserSalt,
+    getUserByUsernamePassword,
+    getUserStocks,
+    insertUser,
+    insertUserStock,
+    deleteUserStock,
+    updateUser,
+    getSymbols,
+    getCompanies,
+    getSymbolByCompany,
+    getCompanyBySymbol,
+    dropCompanies,
+    addCompany
+}
 
 	...
 }
 ```
 
-In the class, each method returns a `Promise` object that will either resolve or reject the asynchronous action from the __[node-postgres](https://node-postgres.com/)__ npm module. On the event the database method has been rejected, the error will be caught and logged to the terminal; The server will then return a status code of `500` to the client. Below is the code for a snippet of this:
+In the module, each method returns a `Promise` object that will either resolve or reject the asynchronous action from the __[node-postgres](https://node-postgres.com/)__ npm module. On the event the database method has been rejected, the error will be caught and logged to the terminal; The server will then return a status code of `500` to the client. Below is the code for a snippet of this:
 
 ```javascript
 ...
@@ -132,6 +130,7 @@ Our code in the client, would then check if a status code of `500` is returned a
 In regards on code for refactoring, originally we were handling `Promises` with `then / catch`, but an issue arose where code became ugly and difficult to maintain as we added more and more features. As such, we replaced promise handling with __[async / await](https://javascript.info/async-await)__ to better manage the resolution of promises for asynchronous actions. 
 
 Below is a snippet of code where `then / catch` were used:
+
 ```javascript
 fetch(api).then(resp => {
 	if (resp.status === 200) {
@@ -159,6 +158,7 @@ fetch(api).then(resp => {
 
 ```
 Below does the same as the code above, but with `async / await`:
+
 ```javascript
 try {
 	const resp = await fetch(api);
@@ -186,6 +186,7 @@ Above can be found in `client/src/components/highcharts/Wrapper.js`. With `async
 For performance refactoring, originally when the user would add a stock to their watchlist, we would validate the stock with a `GET` request to the 3rd party API each time to ensure that the user stock exists. We soon discovered that there is a __[HEAD](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD)__ which is similar to a `GET`, but only requests the headers of the resource. This is crucial in the sense that instead of our server downloading the entire body and header returned from the API, we simply need to query the API for the stock and check the header for a status code `200`. If the `HEAD` request to the API returns a `200` for the stock, then the resource exists and therefore the stock does too.
 
 Below is a snippet of the `HEAD` request found in `server/service/api.js`:
+
 ```javascript
 let yearly_data_url = IEX_URL;
 yearly_data_url += `/${stock}/chart/1y`;
@@ -209,6 +210,7 @@ We only have to switch database drivers and with the help of npm, we replaced th
 We used `prepared statements` to precompile SQL statements to ensure faster execution of quries and to resue the same SQL statments in batches.
 
 Below is the database class we originally had for MySQL:
+
 ```javascript
 const mysql = require('mysql');
 
@@ -235,6 +237,7 @@ class DB {
 ```
 
 Below is the updated class for PostgreSQL and prepared statement usage:
+
 ```javascript
 query = {
             name: "validate-user",
@@ -273,6 +276,7 @@ class DB {
 With security becoming a major concern, we were wary of the management of user passwords. When we were using MySQL, we hashed the password string with the built in functionality of `sha256`, but that was not enough. As a result, we decided to use the __[crypto](https://nodejs.org/api/crypto.html)__ to help use generate a random salt of `32 bytes` before storing the hashed salt and password combination with `sha512` into the database. Upon registering onto our platform, users are given a salt that is unique to them.
 
 Below is the code snippet of methods relating to the hashing and encryption of user passwords:
+
 ```javascript
 exports.encrypt = (password, salt) => {
     password = salt + password;
@@ -285,6 +289,160 @@ exports.getSalt = () => {
 }
 ```
 
+## Testing
+For testing our application, we ended up using __[Jest](https://jestjs.io/)__ and __[Enzyme](https://airbnb.io/enzyme/)__ for our client React application and `jest` for our server Node.js application. 
+
+The usage of Jest and Enzyme allows the usage of mock data and rendering of components without having to manually render each one via a browser. Every component and utility function are tested to ensure that everything does not break during the actual deployment of the code. 
+
+The following is an example of testing a basic component:
+
+```javascript
+describe("Rendering Info alert", () => {
+	it('Renders Info without crashing', () => {
+		const div = document.createElement('div');
+
+		ReactDOM.render(<Info />, div);
+		ReactDOM.unmountComponentAtNode(div);
+	});
+});
+```
+The component is tested to make sure it can be rendered properly and without any errors.
+
+For components that required data, we added mock data to ensure that they are rendered without any errors as well:
+
+``` javascript
+const mockData = {
+	symbol: 'TEST',
+	prices: {
+		high: [10],
+		low: [1]
+	},
+	currentPrice: 5,
+	companyName: 'Test Inc.',
+}
+
+describe('Rendering Stockchart', () => {
+	it('Should render with data', () => {
+		const component = shallow(<StockChart data={mockData} />);
+		expect(component).toMatchSnapshot();
+	});
+
+	it('Should update when data is changed', () => {
+		const component = mount(<StockChart data={mockData} />);
+		component.setProps({ type: "single" })
+		expect(component).toMatchSnapshot();
+	});
+});
+```
+
+As mentioned above, we also made sure that the utility functions used for the client are tested. Due to the fact we are caching user information into the browser's localStorage, we uased mock to representing the local storage.
+
+The mock is as follows:
+
+```javascript
+const localStorageMock = (() => {
+	var store = {};
+
+	return {
+		getItem: (key) => {
+			return store[key] ? store[key] : null;
+		},
+		setItem: (key, value) => {
+			store[key] = value.toString();
+		},
+		clear: () => {
+			store = {};
+		},
+		removeItem: (key) => {
+			delete store[key];
+		}
+	};
+})();
+```
+
+The testing of the utility methods are as follows:
+
+```javascript
+describe('Checking auth utility', () => {
+	it('Should check authentication', () => {
+		expect(auth.isAuthenticated()).toBe(true);
+	});
+
+	it('Should get cached user data', () => {
+		const user = auth.getUserInfo();
+		expect(user.firstName + ' ' + user.lastName).toBe('Johnny Test');
+	});
+
+	it('Should set user data into session data', () => {
+		const user = new User(2, 'Shenmue3', 'Ryo', 'Hazuki', false, mockStock)
+
+		auth.setSession(user);
+
+		expect(localStorageMock.getItem('firstname') + ' ' + localStorageMock.getItem('lastname')).toBe('Ryo Hazuki')
+	});
+
+	it('Should destroy the session', () => {
+		auth.destroySession();
+
+		expect(localStorageMock.getItem('isAuth')).toBe(null);
+	});
+});
+```
+
+For our server, in order to have a mock database, we created a database in Postgres called `test_stockswatch` and with the usage of Jest, everytime before the test suites run, the database is wiped and sample data is inputted to mimic how the application works realistically.
+
+```javascript
+const testSQLPath = "../test.sql";
+
+function dumpTestSQL() {
+    console.log("Setting up test database...");
+
+    exec(`psql test_stockswatch < ${testSQLPath}`, (err, stdout, stderr) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+    })
+}
+
+dumpTestSQL();
+```
+
+The tests for our API are given mock data for any endpoints involving `POST` request and `GET` requests are tested to ensure that the JSON being returned contained properties.
+
+```javascript
+describe("Get monthly data for MSFT", () => {
+    test('Should get 200 status and data', async (done) => {
+        const response = await request(app).get("/api/stocks/monthly/MSFT");
+
+        const data = response.body;
+
+        expect(response.statusCode).toBe(200);
+        expect(data.hasOwnProperty("symbol") === "MSFT")
+        expect(data.hasOwnProperty("prices"))
+        done();
+    });
+});
+
+...
+
+let body = { watchlist: '["HUBS"]' };
+
+describe("Get data for stocks in user watchlist", () => {
+    test("Should get 200 status", async (done) => {
+        const response = await request(app)
+            .post("/api/stocks/watchlist")
+            .set("Content-Type", "application/json")
+            .send(body);
+
+        const data = response.body;
+
+        expect(response.statusCode).toBe(200);
+        expect(data.hasOwnProperty("watchlist"));
+        done();
+    });
+});
+```
 
 ## Technologies Used
 We plan to use the following technologies in our application: 
@@ -295,6 +453,8 @@ We plan to use the following technologies in our application:
 * __[PostgreSQL](https://www.postgresql.org/)__ - Relational database used to store our data.
 * __[Intrinio](https://intrinio.com/)__ - An API offering a wide selection of financial data related to Stocks and Cryptocurrencies.
 * __[IEX](https://iexcloud.io/docs/api/)__ - Another financial data API.
+* __[Jest](https://jestjs.io/)__ - Testing framework for JavaScript applications.
+*  __[Enzyme](https://airbnb.io/enzyme/)__ - Testing framework for React with the ability to render components.
 
 The following technologies may be used later down the line as we flesh out our design more:
 * __[Electron](https://electronjs.org/)__ - An JavaScript desktop wrapper that enables web application to function as a desktop applicaiton. (Nice for resume).
@@ -303,7 +463,6 @@ The following technologies may be used later down the line as we flesh out our d
 
 
 ## Timeline
-* Milestone 6 - Testing - __due 11/22__
 * Milestone 7 - Packaging - __due 12/6__
 
 
@@ -319,7 +478,7 @@ Anytime after:
 ```
 npm start
 ```
-Prepare database:
+Dump database:
 ```
 pg_dump stockswatch > stockswatch.sql
 ```
