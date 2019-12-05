@@ -3,18 +3,13 @@ const exec = require("child_process").exec;
 require("custom-env").env(true);
 
 /**
- * Used to setup environment variables for Jest 
- * 
- * 
- * Make sure that test.sql is dumped into the test database 
- * 'psql test_stockswatch < test.sql' 
+ * MAKE SURE THE TEST DATABASE (test_stockswatch) IS CREATED OR THIS WILL FAIL
  */
 
-
 // Test sql file path
-const testSQLPath = "../test.sql";
+const testSQLPath = "../postgres/stockswatch.sql";
 
-// Resets the test database
+// Prepares the test database
 function dumpTestSQL() {
     console.log("Setting up test database...");
 

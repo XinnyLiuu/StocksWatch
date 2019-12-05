@@ -36,7 +36,7 @@
 			"/node_modules/"
 		],
 		"setupFiles": [
-			"./tests/testEnvSetup.js"
+			"./tests/setup.js"
 		]
 	}
 }

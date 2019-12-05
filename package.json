@@ -1,7 +1,7 @@
 {
   "name": "stockswatch",
   "version": "1.0.0",
-  "description": "* Xin Liu - Full Stack Developer * Benjamin Thorn - Front-end Developer   * Terence Biney - Back-end Developer / DB Manager",
+  "description": "",
   "main": "index.js",
   "dependencies": {
     "concurrently": "^5.0.0",

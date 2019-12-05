@@ -444,6 +444,28 @@ describe("Get data for stocks in user watchlist", () => {
 });
 ```
 
+## Deployment, Packaging
+### Production
+This application has already been deployed and can be accessed __[here](http://stockswatch.tk/)__.
+
+
+### Local
+The recommended way to run this application locally is via `Docker`.  Ensure that __[Docker](https://www.docker.com/)__ is installed on the host machine. 
+
+- Make sure to change the `REACT_APP_SERVER_DOMAIN` under `/client/.env.production` to `http://localhost:8000`. The `Dockerfile` under `/client` builds the React application which defaults to use the variables defined under `.env.production`.
+
+- The containers will use the host machine's port `5432` and `80` - the build will fail if those ports are in use.
+
+- The included `docker-compose.dev.yml` file builds and prepares the containers necessary for this application to work locally.
+
+- Run: 
+```
+sudo docker-compose -f docker-compose.dev.yml build
+sudo docker-compose -f docker-compose.dev.yml up& 
+```
+
+Use `sudo docker-compose -f docker-compose.dev.yml down` to stop the container.
+
 ## Technologies Used
 We plan to use the following technologies in our application: 
 
@@ -461,24 +483,15 @@ The following technologies may be used later down the line as we flesh out our d
 * __[Pandas](https://pandas.pydata.org/)__ - Pandas is a data analytics and machine learning library written in Python. The machine learning will only be as good as it is trained, but it will be a cool feature nonetheless.
 
 
+## Database 
+- __NOTE__: PostgreSQL should be installed with a role called `stockswatch` and database called `stockswatch`.
 
-## Timeline
-* Milestone 7 - Packaging - __due 12/6__
-
-
-## Local Installation
-Ensure that `PostgreSQL` is running and `/server/.env` is correct before running:
-
-First usage:
-```
-npm run initialize
-``` 
-
-Anytime after:
-```
-npm start
-```
-Dump database:
+Backup: 
 ```
 pg_dump stockswatch > stockswatch.sql
+```
+
+Restore:
+```
+cat stockswatch.sql | psql -U stockswatch
 ```

@@ -65,6 +65,7 @@ class Wrapper extends React.Component {
 		// Get values
 		let stock = this.props.symbol;
 		let userId = localStorage.getItem("id");
+		let username = localStorage.getItem("username");
 
 		try {
 			const resp = await fetch(url, {
@@ -75,7 +76,8 @@ class Wrapper extends React.Component {
 				},
 				body: JSON.stringify({
 					"userId": userId,
-					"stock": stock
+					"stock": stock,
+					"username": username
 				})
 			});
 

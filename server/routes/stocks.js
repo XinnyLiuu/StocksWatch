@@ -60,7 +60,9 @@ router.get("/monthly/:symbol", async (req, res) => {
  */
 router.get("/dow30", async (req, res) => {
     const dow = ["AAPL", "AXP", "BA", "CAT", "CSCO", "CVX", "DIS", "DWDP", "GE", "GS", "HD", "IBM", "INTC", "JNJ", "JPM", "KO", "MCD", "MMM", "MRK", "MSFT", "NKE", "PFE", "PG", "TRV", "UNH", "UTX", "V", "VZ", "WMT", "XOM"];
-    let results = { "DOW30": [] };
+    let results = {
+        "DOW30": []
+    };
 
     // Iterate through each dow symbol and query intrinio for the data
     let getDow = new Promise((resolve, reject) => {
@@ -106,7 +108,9 @@ router.get("/dow30", async (req, res) => {
 router.post("/watchlist", async (req, res) => {
     let watchlist = JSON.parse(req.body.watchlist);
 
-    let results = { "watchlist": [] };
+    let results = {
+        "watchlist": []
+    };
 
     // Iterate through every symbol in the user's watchlist
     let getWatchlist = new Promise((resolve, reject) => {

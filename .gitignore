@@ -1,6 +1,5 @@
 # Postgres
 postgres-data/
-*.sql
 
 # Logs
 logs

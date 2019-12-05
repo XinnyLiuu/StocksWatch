@@ -1,5 +1,8 @@
 'use strict';
-const { Client } = require('pg');
+const {
+    Client
+} = require('pg');
+
 /**
  * Connection to PostgreSQL
  * 
@@ -41,10 +44,13 @@ function dropCompanies() {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            const affected = results.rowCount;
+            if (typeof results !== 'undefined') {
+                const affected = results.rowCount;
 
-            if (affected > 0) resolve(affected);
-            else reject(error);
+                if (affected >= 0) resolve(affected);
+            }
+
+            reject(error);
         })
     })
 }
@@ -59,10 +65,13 @@ function addCompany(symbol, name) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            const affected = results.rowCount;
+            if (typeof results !== 'undefined') {
+                const affected = results.rowCount;
 
-            if (affected === 1) resolve(affected);
-            else reject(error);
+                if (affected === 1) resolve(affected);
+            }
+
+            reject(error);
         })
     })
 }
@@ -77,12 +86,14 @@ function getUserSalt(username) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            // Check length of results
-            if (results.length === 1) {
-                let salt = results[0].salt;
-                resolve(salt);
+                // Check length of rows
+                if (rows.length === 1) {
+                    let salt = rows[0].salt;
+                    resolve(salt);
+                }
             }
 
             reject(error);
@@ -100,12 +111,15 @@ function getUserByUsernamePassword(username, password) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length === 1) {
-                let userData = results[0];
-                userData["stocks"] = [];
-                resolve(userData);
+                // Check length of rows
+                if (rows.length === 1) {
+                    let userData = rows[0];
+                    userData["stocks"] = [];
+                    resolve(userData);
+                }
             }
 
             reject(error);
@@ -123,12 +137,14 @@ function getUserStocks(userId) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length >= 0) {
-                let stocks = [];
-                results.forEach(d => stocks.push(d.symbol));
-                resolve(stocks);
+                if (rows.length >= 0) {
+                    let stocks = [];
+                    rows.forEach(d => stocks.push(d.symbol));
+                    resolve(stocks);
+                }
             }
 
             reject(error);
@@ -146,36 +162,40 @@ function insertUser(username, firstname, lastname, password, salt) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            // Get affected rows
-            const affected = results.rowCount;
+            if (typeof results !== 'undefined') {
+                const affected = results.rowCount;
 
-            // Get last inserted id
-            const insertedId = results.rows[0].user_id;
+                // Get last inserted id
+                const insertedId = results.rows[0].user_id;
 
-            // Check affected rows
-            if (affected === 1) resolve(insertedId);
-            if (affected === 0) reject(error);
+                // Check affected rows
+                if (affected === 1) resolve(insertedId);
+            }
+
+            reject(error);
         });
     });
 }
 
 // Inserts a stock for the user's watchlist
-function insertUserStock(stock, userId) {
+function insertUserStock(stock, userId, username) {
     let query = {
         name: "insert-stock",
-        text: "insert into user_stocks (symbol, user_id) values ($1, $2)",
-        values: [stock, userId]
+        text: "insert into user_stocks (symbol, user_id, username) values ($1, $2, $3)",
+        values: [stock, userId, username]
     };
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
+            if (typeof results !== 'undefined') {
+                // Get affected rows
+                const affected = results.rowCount;
 
-            // Get affected rows
-            const affected = results.rowCount;
+                // Check affected rows
+                if (affected === 1) resolve(1);
+            }
 
-            // Check affected rows
-            if (affected === 1) resolve(1);
-            if (affected === 0) reject(error);
+            reject(error);
         });
     });
 }
@@ -190,12 +210,15 @@ function deleteUserStock(stock, userId) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            // Get affected rows
-            const affected = results.rowCount;
+            if (typeof results !== 'undefined') {
+                // Get affected rows
+                const affected = results.rowCount;
 
-            // Check affected rows
-            if (affected === 1) resolve(1);
-            if (affected === 0) reject(error);
+                // Check affected rows
+                if (affected === 1) resolve(1);
+            }
+
+            reject(error);
         });
     });
 }
@@ -210,12 +233,15 @@ function updateUser(username, password, firstname, lastname) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            // Get affected rows
-            const affected = results.rowCount;
+            if (typeof results !== 'undefined') {
+                // Get affected rows
+                const affected = results.rowCount;
 
-            // Check affected rows
-            if (affected === 1) resolve(1);
-            if (affected === 0) reject(error);
+                // Check affected rows
+                if (affected === 1) resolve(1);
+            }
+
+            reject(error);
         });
     });
 }
@@ -229,19 +255,22 @@ function getSymbols() {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length === 0) reject(error);
-            if (results.length > 0) {
-                // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
-                let data = [];
-                results.forEach(d => {
-                    data.push(d.symbol);
-                });
-                data.sort();
+                if (rows.length > 0) {
+                    // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
+                    let data = [];
+                    rows.forEach(d => {
+                        data.push(d.symbol);
+                    });
+                    data.sort();
 
-                resolve(data);
+                    resolve(data);
+                }
             }
+
+            reject(error);
         });
     })
 }
@@ -255,19 +284,22 @@ function getCompanies() {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length === 0) reject(error);
-            if (results.length > 0) {
-                // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
-                let data = [];
-                results.forEach(d => {
-                    data.push(d.name);
-                });
-                data.sort();
+                if (rows.length > 0) {
+                    // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
+                    let data = [];
+                    rows.forEach(d => {
+                        data.push(d.name);
+                    });
+                    data.sort();
 
-                resolve(data);
+                    resolve(data);
+                }
             }
+
+            reject(error);
         });
     })
 }
@@ -282,13 +314,16 @@ function getSymbolByCompany(company) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length === 0) reject(error);
-            if (results.length === 1) {
-                const symbol = results[0].symbol;
-                resolve(symbol);
+                if (rows.length === 1) {
+                    const symbol = rows[0].symbol;
+                    resolve(symbol);
+                }
             }
+
+            reject(error);
         });
     })
 }
@@ -303,13 +338,16 @@ function getCompanyBySymbol(symbol) {
 
     return new Promise((resolve, reject) => {
         postgres.query(query, (error, results) => {
-            results = results.rows;
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
 
-            if (results.length === 0) reject(error);
-            if (results.length === 1) {
-                const name = results[0].name;
-                resolve(name);
+                if (rows.length === 1) {
+                    const symbol = rows[0].name;
+                    resolve(symbol);
+                }
             }
+
+            reject(error);
         });
     })
 }

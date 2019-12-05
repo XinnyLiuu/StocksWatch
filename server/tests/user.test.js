@@ -62,7 +62,7 @@ describe("Login user", () => {
 // POST /api/user/watchlist
 describe("Add to watchlist", () => {
 	test("Should get 200 status and stock symbol", async (done) => {
-		let body = { stock: 'HUBS', userId: '4' };
+		let body = { stock: 'HUBS', userId: '5', username: 'test' };
 
 		const response = await request(app)
 			.post("/api/user/watchlist")
@@ -80,7 +80,7 @@ describe("Add to watchlist", () => {
 // DELETE /api/user/watchlist
 describe("Delete from watchlist", () => {
 	test("Should get 200 status and stock symbol", async (done) => {
-		let body = { stock: 'HUBS', userId: '4' };
+		let body = { stock: 'HUBS', userId: '5' };
 
 		const response = await request(app)
 			.delete("/api/user/watchlist")

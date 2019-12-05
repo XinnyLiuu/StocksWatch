@@ -44,7 +44,7 @@ router.post("/login", async (req, res) => {
  * Takes data from request body and creates an user
  */
 router.post("/register", async (req, res) => {
-    
+
     let username = req.body.username;
     let password = req.body.password;
     let firstname = req.body.firstname;
@@ -59,7 +59,9 @@ router.post("/register", async (req, res) => {
     try {
         // Add user
         const insertedId = await postgres.insertUser(username.toLowerCase(), firstname, lastname, password, salt);
-        return res.json({ "id": insertedId });
+        return res.json({
+            "id": insertedId
+        });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -74,11 +76,14 @@ router.post("/register", async (req, res) => {
 router.post("/watchlist", async (req, res) => {
     let stock = req.body.stock;
     let userId = req.body.userId;
+    let username = req.body.username;
 
     try {
         // Add to user stock
-        const affected = await postgres.insertUserStock(stock, userId);
-        if (affected === 1) return res.json({ "symbol": stock });
+        const affected = await postgres.insertUserStock(stock, userId, username);
+        if (affected === 1) return res.json({
+            "symbol": stock
+        });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -97,7 +102,9 @@ router.delete("/watchlist", async (req, res) => {
     try {
         // Delete user stock
         const affected = await postgres.deleteUserStock(stock, userId);
-        if (affected !== null) return res.json({ "symbol": stock });
+        if (affected !== null) return res.json({
+            "symbol": stock
+        });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);

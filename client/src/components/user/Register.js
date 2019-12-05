@@ -44,15 +44,13 @@ class Register extends React.Component {
         e.preventDefault();
 
         // Validate inputs
-        let username = this.state.username;
-        let password = this.state.password;
-        let firstname = this.state.firstname;
-        let lastname = this.state.lastname;
+        let username = this.state.username.toLowerCase().trim();
+        let password = this.state.password.trim();
+        let firstname = this.state.firstname.toLowerCase().trim();
+        let lastname = this.state.lastname.toLowerCase().trim();
 
-        username = username.trim();
-        password = password.trim();
-        firstname = firstname.trim();
-        lastname = lastname.trim();
+        firstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
+        lastname = lastname.charAt(0).toUpperCase() + lastname.slice(1);
 
         // Fire POST request
         const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/register`;

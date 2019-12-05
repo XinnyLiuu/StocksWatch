@@ -172,6 +172,7 @@ class Watchlist extends React.Component {
         // Get values
         let stock = this.state.searchValue;
         let userId = localStorage.getItem("id");
+        let username = localStorage.getItem("username");
 
         // Fire POST 
         let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
@@ -185,7 +186,8 @@ class Watchlist extends React.Component {
                 },
                 body: JSON.stringify({
                     "userId": userId,
-                    "stock": stock
+                    "stock": stock,
+                    "username": username
                 })
             });
 

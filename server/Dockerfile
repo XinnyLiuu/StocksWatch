@@ -7,6 +7,5 @@ RUN npm install
 
 EXPOSE 8000
 
-## Run the server in prod mode, ensure that .env.prod file is created
+## Start the server
 CMD ["npm", "start"]
-
