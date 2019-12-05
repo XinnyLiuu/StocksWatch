@@ -174,6 +174,10 @@ class Watchlist extends React.Component {
         let userId = localStorage.getItem("id");
         let username = localStorage.getItem("username");
 
+        alert(username);
+        alert(userId);
+        alert(stock);
+
         // Fire POST 
         let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
 
