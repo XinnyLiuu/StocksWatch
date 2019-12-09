@@ -449,22 +449,30 @@ describe("Get data for stocks in user watchlist", () => {
 This application has already been deployed and can be accessed __[here](http://stockswatch.tk/)__.
 
 
-### Local
-The recommended way to run this application locally is via `Docker`.  Ensure that __[Docker](https://www.docker.com/)__ is installed on the host machine. 
+### Docker
+Ensure that __[Docker](https://www.docker.com/)__ is installed on the host machine. Before running please address the following:
 
-- Make sure to change the `REACT_APP_SERVER_DOMAIN` under `/client/.env.production` to `http://localhost:8000`. The `Dockerfile` under `/client` builds the React application which defaults to use the variables defined under `.env.production`.
+- Change the `REACT_APP_SERVER_DOMAIN` environment variable under `/client/.env.production` to `http://localhost:8000`. 
+	- The `Dockerfile` under `/client` builds the React application which defaults to use the variables defined under `.env.production`.
 
 - The containers will use the host machine's port `5432` and `80` - the build will fail if those ports are in use.
 
 - The included `docker-compose.dev.yml` file builds and prepares the containers necessary for this application to work locally.
 
-- Run: 
+Run: 
 ```
 sudo docker-compose -f docker-compose.dev.yml build
 sudo docker-compose -f docker-compose.dev.yml up& 
 ```
 
-Use `sudo docker-compose -f docker-compose.dev.yml down` to stop the container.
+Use `sudo docker-compose -f docker-compose.dev.yml down` to stop the containers.
+
+### Electron
+Run:
+```
+npm install 
+npm run electron
+```
 
 ## Technologies Used
 We plan to use the following technologies in our application: 

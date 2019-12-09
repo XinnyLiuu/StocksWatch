@@ -255,7 +255,7 @@ function deleteUserStock(stock, userId) {
 // Deletes a stock from the user's watchlist based on the username
 function deleteUserStockByUsername(stock, username) {
     let query = {
-        name: "delete-stock",
+        name: "delete-stock-by-username",
         text: "delete from user_stocks where symbol = $1 and username = $2",
         values: [stock, username]
     };

@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
 // Remove top toolbar
 Menu.setApplicationMenu(false)
@@ -9,7 +9,7 @@ const url = require('url');
 let mainWindow;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({width: 1200, height: 800});
+    mainWindow = new BrowserWindow({ width: 1200, height: 800 });
 
     mainWindow.setMenuBarVisibility(false);
 
