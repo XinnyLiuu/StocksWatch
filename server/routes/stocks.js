@@ -119,7 +119,7 @@ router.post("/watchlist", async (req, res) => {
 
                 // Build URLs
                 let yearly_data_url = IEX_URL;
-                yearly_data_url += `/${s}/chart/1y`;
+                yearly_data_url += `/${s}/chart/2y`;
                 yearly_data_url += `?token=${IEX_KEY}`;
 
                 let current_data_url = IEX_URL;
