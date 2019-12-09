@@ -485,9 +485,9 @@ We plan to use the following technologies in our application:
 * __[IEX](https://iexcloud.io/docs/api/)__ - Another financial data API.
 * __[Jest](https://jestjs.io/)__ - Testing framework for JavaScript applications.
 *  __[Enzyme](https://airbnb.io/enzyme/)__ - Testing framework for React with the ability to render components.
+* __[Electron](https://electronjs.org/)__ - An JavaScript desktop wrapper that enables web application to function as a desktop applicaiton. (Nice for resume).
 
 The following technologies may be used later down the line as we flesh out our design more:
-* __[Electron](https://electronjs.org/)__ - An JavaScript desktop wrapper that enables web application to function as a desktop applicaiton. (Nice for resume).
 * __[Pandas](https://pandas.pydata.org/)__ - Pandas is a data analytics and machine learning library written in Python. The machine learning will only be as good as it is trained, but it will be a cool feature nonetheless.
 
 
