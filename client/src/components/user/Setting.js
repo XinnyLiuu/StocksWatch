@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom';
 
 import Error from '../alert/Error';
-import Success from '../alert/Success';
 import User from '../../model/User';
 
 import {

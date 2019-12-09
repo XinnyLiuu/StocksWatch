@@ -7,8 +7,7 @@ class Notfound extends React.Component {
     render() {
         return (
             <Alert variant="danger">
-                <Alert.Heading>Page Not Found</Alert.Heading>
-                <p>The page you are looking for does not exist!</p>
+                <Alert.Heading>Oops! Something Unexpected Has Occured!</Alert.Heading>
             </Alert>
         )
     }

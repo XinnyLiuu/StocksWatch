@@ -101,7 +101,7 @@ class Login extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				{this.state.error ? <Error message={"There has been an error attemping to log you in. Please try again later!"} /> : ""}
+				{this.state.error ? <Error message={"The username or password entered does not match our records. Please try agian!"} /> : ""}
 
 				<div id="login">
 					<Form onSubmit={this.login}>

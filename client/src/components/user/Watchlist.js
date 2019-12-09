@@ -21,7 +21,7 @@ class Watchlist extends React.Component {
         super(props);
 
         this.state = {
-            searchText: "Search by Symbol", // Text for the searchInput, 
+            searchText: "Select a Symbol", // Text for the searchInput, 
             searchValue: '', // Value to be searched
             prevStocks: [],
             symbols: [],
@@ -29,7 +29,6 @@ class Watchlist extends React.Component {
             data: [],
             dataType: '', // Type of data - symbol or company
             error: false,
-            errMessage: "There has been an error. Please try again later!"
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -62,18 +61,20 @@ class Watchlist extends React.Component {
         if (event === 1) {
             // Symbol
             this.setState({
-                searchText: "Search by Symbol",
+                searchText: "Select a Symbol",
                 data: this.state.symbols,
-                dataType: "symbol"
+                dataType: "symbol",
+                searchValue: ""
             })
         }
 
         if (event === 2) {
             // Company
             this.setState({
-                searchText: "Search by Company",
+                searchText: "Select a Company",
                 data: this.state.companies,
-                dataType: "company"
+                dataType: "company",
+                searchValue: ""
             })
         }
     }
@@ -166,6 +167,11 @@ class Watchlist extends React.Component {
     async addUserStock(e) {
         e.preventDefault();
 
+        // Validate search value
+        if (this.state.searchValue === "") {
+            return;
+        }
+
         /**
          * Check the data type, for `company` we have to query for the symbol
          */
@@ -182,13 +188,6 @@ class Watchlist extends React.Component {
         let stock = this.state.searchValue;
         let userId = localStorage.getItem("id");
         let username = localStorage.getItem("username");
-
-        if (stock.length === 0) {
-            return this.setState({
-                error: true,
-                errMessage: "Please ensure all fields are not empty!"
-            });
-        }
 
         // Prepare data and URL
         const data = JSON.stringify({
@@ -288,7 +287,7 @@ class Watchlist extends React.Component {
         // Error
         const error = (
             <React.Fragment>
-                {this.state.error ? <Error message={this.state.errMessage} /> : ""}
+                {this.state.error ? <Error message={"There has been an error. Please try again later!"} /> : ""}
             </React.Fragment>
         )
 

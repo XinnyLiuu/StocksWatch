@@ -10,8 +10,6 @@ import {
 import { Typeahead } from "react-bootstrap-typeahead"; // http://ericgio.github.io/react-bootstrap-typeahead/#top
 import { withRouter } from "react-router-dom";
 
-import Error from '../alert/Error';
-
 import {
 	isAuthenticated,
 	getUserInfo,
@@ -32,9 +30,8 @@ class Header extends React.Component {
 			companies: [],
 			data: [], // This will be an array of symbols or companies, default is symbols
 			dataType: '', // Type of data - symbol or company
-			error: false,
-			searchText: "Search by Symbol", // Text for the searchInput ,
-			searchValue: '', // Value to be searched
+			searchText: "Select a Symbol", // Text for the searchInput ,
+			searchValue: '', // Value to be searched,
 		};
 
 		// Bind, so that 'this' can be used in the callback
@@ -66,18 +63,20 @@ class Header extends React.Component {
 		if (event === 1) {
 			// Symbol
 			this.setState({
-				searchText: "Search by Symbol",
+				searchText: "Select a Symbol",
 				data: this.state.symbols,
-				dataType: "symbol"
+				dataType: "symbol",
+				searchValue: ""
 			})
 		}
 
 		if (event === 2) {
 			// Company
 			this.setState({
-				searchText: "Search by Company",
+				searchText: "Select a Company",
 				data: this.state.companies,
-				dataType: "company"
+				dataType: "company",
+				searchValue: ""
 			})
 		}
 	}
@@ -85,6 +84,11 @@ class Header extends React.Component {
 	// Fires when form is submitted
 	async searchStock(e) {
 		e.preventDefault();
+
+		// Validate search value
+		if (this.state.searchValue === "") {
+			return;
+		}
 
 		/**
 		 * Check the data type, for `company` we have to query for the symbol
@@ -94,7 +98,7 @@ class Header extends React.Component {
 				const symbol = await this.getSymbolForCompany(this.state.searchValue);
 				this.setState({ searchValue: symbol });
 			} catch (err) {
-				this.setState({ error: true });
+
 			}
 		}
 
@@ -132,10 +136,8 @@ class Header extends React.Component {
 					// Load the array into state
 					this.setState({ symbols: json })
 				}
-
-				if (resp.status === 500) this.setState({ error: true });
 			} catch (err) {
-				this.setState({ error: true })
+				this.props.history.push("/NotFound");
 			}
 		}
 
@@ -157,10 +159,8 @@ class Header extends React.Component {
 					// Load the array into state
 					this.setState({ companies: json })
 				}
-
-				if (resp.status === 500) this.setState({ error: true });
 			} catch (err) {
-				this.setState({ error: true })
+				this.props.history.push("/NotFound");
 			}
 		}
 
@@ -189,9 +189,8 @@ class Header extends React.Component {
 				return symbol;
 			}
 
-			if (resp.status === 500) this.setState({ error: true });
 		} catch (err) {
-			this.setState({ error: true });
+			this.props.history.push("/NotFound");
 		}
 	}
 
@@ -200,11 +199,6 @@ class Header extends React.Component {
 	}
 
 	render() {
-		// Check for error from server
-		if (this.state.error) {
-			return <Error message={"There has been an error. Please try again later!"} />;
-		}
-
 		let navbar = (
 			<Navbar sticky="top" bg="dark" variant="dark" expand="lg">
 				<Navbar.Brand href="/">StocksWatch</Navbar.Brand>

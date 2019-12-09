@@ -22,7 +22,7 @@ router.get("/yearly/:symbol", async (req, res) => {
 
     // Build URL
     let yearly_data_url = IEX_URL;
-    yearly_data_url += `/${symbol}/chart/1y`;
+    yearly_data_url += `/${symbol}/chart/2y`;
     yearly_data_url += `?token=${IEX_KEY}`;
 
     try {
