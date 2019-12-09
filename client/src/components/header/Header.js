@@ -52,9 +52,7 @@ class Header extends React.Component {
 	 * https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/Props.md
 	 */
 	handleChange(event) {
-		this.setState({
-			searchValue: event[0]
-		});
+		this.setState({ searchValue: event[0] });
 	}
 
 	/**
@@ -72,7 +70,9 @@ class Header extends React.Component {
 				data: this.state.symbols,
 				dataType: "symbol"
 			})
-		} else {
+		}
+
+		if (event === 2) {
 			// Company
 			this.setState({
 				searchText: "Search by Company",
