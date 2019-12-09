@@ -3,7 +3,7 @@ const exec = require("child_process").exec;
 require("custom-env").env(true);
 
 /**
- * MAKE SURE THE TEST DATABASE (test_stockswatch) IS CREATED OR THIS WILL FAIL
+ * MAKE SURE THE TEST DATABASE (test_stockswatch) IS CREATED AND THAT THE SCHEMA HAS BEEN SET TO `stockswatch` OR THIS WILL FAIL
  */
 
 // Test sql file path

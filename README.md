@@ -411,9 +411,9 @@ dumpTestSQL();
 The tests for our API are given mock data for any endpoints involving `POST` request and `GET` requests are tested to ensure that the JSON being returned contained properties that are expected.
 
 ```javascript
-describe("Get monthly data for MSFT", () => {
+describe("Get yearly data for MSFT", () => {
     test('Should get 200 status and data', async (done) => {
-        const response = await request(app).get("/api/stocks/monthly/MSFT");
+        const response = await request(app).get("/api/stocks/yearly/MSFT");
 
         const data = response.body;
 

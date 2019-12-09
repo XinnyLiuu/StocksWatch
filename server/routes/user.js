@@ -13,8 +13,6 @@ router.post("/login", async (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
 
-    username = username.toLowerCase();
-
     try {
         // Query for the user's salt first
         const salt = await postgres.getUserSalt(username);
@@ -44,7 +42,6 @@ router.post("/login", async (req, res) => {
  * Takes data from request body and creates an user
  */
 router.post("/register", async (req, res) => {
-
     let username = req.body.username;
     let password = req.body.password;
     let firstname = req.body.firstname;
@@ -111,30 +108,47 @@ router.delete("/watchlist", async (req, res) => {
     }
 });
 
-/**
- * TODO: This is currently broken
- * 
+/** 
  * PUT /api/user/settings
  * 
  * Receives data from PUT request and updates user information
  */
 router.put("/settings", async (req, res) => {
-    let ogUsername = req.body.ogUsername.toLowerCase();
-    let username = req.body.username.toLowerCase();
+    const userId = req.body.userId;
+    let ogUsername = req.body.ogUsername;
+    let username = req.body.username;
     let password = req.body.password;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
 
     try {
-        // Get user salt
-        const salt = await postgres.getUserSalt(ogUsername);
+        /**
+         * A user's username is a foreign key in the database, as such in order for this update to be successful we need to do a series of actons
+         */
+
+        // Get the user's symbols
+        const symbols = await postgres.getUserStocksByUsername(ogUsername);
+
+        // Delete all the user's symbols from user_stocks
+        if (symbols.length > 0) symbols.forEach(async s =>
+            await postgres.deleteUserStockByUsername(s, ogUsername)
+        );
+
+        // Because the user is updating their information, to secure users, we should generate a new salt
+        let salt = encryptHelper.getSalt();
 
         // Hash password
         password = encryptHelper.encrypt(password, salt);
 
         // Update user
-        const affected = await postgres.updateUser(username, password, firstname, lastname);
+        let affected = await postgres.updateUser(ogUsername, username, password, firstname, lastname, salt);
         if (affected === 1) {
+
+            // Add each stock back to the database under the user's new username
+            if (symbols.length > 0) symbols.forEach(async s => {
+                await postgres.insertUserStock(s, userId, username);
+            });
+
             return res.json({
                 username: username,
                 firstname: firstname,

@@ -12,6 +12,9 @@ import Info from '../alert/Info';
 import {
 	isAuthenticated
 } from '../../utils/auth';
+import {
+	post
+} from "../../utils/requests";
 
 class Wrapper extends React.Component {
 	constructor(props) {
@@ -55,31 +58,25 @@ class Wrapper extends React.Component {
 		}
 	}
 
-
 	// Adds the stock to the user watchlist
 	async addUserStock(e) {
 		e.preventDefault();
 
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
-
 		// Get values
-		let stock = this.props.symbol;
-		let userId = localStorage.getItem("id");
-		let username = localStorage.getItem("username");
+		const stock = this.props.symbol;
+		const userId = localStorage.getItem("id");
+		const username = localStorage.getItem("username");
+
+		// Prepare url and data
+		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+		const data = JSON.stringify({
+			"userId": userId,
+			"stock": stock,
+			"username": username
+		})
 
 		try {
-			const resp = await fetch(url, {
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					"userId": userId,
-					"stock": stock,
-					"username": username
-				})
-			});
+			const resp = await post(url, data);
 
 			// On 200 status
 			if (resp.status === 200) {
@@ -123,7 +120,6 @@ class Wrapper extends React.Component {
 	}
 
 	componentDidMount() {
-		// Grab the data from the server to render the graphs in the components
 		this.fetchData();
 		this.checkStockInWatchlist();
 	}
@@ -162,7 +158,9 @@ class Wrapper extends React.Component {
 				let dow = json["DOW30"];
 
 				stockCharts.push(
-					<Info header={"Dow 30"} message={"Login or Register to build your personalized watchlist"} />
+					<Info header={"Dow 30"} message={
+						"Login or Register to build your personalized watchlist"
+					} />
 				);
 
 				// Render each DOW stock as its own StockChart component
@@ -185,6 +183,7 @@ class Wrapper extends React.Component {
 				);
 			}
 
+			// Default is to render the chart for the single stock
 			return <StockChart data={json} type="single" />;
 		}
 

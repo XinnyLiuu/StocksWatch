@@ -95,4 +95,29 @@ describe("Delete from watchlist", () => {
 	})
 })
 
-// TODO: PUT /api/user/settings - currently broken
+// PUT /api/user/settings - currently broken
+describe("Update user", () => {
+	test("Should get 200 status and user information", async (done) => {
+		let body = {
+			userId: "5",
+			ogUsername: "test",
+			username: "NEW_TEST",
+			password: "test",
+			firstname: "NEW_TEST",
+			lastname: "NEW_TEST"
+		}
+
+		const response = await request(app)
+			.put("/api/user/settings")
+			.set("Content-Type", "application/json")
+			.send(body);
+
+		const data = response.body;
+
+		expect(response.statusCode).toBe(200);
+		expect(data.username).toBe(body.username);
+		expect(data.firstname).toBe(body.firstname);
+		expect(data.lastname).toBe(body.lastname);
+		done()
+	})
+})

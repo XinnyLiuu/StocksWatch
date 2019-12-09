@@ -19,7 +19,7 @@ SET row_security = off;
 --
 -- Name: stockswatch; Type: SCHEMA; Schema: -; Owner: stockswatch
 --
-
+DROP SCHEMA IF EXISTS stockswatch CASCADE;
 CREATE SCHEMA stockswatch;
 
 

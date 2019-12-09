@@ -23,9 +23,11 @@ module.exports = {
     getUserSalt,
     getUserByUsernamePassword,
     getUserStocks,
+    getUserStocksByUsername,
     insertUser,
     insertUserStock,
     deleteUserStock,
+    deleteUserStockByUsername,
     updateUser,
     getSymbols,
     getCompanies,
@@ -152,6 +154,31 @@ function getUserStocks(userId) {
     })
 }
 
+// Get the stocks that the user has in their watchlist based on their username
+function getUserStocksByUsername(username) {
+    let query = {
+        name: "get-user-stocks-by-username",
+        text: "select symbol from user_stocks where username = $1",
+        values: [username]
+    }
+
+    return new Promise((resolve, reject) => {
+        postgres.query(query, (error, results) => {
+            if (typeof results !== 'undefined') {
+                const rows = results.rows;
+
+                if (rows.length >= 0) {
+                    let stocks = [];
+                    rows.forEach(d => stocks.push(d.symbol));
+                    resolve(stocks);
+                }
+            }
+
+            reject(error);
+        });
+    })
+}
+
 // Insert user into database
 function insertUser(username, firstname, lastname, password, salt) {
     let query = {
@@ -223,12 +250,35 @@ function deleteUserStock(stock, userId) {
     });
 }
 
+// Deletes a stock from the user's watchlist based on the username
+function deleteUserStockByUsername(stock, username) {
+    let query = {
+        name: "delete-stock",
+        text: "delete from user_stocks where symbol = $1 and username = $2",
+        values: [stock, username]
+    };
+
+    return new Promise((resolve, reject) => {
+        postgres.query(query, (error, results) => {
+            if (typeof results !== 'undefined') {
+                // Get affected rows
+                const affected = results.rowCount;
+
+                // Check affected rows
+                if (affected === 1) resolve(1);
+            }
+
+            reject(error);
+        });
+    });
+}
+
 // Updates an existing user
-function updateUser(username, password, firstname, lastname) {
+function updateUser(ogUsername, username, password, firstname, lastname, salt) {
     let query = {
         name: 'update-user',
-        text: "update users set username = $1, password = $2, firstname = $3, lastname = $4",
-        values: [username, password, firstname, lastname]
+        text: "update users set username = $2, password = $3, firstname = $4, lastname = $5, salt = $6 where username = $1",
+        values: [ogUsername, username, password, firstname, lastname, salt]
     }
 
     return new Promise((resolve, reject) => {

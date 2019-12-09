@@ -13,11 +13,11 @@ const IEX_KEY = process.env.IEX_KEY;
 const IEX_URL = process.env.IEX_URL;
 
 /**
- * GET /api/stocks/monthly/:stock
+ * GET /api/stocks/yearly/:stock
  * 
  * Gets data for a specified stock
  */
-router.get("/monthly/:symbol", async (req, res) => {
+router.get("/yearly/:symbol", async (req, res) => {
     const symbol = req.params.symbol;
 
     // Build URL

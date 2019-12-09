@@ -1,134 +1,134 @@
 import React from 'react';
 import {
-    Form,
-    Button
+	Form,
+	Button
 } from 'react-bootstrap';
 import {
-    withRouter
+	withRouter
 } from 'react-router-dom';
 
 import Error from '../alert/Error';
 import User from '../../model/User';
+
 import {
-    setSession
+	setSession
 } from '../../utils/auth';
+import {
+	post
+} from "../../utils/requests"
 
 class Login extends React.Component {
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            username: '',
-            password: '',
-            error: false
-        };
+		this.state = {
+			username: '',
+			password: '',
+			error: false
+		};
 
-        // Bind methods
-        this.handleChange = this.handleChange.bind(this);
-        this.login = this.login.bind(this);
-        this.toRegister = this.toRegister.bind(this);
-    }
+		// Bind methods
+		this.handleChange = this.handleChange.bind(this);
+		this.login = this.login.bind(this);
+		this.toRegister = this.toRegister.bind(this);
+	}
 
-    handleChange(e) {
-        let name = e.target.name;
-        let value = e.target.value;
+	handleChange(e) {
+		let name = e.target.name;
+		let value = e.target.value;
 
-        this.setState({
-            [name]: value
-        });
-    }
+		this.setState({ [name]: value });
+	}
 
-    // Takes the input values from the form to authenticate user
-    async login(e) {
-        e.preventDefault();
+	// Takes the input values from the form to authenticate user
+	async login(e) {
+		e.preventDefault();
 
-        // Validate the inputs
-        let username = this.state.username;
-        let password = this.state.password;
+		// Validate the inputs
+		let username = this.state.username;
+		let password = this.state.password;
 
-        username = username.trim();
-        password = password.trim();
+		username = username.trim().toLowerCase();
+		password = password.trim();
 
-        // Fire POST request
-        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/login`;
+		// Prepare data and url
+		const data = JSON.stringify({
+			"username": username,
+			"password": password
+		});
 
-        try {
-            const resp = await fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "username": username,
-                    "password": password
-                })
-            });
+		let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/login`;
 
-            // Check for 200
-            if (resp.status === 200) {
-                const json = await resp.json();
+		// Fire POST request
+		try {
+			const resp = await post(url, data);
 
-                // Instantiate User
-                const user = new User(json.user_id, json.username, json.firstname, json.lastname, true, json.stocks);
+			// Check for 200
+			if (resp.status === 200) {
+				const json = await resp.json();
 
-                // Set user session
-                setSession(user);
+				// Instantiate User
+				const user = new User(
+					json.user_id,
+					json.username,
+					json.firstname,
+					json.lastname,
+					true,
+					json.stocks
+				);
 
-                // Redirect to home
-                this.props.history.push("/");
-            }
+				// Set user session
+				setSession(user);
 
-            // On 500 status
-            if (resp.status === 500) {
-                this.setState({
-                    error: true
-                });
-            }
-        } catch (err) {
-            this.setState({
-                error: true
-            });
-        }
-    }
+				// Redirect to home
+				this.props.history.push("/");
+			}
 
-    // Redirects user to /register
-    toRegister() {
-        this.props.history.push("/register");
-    }
+			// On 500 status
+			if (resp.status === 500) {
+				this.setState({ error: true });
+			}
+		} catch (err) {
+			this.setState({ error: true });
+		}
+	}
 
-    render() {
-        // Check if error
-        if (this.state.error) {
-            return <Error message={"There has been an error attemping to log you in. Please try again later!"} />;
-        }
+	// Redirects user to /register
+	toRegister() {
+		this.props.history.push("/register");
+	}
 
-        return (
-            <div id="login">
-                <Form onSubmit={this.login}>
-                    <Form.Group>
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" name="username" placeholder="Enter username" onChange={this.handleChange} />
-                    </Form.Group>
+	render() {
+		return (
+			<React.Fragment>
+				{this.state.error ? <Error message={"There has been an error attemping to log you in. Please try again later!"} /> : ""}
 
-                    <Form.Group>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" name="password" placeholder="Password" onChange={this.handleChange} />
-                    </Form.Group>
+				<div id="login">
+					<Form onSubmit={this.login}>
+						<Form.Group>
+							<Form.Label>Username</Form.Label>
+							<Form.Control type="text" name="username" placeholder="Enter username" onChange={this.handleChange} />
+						</Form.Group>
 
-                    <Button variant="info" type="submit">
-                        Login
-                    </Button>
+						<Form.Group>
+							<Form.Label>Password</Form.Label>
+							<Form.Control type="password" name="password" placeholder="Password" onChange={this.handleChange} />
+						</Form.Group>
 
-                    <span className="space"></span>
+						<Button variant="info" type="submit">
+							Login
+                   		</Button>
 
-                    <Button variant="outline-info" onClick={this.toRegister}>
-                        Register
-                    </Button>
-                </Form>
-            </div>
-        )
-    }
+						<span className="space"></span>
+
+						<Button variant="outline-info" onClick={this.toRegister}>
+							Register
+	                    </Button>
+					</Form>
+				</div>
+			</React.Fragment>
+		)
+	}
 }
 
 export default withRouter(Login);

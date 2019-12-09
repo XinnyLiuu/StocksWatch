@@ -10,7 +10,6 @@ import {
 import Header from './components/header/Header';
 import Wrapper from './components/highcharts/Wrapper';
 import WatchlistCharts from './components/highcharts/WatchlistCharts';
-import LoadingSpinner from './components/highcharts/LoadingSpinner';
 import Notfound from './components/alert/Notfound';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
@@ -27,7 +26,7 @@ import {
 } from './utils/auth';
 
 // API endpoints
-const monthly_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/monthly`;
+const yearly_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/yearly`;
 const dow30_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/dow30`;
 const watchlist_api = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/watchlist`;
 
@@ -40,7 +39,7 @@ const routing = (
                 isAuthenticated() === true ? <WatchlistCharts api={watchlist_api} /> : <Wrapper api={dow30_api} symbol="" />
             } />
             <Route exact path="/search/:stock" component={props =>
-                <Wrapper api={monthly_api} symbol={props.match.params.stock} />
+                <Wrapper api={yearly_api} symbol={props.match.params.stock} />
             } />
             <Route exact path="/login" component={props =>
                 isAuthenticated() === false ? <Login /> : <Notfound />

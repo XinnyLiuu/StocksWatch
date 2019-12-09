@@ -11,6 +11,11 @@ import { Typeahead } from "react-bootstrap-typeahead"; // http://ericgio.github.
 
 import Error from '../alert/Error';
 
+import {
+    post,
+    del
+} from "../../utils/requests";
+
 class Watchlist extends React.Component {
     constructor(props) {
         super(props);
@@ -60,7 +65,9 @@ class Watchlist extends React.Component {
                 data: this.state.symbols,
                 dataType: "symbol"
             })
-        } else {
+        }
+
+        if (event === 2) {
             // Company
             this.setState({
                 searchText: "Search by Company",
@@ -142,6 +149,7 @@ class Watchlist extends React.Component {
 
         try {
             const resp = await fetch(url);
+
             if (resp.status === 200) {
                 const symbol = await resp.json();
                 return symbol;
@@ -173,23 +181,18 @@ class Watchlist extends React.Component {
         let stock = this.state.searchValue;
         let userId = localStorage.getItem("id");
         let username = localStorage.getItem("username");
-        
-        // Fire POST 
-        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+
+        // Prepare data and URL
+        const data = JSON.stringify({
+            "userId": userId,
+            "stock": stock,
+            "username": username
+        });
+
+        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
 
         try {
-            const resp = await fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "userId": userId,
-                    "stock": stock,
-                    "username": username
-                })
-            });
+            const resp = await post(url, data);
 
             // On 200 status
             if (resp.status === 200) {
@@ -222,21 +225,17 @@ class Watchlist extends React.Component {
         let stock = e.target.dataset.stock;
         let userId = localStorage.getItem("id");
 
-        // Fire DELETE
-        let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+        // Prepare data 
+        const data = JSON.stringify({
+            "userId": userId,
+            "stock": stock
+        });
 
+        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+
+        // Fires DELETE
         try {
-            const resp = await fetch(url, {
-                method: "DELETE",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "userId": userId,
-                    "stock": stock
-                })
-            });
+            const resp = await del(url, data);
 
             // On 200 status
             if (resp.status === 200) {
@@ -246,7 +245,6 @@ class Watchlist extends React.Component {
                 let symbol = json.symbol;
                 let stocks = JSON.parse(localStorage.getItem("stocks"));
 
-                // Remove 
                 for (let i = 0; i < stocks.length; i++) {
                     if (stocks[i] === symbol) {
                         stocks.splice(i, 1);
@@ -273,18 +271,22 @@ class Watchlist extends React.Component {
 
         // Get the stocks of the user in localStorage 
         const stocks = JSON.parse(localStorage.getItem('stocks'));
-
         if (stocks.length > 0) this.setState({ prevStocks: stocks });
     }
 
     render() {
-        // Check if error
-        if (this.state.error) {
-            return <Error message={"There has been an error. Please try again later!"} />;
-        }
+        // Error
+        const error = (
+            <React.Fragment>
+                {this.state.error ? <Error message={"There has been an error. Please try again later!"} /> : ""}
+            </React.Fragment>
+        )
 
+        // Watchlist
         let watchlist = (
             <React.Fragment>
+                {error}
+
                 <Form.Label>Add to Watchlist</Form.Label>
                 <Form inline onSubmit={this.addUserStock}>
 
@@ -304,13 +306,15 @@ class Watchlist extends React.Component {
         );
 
         // If there are stocks in the user's watchlist already, show them here
-        if (this.state.prevStocks instanceof Array && this.state.prevStocks.length > 0) {
+        if (this.state.prevStocks instanceof Array &&
+            this.state.prevStocks.length > 0) {
+
             // Build the component(s) to be rendered
             let temp = watchlist;
             watchlist = [];
             watchlist.push(temp);
 
-            // Each stock in prevStocks will exist in a ListGroup component
+            // Each stock in prevStocks will exist in a list
             let lists = [];
             this.state.prevStocks.forEach(s => {
                 lists.push(
@@ -339,14 +343,6 @@ class Watchlist extends React.Component {
             );
 
             watchlist.push(card);
-
-            watchlist = (
-                <div id="watchlist">
-                    {watchlist}
-                </div>
-            );
-
-            return watchlist;
         }
 
         return (

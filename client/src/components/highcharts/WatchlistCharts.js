@@ -2,86 +2,100 @@ import React from 'react';
 import StockChart from './StockChart';
 import LoadingSpinner from './LoadingSpinner';
 import Unavailable from '../alert/Unavailable';
-import Warning from '../alert/Warning';
+import Info from "../alert/Info";
+
+import {
+	post
+} from "../../utils/requests";
 
 class WatchlistCharts extends React.Component {
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            watchlist: [],
-            data: "",
-            error: false
-        };
-    }
+		this.state = {
+			watchlist: [],
+			data: "",
+			error: false
+		};
+	}
 
-    async fetchData() {
-        const api = this.props.api;
+	/**
+	 * Sends a request to the server to retrieve all the user's stocks' data
+	 */
+	async fetchData() {
+		// Prepare data and url
+		const api = this.props.api;
+		const data = JSON.stringify(
+			{ "watchlist": localStorage.getItem("stocks") }
+		);
 
-        try {
-            // Send a POST to server, so that server can query for the stock(s) data
-            const resp = await fetch(api, {
-                method: 'POST',
-                mode: 'cors',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(
-                    { "watchlist": localStorage.getItem("stocks") }
-                )
-            });
+		try {
+			const resp = await post(api, data);
 
-            // Check HTTP status code
-            if (resp.status === 200) {
-                const json = await resp.json();
-                this.setState({ data: json });
-            }
+			// Check HTTP status code
+			if (resp.status === 200) {
+				const json = await resp.json();
+				this.setState({ data: json });
+			}
 
-            if (resp.status === 500) this.setState({ error: true });
-        } catch (err) {
-            this.setState({ error: true })
-        }
-    }
+			if (resp.status === 500) this.setState({ error: true });
+		} catch (err) {
+			this.setState({ error: true })
+		}
+	}
 
-    componentDidMount() {
-        // Get the stocks of the user in localStorage 
-        const stocks = JSON.parse(localStorage.getItem('stocks'));
+	componentDidMount() {
+		// Get the stocks of the user in localStorage 
+		const stocks = JSON.parse(localStorage.getItem('stocks'));
 
-        this.setState({
-            watchlist: stocks
-        }, () => this.fetchData());
-    }
+		this.setState({
+			watchlist: stocks
+		}, () => this.fetchData());
+	}
 
-    render() {
-        // Check for error from server
-        if (this.state.error) {
-            return <Unavailable message={"Could not load your watchlist at this time!"} />;
-        }
+	render() {
+		// Alert
+		const alert = (
+			<React.Fragment>
+				{this.state.error ?
+					<Unavailable message={"Could not load your watchlist at this time!"} /> :
+					<Info header={"Your Watchlist"} message={
+						<p>Go <a href="/watchlist">here</a> to add to your watchlist</p>
+					} />
+				}
+			</React.Fragment>
+		)
 
-        // Check if the user has stocks listed in their watchlist
-        if (this.state.watchlist.length > 0 && this.state.data !== "") {
-            let json = this.state.data;
+		// Check if the user has stocks listed in their watchlist and that data has been retreived
+		if (this.state.watchlist.length > 0 &&
+			this.state.data !== "") {
 
-            if (json.hasOwnProperty("watchlist")) {
-                let charts = [];
-                let watchlist = json["watchlist"];
+			// Get the data retrieved from the server
+			let json = this.state.data;
 
-                watchlist.forEach(d => {
-                    charts.push(<StockChart data={d} type="multiple" />);
-                });
+			if (json.hasOwnProperty("watchlist")) {
+				let charts = [];
+				charts.push(alert);
 
-                return charts;
-            }
-        }
+				// For each stock in the user's watchlist, generate a chart for it
+				let watchlist = json["watchlist"];
 
-        // Show alert message to let users know about adding to watchlist
-        if (this.state.watchlist.length === 0) {
-            return (
-                <Warning header={"Your watchlist is empty!"} message={<p>Go <a href="/watchlist">here</a> to start building your watchlist</p>} />
-            )
-        }
+				watchlist.forEach(d => {
+					charts.push(<StockChart data={d} type="multiple" />);
+				});
 
-        // Default to render a spinner
-        return <LoadingSpinner />;
-    }
+				return charts;
+			}
+		}
+
+		// Show alert message to let users know about adding to watchlist
+		if (this.state.watchlist.length === 0) {
+			return alert;
+		}
+
+		// Default to render a spinner
+		return <LoadingSpinner />;
+	}
 }
 
 export default WatchlistCharts;

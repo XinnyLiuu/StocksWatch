@@ -10,7 +10,7 @@ const app = require("../app");
  *
  * /api
  * 		/stocks
- * 			GET /monthly/:stock
+ * 			GET /yearly/:stock
  * 			GET /dow30
  * 			POST /watchlist
  * 			GET /symbols
@@ -19,10 +19,10 @@ const app = require("../app");
  * 			GET /convert/symbol/:symbol
  */
 
-// GET /api/stocks/monthly/:stock
-describe("Get monthly data for MSFT", () => {
+// GET /api/stocks/yearly/:stock
+describe("Get yearly data for MSFT", () => {
     test('Should get 200 status and data', async (done) => {
-        const response = await request(app).get("/api/stocks/monthly/MSFT");
+        const response = await request(app).get("/api/stocks/yearly/MSFT");
 
         const data = response.body;
 
