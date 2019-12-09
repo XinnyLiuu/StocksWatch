@@ -13,7 +13,7 @@ Our application, StocksWatch, aims to provide historical snapshots of a year’s
 ## Project Description 
 StocksWatch will be a web application aimed to offer the best experience for our stakeholders. The application will allow users to:
 
-* Create an account on our application and keep track of the stocks that choose to follow.
+* Create an account on our application and keep track of the stocks that they choose to follow.
 * Add to their own list of stocks that is offered by our platform. 
 * Edit the stocks that are currently being tracked. 
 * Enjoy seamless user experience. StocksWatch will be both desktop and mobile friendly so that our application be used anywhere with an internet connection.
