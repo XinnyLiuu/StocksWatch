@@ -95,6 +95,8 @@ function getUserSalt(username) {
                 if (rows.length === 1) {
                     let salt = rows[0].salt;
                     resolve(salt);
+                } else {
+                    resolve(0);
                 }
             }
 

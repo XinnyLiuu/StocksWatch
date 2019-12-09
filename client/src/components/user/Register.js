@@ -104,7 +104,7 @@ class Register extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				{this.state.error ? <Error message={"The username or password entered does not match our records. Please try agian!"} /> : ""}
+				{this.state.error ? <Error message={"There has been an error registering your information. Please try again!"} /> : ""}
 
 				<div id="login">
 					<Form onSubmit={this.register}>

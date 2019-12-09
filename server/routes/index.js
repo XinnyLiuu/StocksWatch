@@ -8,7 +8,7 @@ const router = express.Router();
 const stocksRoute = require("./stocks");
 const userRoute = require("./user");
 
-router.use("/stocks", stocksRoute); 
+router.use("/stocks", stocksRoute);
 router.use("/user", userRoute);
 
 module.exports = router;

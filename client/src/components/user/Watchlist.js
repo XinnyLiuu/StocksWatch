@@ -45,9 +45,8 @@ class Watchlist extends React.Component {
      * https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/Props.md
      */
     handleChange(event) {
-        this.setState({
-            searchValue: event[0]
-        });
+        // Encode the value since it will be used in the URL
+        this.setState({ searchValue: encodeURIComponent(event[0]) });
     }
 
     /**
@@ -172,12 +171,11 @@ class Watchlist extends React.Component {
             return;
         }
 
-        /**
-         * Check the data type, for `company` we have to query for the symbol
-         */
+        // Check the data type of the value entered into the search bar
         if (this.state.dataType === "company") {
             try {
                 const symbol = await this.getSymbolForCompany(this.state.searchValue);
+
                 this.setState({ searchValue: symbol });
             } catch (err) {
                 this.setState({ error: true });
@@ -214,6 +212,7 @@ class Watchlist extends React.Component {
 
                 // Update state
                 this.setState({
+                    searchValue: "",
                     error: false,
                     prevStocks: JSON.parse(localStorage.getItem('stocks'))
                 })
@@ -300,7 +299,7 @@ class Watchlist extends React.Component {
                 <Form inline onSubmit={this.addUserStock}>
 
                     <Form.Group>
-                        <Typeahead id="watchlistInput" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
+                        <Typeahead id="watchlistInput" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} value={this.state.searchValue} />
                         <ToggleButtonGroup id="toggleGroupWatchlist" type="radio" name="search-option" defaultValue={1} onChange={this.toggleChange}>
                             <ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
                             <ToggleButton variant="outline-info" value={2}>Company</ToggleButton>

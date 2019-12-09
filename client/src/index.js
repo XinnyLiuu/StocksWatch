@@ -36,22 +36,25 @@ const routing = (
         <Header />
         <Switch>
             <Route exact path="/" component={props =>
-                isAuthenticated() === true ? <WatchlistCharts api={watchlist_api} /> : <Wrapper api={dow30_api} symbol="" />
+                isAuthenticated() ? <WatchlistCharts api={watchlist_api} /> : <Wrapper api={dow30_api} symbol="" />
             } />
             <Route exact path="/search/:stock" component={props =>
                 <Wrapper api={yearly_api} symbol={props.match.params.stock} />
             } />
             <Route exact path="/login" component={props =>
-                isAuthenticated() === false ? <Login /> : <Notfound />
+                !isAuthenticated() ? <Login /> : <Notfound />
             } />
             <Route exact path="/register" component={props =>
-                isAuthenticated() === false ? <Register /> : <Notfound />
+                !isAuthenticated() ? <Register /> : <Notfound />
             } />
             <Route exact path="/settings" component={props =>
-                isAuthenticated() === true ? <Setting /> : <Notfound />
+                isAuthenticated() ? <Setting /> : <Notfound />
             } />
             <Route exact path="/watchlist" component={props =>
-                isAuthenticated() === true ? <Watchlist /> : <Notfound />
+                isAuthenticated() ? <Watchlist /> : <Notfound />
+            } />
+            <Route exact path="/dow30" component={props =>
+                <Wrapper api={dow30_api} symbol="" />
             } />
             <Route component={Notfound} />
         </Switch>

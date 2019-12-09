@@ -54,14 +54,18 @@ class WatchlistCharts extends React.Component {
 	}
 
 	render() {
+		// Determine the message to show in the alert
+		const message = (this.state.watchlist.length === 0 ?
+			<p>Your watchlist is currently empty! Go <a href='/watchlist'>here</a> to add to your watchlist</p> :
+			<p>Go <a href='/watchlist'>here</a> to update your watchlist</p>
+		);
+
 		// Alert
 		const alert = (
 			<React.Fragment>
 				{this.state.error ?
 					<Unavailable message={"Could not load your watchlist at this time!"} /> :
-					<Info header={"Your Watchlist"} message={
-						<p>Go <a href="/watchlist">here</a> to add to your watchlist</p>
-					} />
+					<Info header={"Your Watchlist"} message={message} />
 				}
 			</React.Fragment>
 		)

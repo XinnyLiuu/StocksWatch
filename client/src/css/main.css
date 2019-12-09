@@ -49,6 +49,7 @@ body {
 #name {
   color: #17a2b8 !important;
 }
+
 #name a {
   color: none;
   text-decoration: none;
@@ -84,9 +85,10 @@ body {
   Media Queries 
 */
 @media only screen and (max-width: 600px) {
+
   #login,
-#settings,
-#watchlist {
+  #settings,
+  #watchlist {
     margin: 50px;
     padding: 20px;
     width: inherit;

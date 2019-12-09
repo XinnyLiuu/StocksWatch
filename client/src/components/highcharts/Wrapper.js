@@ -157,10 +157,13 @@ class Wrapper extends React.Component {
 				let stockCharts = [];
 				let dow = json["DOW30"];
 
+				// Check if the user is authenticated to determine dow30 message
+				let message = "Login or Register to build your personalized watchlist";
+
+				if (isAuthenticated()) message = "Companies in the Dow Jones Industrial Average";
+
 				stockCharts.push(
-					<Info header={"Dow 30"} message={
-						"Login or Register to build your personalized watchlist"
-					} />
+					<Info header={"Dow 30"} message={message} />
 				);
 
 				// Render each DOW stock as its own StockChart component

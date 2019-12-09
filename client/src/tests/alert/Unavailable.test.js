@@ -9,7 +9,7 @@ import renderer from 'react-test-renderer';
 describe("Rendering Unavailable alert", () => {
 	it('Renders Unavailable without crashing', () => {
 		const div = document.createElement('div');
-	
+
 		ReactDOM.render(<Unavailable />, div);
 		ReactDOM.unmountComponentAtNode(div);
 	});

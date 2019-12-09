@@ -47,8 +47,12 @@ router.post("/register", async (req, res) => {
     let firstname = req.body.firstname;
     let lastname = req.body.lastname;
 
+    // First, check if the username is already taken. Setting a composite primary key with Postgres does not enforce uniqueness of the two keys. We can check if the username is already taken by getting the salt for the username. If the salt is returned, then the username is taken.
+    let salt = await postgres.getUserSalt(username);
+    if (salt !== 0) return res.sendStatus(500);
+
     // Generate a salt
-    let salt = encryptHelper.getSalt();
+    salt = encryptHelper.getSalt();
 
     // Hash the password
     password = encryptHelper.encrypt(password, salt);

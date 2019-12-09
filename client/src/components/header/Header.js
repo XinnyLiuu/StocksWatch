@@ -30,8 +30,8 @@ class Header extends React.Component {
 			companies: [],
 			data: [], // This will be an array of symbols or companies, default is symbols
 			dataType: '', // Type of data - symbol or company
-			searchText: "Select a Symbol", // Text for the searchInput ,
-			searchValue: '', // Value to be searched,
+			searchText: "Select a Symbol", // Text for the searchInput 
+			searchValue: '', // Value to be searched
 		};
 
 		// Bind, so that 'this' can be used in the callback
@@ -49,7 +49,8 @@ class Header extends React.Component {
 	 * https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/Props.md
 	 */
 	handleChange(event) {
-		this.setState({ searchValue: event[0] });
+		// Encode the value since it will be used in the URL
+		this.setState({ searchValue: encodeURIComponent(event[0]) });
 	}
 
 	/**
@@ -90,21 +91,22 @@ class Header extends React.Component {
 			return;
 		}
 
-		/**
-		 * Check the data type, for `company` we have to query for the symbol
-		 */
+		// Check the data type of the value entered into the search bar
 		if (this.state.dataType === "company") {
+
 			try {
 				const symbol = await this.getSymbolForCompany(this.state.searchValue);
-				this.setState({ searchValue: symbol });
-			} catch (err) {
 
+				this.setState({ searchValue: symbol })
+			} catch (err) {
+				this.props.history.push("/NotFound");
 			}
 		}
 
 		// Update `url` flag in state
 		this.setState({
-			url: `/search/${this.state.searchValue}`
+			url: `/search/${this.state.searchValue}`,
+			searchValue: ""
 		}, () => this.props.history.push(this.state.url));
 	}
 
@@ -213,7 +215,7 @@ class Header extends React.Component {
 							<ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
 							<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 						</ToggleButtonGroup>
-						<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
+						<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} value={this.state.searchValue} />
 						<Button id="searchBtn" variant="outline-info" type="submit">Search</Button>
 					</Form>
 				</Navbar.Collapse>
@@ -233,6 +235,7 @@ class Header extends React.Component {
 							<Nav.Link disabled>
 								<span id="name">{user.getFirstName()} {user.getLastName()}</span>
 							</Nav.Link>
+							<Nav.Link href="/dow30">Dow 30</Nav.Link>
 							<Nav.Link href="/watchlist">Watchlist</Nav.Link>
 							<Nav.Link href="/settings">Settings</Nav.Link>
 							<Nav.Link onClick={this.logout} href="/">Logout</Nav.Link>
@@ -242,7 +245,7 @@ class Header extends React.Component {
 								<ToggleButton variant="outline-info" value={1}>Symbol</ToggleButton>
 								<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 							</ToggleButtonGroup>
-							<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} />
+							<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} value={this.state.searchValue} />
 							<Button id="searchBtn" variant="outline-success" type="submit">Search</Button>
 						</Form>
 					</Navbar.Collapse>
