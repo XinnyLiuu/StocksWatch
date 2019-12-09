@@ -29,6 +29,7 @@ class Watchlist extends React.Component {
             data: [],
             dataType: '', // Type of data - symbol or company
             error: false,
+            errMessage: "There has been an error. Please try again later!"
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -182,6 +183,13 @@ class Watchlist extends React.Component {
         let userId = localStorage.getItem("id");
         let username = localStorage.getItem("username");
 
+        if (stock.length === 0) {
+            return this.setState({
+                error: true,
+                errMessage: "Please ensure all fields are not empty!"
+            });
+        }
+
         // Prepare data and URL
         const data = JSON.stringify({
             "userId": userId,
@@ -207,6 +215,7 @@ class Watchlist extends React.Component {
 
                 // Update state
                 this.setState({
+                    error: false,
                     prevStocks: JSON.parse(localStorage.getItem('stocks'))
                 })
             }
@@ -256,6 +265,7 @@ class Watchlist extends React.Component {
 
                 // Update state
                 this.setState({
+                    error: false,
                     prevStocks: JSON.parse(localStorage.getItem('stocks'))
                 })
             }
@@ -278,7 +288,7 @@ class Watchlist extends React.Component {
         // Error
         const error = (
             <React.Fragment>
-                {this.state.error ? <Error message={"There has been an error. Please try again later!"} /> : ""}
+                {this.state.error ? <Error message={this.state.errMessage} /> : ""}
             </React.Fragment>
         )
 
@@ -322,7 +332,9 @@ class Watchlist extends React.Component {
                         <ListGroup.Item variant="info">
                             <span><a href={`/search/${s}`}>{s}</a></span>
                             <span className="float-right">
-                                <Button data-stock={s} variant="outline-danger" size="sm" onClick={this.deleteUserStock}>Remove</Button>
+                                <Button data-stock={s} variant="outline-danger" size="sm" onClick={this.deleteUserStock}>
+                                    Remove
+                                </Button>
                             </span>
                         </ListGroup.Item>
                     </React.Fragment>
