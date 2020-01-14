@@ -16,7 +16,7 @@ app.use(morgan(':date[iso] :status :method :url [:response-time ms] :remote-addr
 
 // Enable CORS for React
 const corsOptions = {
-    origin: process.env.REACT_DEV_DOMAIN || "http://stockswatch.tk"
+    origin: [process.env.REACT_DEV_DOMAIN, "http://stockswatch.tk"]
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
