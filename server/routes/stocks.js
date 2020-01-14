@@ -122,40 +122,30 @@ router.post("/watchlist", async (req, res) => {
                 yearly_data_url += `/${s}/chart/2y`;
                 yearly_data_url += `?token=${IEX_KEY}`;
 
-                let current_data_url = IEX_URL;
-                current_data_url += `/${s}/quote`;
-                current_data_url += `?token=${IEX_KEY}`;
+                // Note: Getting a quote from iex in an iteration seems to trigger a 429 as of Jan 2020. Check git history for implementation.
 
-                // Fire both axios calls
-                return Promise.all([
-                    axios.get(yearly_data_url), // Gets the years worth of data 
-                    axios.get(current_data_url) // Gets a quote 
-                ]).then(resp => {
+                // Get data from IEX endpoint
+                axios.get(yearly_data_url)
+                    .then(resp => {
 
-                    // Get both axios responses
-                    const yearlyResp = resp[0];
-                    const currentResp = resp[1];
+                        // Get both axios responses
+                        const yearlyResp = resp;
 
-                    if (yearlyResp.status === 200) {
-                        let data = yearlyResp.data;
-                        let json = parser.IEXParser(data, s);
+                        if (yearlyResp.status === 200) {
+                            let data = yearlyResp.data;
+                            let json = parser.IEXParser(data, s);
+                            json["currentPrice"] = data[data.length - 1].close;
 
-                        if (currentResp.status === 200) {
-                            data = currentResp.data;
-                            json["company"] = data.companyName;
-                            json["currentPrice"] = data.latestPrice;
+                            results.watchlist.push(json);
+
+                            // Check the length of results.watchlist and watchlist
+                            if (watchlist.length === results.watchlist.length) {
+                                resolve(true);
+                            }
                         }
-
-                        results.watchlist.push(json);
-
-                        // Check the length of results.watchlist and watchlist
-                        if (watchlist.length === results.watchlist.length) {
-                            resolve(true);
-                        }
-                    }
-                }).catch(err => {
-                    reject(err);
-                })
+                    }).catch(err => {
+                        reject(err);
+                    })
             });
         }
     });
