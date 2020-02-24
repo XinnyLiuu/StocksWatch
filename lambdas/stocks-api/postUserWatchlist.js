@@ -1,50 +1,17 @@
 'use strict';
 
-/**
- * POST /api/stocks/watchlist
- * 
- * Receives a list of the user's watchlists from client and queries them through intrinio, aggregate the data and return it to the client
- */
-
 const axios = require('axios');
+
+const parser = require("./utils/parser");
 
 const IEX_KEY = process.env.IEX_KEY;
 const IEX_URL = process.env.IEX_URL;
 
 /**
- * Parses data from IEX
+ * POST /api/stocks/watchlist
+ * 
+ * Receives a list of the user's watchlists from client and queries them through intrinio, aggregate the data and return it to the client
  */
-function IEXParser(data, s) {
-    let json = {
-        "symbol": s,
-        "prices": {
-            "high": [], // [date, high]
-            "low": [] // [date, low]
-        }
-    };
-
-    data.forEach(p => {
-        let date = new Date(p.date).getTime();
-
-        let high_arr = [];
-        let low_arr = [];
-
-        high_arr.push(date);
-        high_arr.push(p.high);
-
-        low_arr.push(date);
-        low_arr.push(p.low);
-
-        json.prices.high.push(high_arr);
-        json.prices.low.push(low_arr);
-    });
-
-    json.prices.high.reverse();
-    json.prices.low.reverse();
-
-    return json;
-}
-
 exports.handler = async (event, context) => {
     // Get the watchlist from request body
     let { watchlist } = JSON.parse(event.body);
@@ -76,7 +43,7 @@ exports.handler = async (event, context) => {
 
                         if (yearlyResp.status === 200) {
                             let data = yearlyResp.data;
-                            let json = IEXParser(data, s);
+                            let json = parser.IEXParser(data, s);
                             json["currentPrice"] = data[data.length - 1].close;
 
                             results.watchlist.push(json);
