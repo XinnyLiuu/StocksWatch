@@ -65,7 +65,7 @@ router.get("/dow30", async (req, res) => {
     };
 
     // Iterate through each dow symbol and query intrinio for the data
-    let getDow = new Promise((resolve, reject) => {
+    const getDow = new Promise((resolve, reject) => {
         dow.forEach(symbol => {
             const intrinio_prices_url = `${INTRINIO_PRICES_URL}/${symbol}/prices?api_key=${INTRINIO_KEY}`;
 
