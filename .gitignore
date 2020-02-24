@@ -1,5 +1,6 @@
 # Postgres
 postgres-data/
+postgres/
 
 # Logs
 logs
