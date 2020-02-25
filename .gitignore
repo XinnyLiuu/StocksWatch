@@ -2,6 +2,12 @@
 postgres-data/
 postgres/
 
+# Netlify
+.netlify/
+
+# Build
+client/build/
+
 # Logs
 logs
 *.log

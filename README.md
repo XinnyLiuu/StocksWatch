@@ -1,5 +1,16 @@
 # StocksWatch
 
+## Notice - Feb 2020
+Stockswatch has been updated to use AWS lambda functions and gone completely serverless. Read up on __[JAMStack](https://jamstack.org/)__.
+
+The following documentation and certain directories are still on this repo for demonstration purposes.
+
+Technologies Used:
+* __[Serverless Framework](https://serverless.com/)__ - Used to automate the deployment of AWS lambda functions in seconds. 
+* __[AWS Lambda](https://aws.amazon.com/lambda/)__ - Function-as-a-Service; "Server-like" code that does not require the use of a server and is charged on-demand.
+* __[AWS RDS](https://aws.amazon.com/rds/)__ - PostgreSQL in the cloud.
+
+
 ## Team Members and Roles
 * Xin Liu - Full Stack Developer
 * Benjamin Thorn - Front-end Developer  

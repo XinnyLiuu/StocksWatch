@@ -13,7 +13,7 @@ function createWindow() {
 
     mainWindow.setMenuBarVisibility(false);
 
-    mainWindow.loadURL('http://stockswatch.tk/');
+    mainWindow.loadURL('https://stockswatch.netlify.com/');
 
     mainWindow.on('closed', function () {
         mainWindow = null
