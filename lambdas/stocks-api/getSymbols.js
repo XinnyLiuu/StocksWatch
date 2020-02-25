@@ -1,6 +1,5 @@
 'use strict';
-
-const db = require("./utils/db");
+const { Client } = require("pg");
 
 /**
  * GET /api/stocks/symbols
@@ -8,12 +7,28 @@ const db = require("./utils/db");
  * Returns all the symbols the database has for companies from database
  */
 exports.handler = async (event, context) => {
+    const postgres = new Client({
+        host: process.env.HOST,
+        port: process.env.PORT,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE
+    });
+
     try {
         // Connect to db
-        await db.connect();
+        await postgres.connect();
 
         // Query db
-        const data = await db.getSymbols();
+        const query = {
+            name: "get-symbols",
+            text: "select symbol from stockswatch.companies"
+        }
+
+        const rows = await postgres.query(query);
+
+        // Close connection 
+        await postgres.end();
 
         return {
             statusCode: 200,
@@ -21,7 +36,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(rows)
         };
     } catch (e) {
         return {

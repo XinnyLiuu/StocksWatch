@@ -1,6 +1,5 @@
 'use strict';
-
-const db = require("./utils/db");
+const { Client } = require("pg");
 
 /**
  * GET /api/stocks/convert/company/:company
@@ -9,14 +8,32 @@ const db = require("./utils/db");
  */
 exports.handler = async (event, context) => {
     // Get company name from request param
-    const { company } = event.pathParameters;
+    let { company } = event.pathParameters;
+    company = decodeURI(company);
+
+    const postgres = new Client({
+        host: process.env.HOST,
+        port: process.env.PORT,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE
+    });
 
     try {
         // Connect to db
-        await db.connect();
+        await postgres.connect();
 
         // Query db
-        const symbol = await db.getSymbolByCompany(company);
+        const query = {
+            name: "get-symbol-by-company",
+            text: "select symbol from stockswatch.companies where name = $1",
+            values: [company]
+        }
+
+        const rows = await postgres.query(query);
+
+        // Close connection
+        await postgres.end();
 
         return {
             statusCode: 200,
@@ -24,7 +41,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(symbol)
+            body: JSON.stringify(rows)
         };
     } catch (e) {
         return {
@@ -33,7 +50,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(e)
+            body: JSON.stringify("Bad Request")
         };
     }
 }
