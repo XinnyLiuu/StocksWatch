@@ -1,4 +1,5 @@
 // Postgres Client object
+const { Client } = require("pg");
 const postgres = new Client({
     host: process.env.HOST,
     port: process.env.PORT,
@@ -45,7 +46,7 @@ async function connect() {
 function dropCompanies() {
     let query = {
         name: "drop-companies",
-        text: "delete from companies"
+        text: "delete from stockswatch.companies"
     };
 
     return new Promise((resolve, reject) => {
@@ -65,7 +66,7 @@ function dropCompanies() {
 function addCompany(symbol, name) {
     let query = {
         name: "add-company",
-        text: "insert into companies (symbol, name) values ($1, $2) returning *",
+        text: "insert into stockswatch.companies (symbol, name) values ($1, $2) returning *",
         values: [symbol, name]
     }
 
@@ -86,7 +87,7 @@ function addCompany(symbol, name) {
 function getUserSalt(username) {
     let query = {
         name: "get-user-salt",
-        text: "select salt from users where username = $1",
+        text: "select salt from stockswatch.users where username = $1",
         values: [username]
     }
 
@@ -113,7 +114,7 @@ function getUserSalt(username) {
 function getUserByUsernamePassword(username, password) {
     let query = {
         name: "get-user",
-        text: "select user_id, username, firstname, lastname from users where username = $1 and password = $2",
+        text: "select user_id, username, firstname, lastname from stockswatch.users where username = $1 and password = $2",
         values: [username, password]
     }
 
@@ -139,7 +140,7 @@ function getUserByUsernamePassword(username, password) {
 function getUserStocks(userId) {
     let query = {
         name: "get-user-stocks",
-        text: "select symbol from user_stocks where user_id = $1",
+        text: "select symbol from stockswatch.user_stocks where user_id = $1",
         values: [userId]
     }
 
@@ -164,7 +165,7 @@ function getUserStocks(userId) {
 function getUserStocksByUsername(username) {
     let query = {
         name: "get-user-stocks-by-username",
-        text: "select symbol from user_stocks where username = $1",
+        text: "select symbol from stockswatch.user_stocks where username = $1",
         values: [username]
     }
 
@@ -189,7 +190,7 @@ function getUserStocksByUsername(username) {
 function insertUser(username, firstname, lastname, password, salt) {
     let query = {
         name: "insert-user",
-        text: "insert into users (username, firstname, lastname, password, salt) values ($1, $2, $3, $4, $5) returning *",
+        text: "insert into stockswatch.users (username, firstname, lastname, password, salt) values ($1, $2, $3, $4, $5) returning *",
         values: [username, firstname, lastname, password, salt]
     }
 
@@ -214,7 +215,7 @@ function insertUser(username, firstname, lastname, password, salt) {
 function insertUserStock(stock, userId, username) {
     let query = {
         name: "insert-stock",
-        text: "insert into user_stocks (symbol, user_id, username) values ($1, $2, $3)",
+        text: "insert into stockswatch.user_stocks (symbol, user_id, username) values ($1, $2, $3)",
         values: [stock, userId, username]
     };
 
@@ -237,7 +238,7 @@ function insertUserStock(stock, userId, username) {
 function deleteUserStock(stock, userId) {
     let query = {
         name: "delete-stock",
-        text: "delete from user_stocks where symbol = $1 and user_id = $2",
+        text: "delete from stockswatch.user_stocks where symbol = $1 and user_id = $2",
         values: [stock, userId]
     };
 
@@ -260,7 +261,7 @@ function deleteUserStock(stock, userId) {
 function deleteUserStockByUsername(stock, username) {
     let query = {
         name: "delete-stock-by-username",
-        text: "delete from user_stocks where symbol = $1 and username = $2",
+        text: "delete from stockswatch.user_stocks where symbol = $1 and username = $2",
         values: [stock, username]
     };
 
@@ -283,7 +284,7 @@ function deleteUserStockByUsername(stock, username) {
 function updateUser(ogUsername, username, password, firstname, lastname, salt) {
     let query = {
         name: 'update-user',
-        text: "update users set username = $2, password = $3, firstname = $4, lastname = $5, salt = $6 where username = $1",
+        text: "update stockswatch.users set username = $2, password = $3, firstname = $4, lastname = $5, salt = $6 where username = $1",
         values: [ogUsername, username, password, firstname, lastname, salt]
     }
 
@@ -306,7 +307,7 @@ function updateUser(ogUsername, username, password, firstname, lastname, salt) {
 function getSymbols() {
     const query = {
         name: "get-symbols",
-        text: "select symbol from companies"
+        text: "select symbol from stockswatch.companies"
     }
 
     return new Promise((resolve, reject) => {
@@ -335,7 +336,7 @@ function getSymbols() {
 function getCompanies() {
     const query = {
         name: "get-companies",
-        text: "select name from companies"
+        text: "select name from stockswatch.companies"
     }
 
     return new Promise((resolve, reject) => {
@@ -364,7 +365,7 @@ function getCompanies() {
 function getSymbolByCompany(company) {
     const query = {
         name: "get-symbol-by-company",
-        text: "select symbol from companies where name = $1",
+        text: "select symbol from stockswatch.companies where name = $1",
         values: [company]
     }
 
@@ -388,7 +389,7 @@ function getSymbolByCompany(company) {
 function getCompanyBySymbol(symbol) {
     const query = {
         name: "get-company-for-symbol",
-        text: "select name from companies where symbol = $1",
+        text: "select name from stockswatch.companies where symbol = $1",
         values: [symbol]
     }
 

@@ -4,32 +4,30 @@ const db = require("./utils/db");
 const encryptHelper = require("./utils/encrypt");
 
 /**
- * POST /api/user/login
+ * POST /api/user/register
  * 
- * Recieves a post request from the client containing user login information. Check if the information matches a user in the database - if so, send back user information and log them in
+ * Takes data from request body and creates an user
  */
 exports.handler = async (event, context) => {
     // Get the user info from request body
-    let { username, password } = JSON.parse(event.body);
+    let { username, password, firstname, lastname } = JSON.parse(event.body);
 
     try {
         // Connect to db
         await db.connect();
         
-        // Query for the user's salt first
-        const salt = await db.getUserSalt(username);
+        // First, check if the username is already taken. Setting a composite primary key with Postgres does not enforce uniqueness of the two keys. We can check if the username is already taken by getting the salt for the username. If the salt is returned, then the username is taken.
+        let salt = await db.getUserSalt(username);
+        if (salt !== 0) throw new Error("Operation failed!");
 
-        // Hash password
+        // Generate a salt
+        salt = encryptHelper.getSalt();
+
+        // Hash the password
         password = encryptHelper.encrypt(password, salt);
 
-        // Check if user exists in db
-        const userData = await db.getUserByUsernamePassword(username, password);
-
-        const userId = userData.user_id;
-
-        // Find if the user has any symbols in user_stocks
-        const stocks = await db.getUserStocks(userId);
-        stocks.forEach(d => userData.stocks.push(d));
+        // Add user
+        const insertedId = await db.insertUser(username.toLowerCase(), firstname, lastname, password, salt);
 
         return {
             statusCode: 200,
@@ -37,7 +35,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(insertedId)
         };
     } catch (e) {
         return {

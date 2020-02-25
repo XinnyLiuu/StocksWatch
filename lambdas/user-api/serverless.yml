@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: user-api
+service: stockswatch-user-api
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -23,6 +23,7 @@ service: user-api
 provider:
   name: aws
   runtime: nodejs12.x
+  endpointType: REGIONAL
 
 # you can overwrite defaults here
 #  stage: dev
@@ -58,8 +59,48 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  post-login:
+    handler: postLogin.handler
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /api/user/login
+
+  post-register:
+    handler: postRegister.handler
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /api/user/register
+
+  post-add-user-stock:
+    handler: postAddUserStock.handler
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /api/user/watchlist
+
+  delete-user-stock:
+    handler: deleteUserStock.handler
+    events:
+      - http:
+          method: delete
+          cors: true
+          path: /api/user/watchlist
+
+  put-settings:
+    handler: putSettings.handler
+    events:
+      - http:
+          method: put
+          cors: true 
+          path: /api/user/settings
+
+  
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

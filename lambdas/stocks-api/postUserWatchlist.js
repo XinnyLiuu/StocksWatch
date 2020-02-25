@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
         }
     });
 
-    // Check if dow data has been fetched
+    // Check if watchlist data has been received
     try {
         const fetched = await getWatchlist;
 
