@@ -34,7 +34,7 @@ class Wrapper extends React.Component {
 	// Grabs the data for the stock
 	async fetchData() {
 		// Get props
-		const api = this.props.api + "/" + this.props.symbol;
+		const api = this.props.api + this.props.symbol;
 
 		// GET data from server
 		try {
@@ -52,7 +52,7 @@ class Wrapper extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) this.setState({ error: true });
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true })
 		}
@@ -68,7 +68,7 @@ class Wrapper extends React.Component {
 		const username = localStorage.getItem("username");
 
 		// Prepare url and data
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+		const url = `${process.env.REACT_APP_post_user_watchlist_url}`;
 		const data = JSON.stringify({
 			"userId": userId,
 			"stock": stock,
@@ -97,7 +97,7 @@ class Wrapper extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) this.setState({ error: true });
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true });
 		}

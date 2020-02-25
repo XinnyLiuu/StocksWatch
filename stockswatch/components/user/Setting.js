@@ -154,4 +154,4 @@ class Setting extends React.Component {
 	}
 }
 
-export default withRouter(Setting);
+export default Setting;

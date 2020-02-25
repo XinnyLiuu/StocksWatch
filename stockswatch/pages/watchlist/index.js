@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import Watchlist from '../../components/user/Watchlist';
 import Notfound from '../../components/alert/Notfound';
 
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 /**
  * https://nextjs.org/docs/routing/introduction
@@ -12,7 +12,7 @@ import { isAuthenticated } from '../utils/auth';
  * Renders the user's watchlist page
  */
 
-const Watchlist = () => {
+const WatchlistIndex = () => {
     return (
         isAuthenticated() ?
         <Layout component={
@@ -24,4 +24,4 @@ const Watchlist = () => {
     )
 }
 
-export default Watchlist;
+export default WatchlistIndex;

@@ -26,7 +26,14 @@ exports.handler = async (event, context) => {
             text: "select name from stockswatch.companies"
         }
 
-        const rows = await postgres.query(query);
+        const rows = await (await postgres.query(query)).rows;
+        
+        // The result data will be a list of json objects, parse through each and just return an array of symbols to the client
+        let data = [];
+        rows.forEach(d => {
+            data.push(d.name);
+        });
+        data.sort();
 
         // Close connection 
         await postgres.end();
@@ -37,7 +44,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(rows)
+            body: JSON.stringify(data)
         };
     } catch (e) {
         return {

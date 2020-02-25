@@ -19,24 +19,31 @@ class Home extends React.Component {
         super(props);
 
         this.state = {
-            authenticated: false
+            authenticated: false,
+            ready: false
         }
     }
 
     componentDidMount() {
-        if (isAuthenticated()) this.setState({ authenticated: true });
+        if (localStorage !== undefined) {
+            this.setState({ ready: true });
+
+            if (isAuthenticated()) this.setState({ authenticated: true });
+        }
     }
 
     render() {
+        if (!this.state.ready) return "";
+
         if (this.state.authenticated) {
             return <Layout component={
                 <WatchlistCharts api={process.env.post_user_watchlist_url} />}
             />;
+        } else {
+            return <Layout component={
+                <Wrapper api={process.env.get_dow30_stock_url} symbol="" />}
+            />;
         }
-
-        return <Layout component={
-            <Wrapper api={process.env.get_dow30_stock_url} symbol="" />}
-        />;
     }
 }
 

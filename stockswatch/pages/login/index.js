@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import Login from '../../components/user/Login';
 import Notfound from '../../components/alert/Notfound';
 
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 /**
  * https://nextjs.org/docs/routing/introduction
@@ -12,7 +12,7 @@ import { isAuthenticated } from '../utils/auth';
  * Renders the login page
  */
 
-const Login = () => {
+const LoginIndex = () => {
     return (
         !isAuthenticated() ?
         <Layout component={
@@ -24,4 +24,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default LoginIndex;

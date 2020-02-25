@@ -1,8 +1,10 @@
+import React from 'react';
+
 import Layout from '../../components/Layout';
 import Wrapper from '../../components/highcharts/Wrapper';
 import Notfound from '../../components/alert/Notfound';
 
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 /**
  * https://nextjs.org/docs/routing/introduction
@@ -11,17 +13,37 @@ import { isAuthenticated } from '../utils/auth';
  * 
  * Renders the dow30 page
  */
+class Dow30 extends React.Component {
+    constructor(props) {
+        super(props);
 
-const Dow30 = () => {
-    return (
-        isAuthenticated() ?
-        <Layout component={
-            <Wrapper />
-        } /> :
-        <Layout component={
+        this.state = {
+            authenticated: false,
+            ready: false
+        }
+    }
+
+    componentDidMount() {
+        if (localStorage !== undefined) {
+            this.setState({ ready: true });
+
+            if (isAuthenticated()) this.setState({ authenticated: true });
+        }
+    }
+
+    render() {
+        if (!this.state.ready) return "";
+        
+        if (this.state.authenticated) {
+            return <Layout component={
+                <Wrapper api={process.env.get_dow30_stock_url} symbol="" />
+            } />;
+        }
+
+        return <Layout component={
             <Notfound />
-        } />
-    )
+        } />;
+    }
 }
 
 export default Dow30;

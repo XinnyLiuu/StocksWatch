@@ -20,7 +20,9 @@ class Wrapper extends React.Component {
 			data: "",
 			error: false,
 			btnDisable: false,
-			btnText: "Add to Watchlist"
+			btnText: "Add to Watchlist",
+			ready: false
+
 		};
 
 		this.addUserStock = this.addUserStock.bind(this);
@@ -28,7 +30,7 @@ class Wrapper extends React.Component {
 	}
 
 	// Grabs the data for the stock
-	async fetchData() {
+	async fetchData() {		
 		// Get props
 		const api = this.props.api + "/" + this.props.symbol;
 
@@ -48,7 +50,7 @@ class Wrapper extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) this.setState({ error: true });
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true })
 		}
@@ -93,7 +95,7 @@ class Wrapper extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) this.setState({ error: true });
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true });
 		}
@@ -116,8 +118,12 @@ class Wrapper extends React.Component {
 	}
 
 	componentDidMount() {
-		this.fetchData();
-		this.checkStockInWatchlist();
+		if (localStorage !== undefined) {
+			this.setState({ ready: true });
+
+			this.fetchData();
+			this.checkStockInWatchlist();
+		}
 	}
 
 	/**
@@ -139,53 +145,57 @@ class Wrapper extends React.Component {
 	}
 
 	render() {
-		// Check for error from server
-		if (this.state.error) return <Unavailable message={"There is an error getting the data for that stock!"} />;
+		if (!this.state.ready) return "";
 
-		// Check if data in state is still an empty string
-		if (this.state.data !== "") {
-			let json = this.state.data;
+		return "ready";
 
-			// Check if json has DOW30
-			if (json.hasOwnProperty("DOW30")) {
-				let stockCharts = [];
-				let dow = json["DOW30"];
+		// // Check for error from server
+		// if (this.state.error) return <Unavailable message={"There is an error getting the data for that stock!"} />;
 
-				// Check if the user is authenticated to determine dow30 message
-				let message = "Login or Register to build your personalized watchlist";
+		// // Check if data in state is still an empty string
+		// if (this.state.data !== "") {
+		// 	let json = this.state.data;
 
-				if (isAuthenticated()) message = "Companies in the Dow Jones Industrial Average";
+		// 	// Check if json has DOW30
+		// 	if (json.hasOwnProperty("DOW30")) {
+		// 		let stockCharts = [];
+		// 		let dow = json["DOW30"];
 
-				stockCharts.push(
-					<Info header={"Dow 30"} message={message} />
-				);
+		// 		// Check if the user is authenticated to determine dow30 message
+		// 		let message = "Login or Register to build your personalized watchlist";
 
-				// Render each DOW stock as its own StockChart component
-				dow.forEach(d => stockCharts.push(<StockChart data={d} type="multiple" />));
+		// 		if (isAuthenticated()) message = "Companies in the Dow Jones Industrial Average";
 
-				return stockCharts;
-			}
+		// 		stockCharts.push(
+		// 			<Info header={"Dow 30"} message={message} />
+		// 		);
 
-			// If the json does not have DOW30, then its a single stock
-			// Check if the user is logged in
-			if (isAuthenticated()) {
-				return (
-					<React.Fragment>
-						<StockChart data={json} type="single" />
-						<br />
-						<ButtonToolbar className="center">
-							<Button variant="success" onClick={this.addUserStock} disabled={this.state.btnDisable}>{this.state.btnText}</Button>
-						</ButtonToolbar>
-					</React.Fragment>
-				);
-			}
+		// 		// Render each DOW stock as its own StockChart component
+		// 		dow.forEach(d => stockCharts.push(<StockChart data={d} type="multiple" />));
 
-			// Default is to render the chart for the single stock
-			return <StockChart data={json} type="single" />;
-		}
+		// 		return stockCharts;
+		// 	}
 
-		// Temporary DOM element until the date is ready
-		return <LoadingSpinner />;
+		// 	// If the json does not have DOW30, then its a single stock
+		// 	// Check if the user is logged in
+		// 	if (isAuthenticated()) {
+		// 		return (
+		// 			<React.Fragment>
+		// 				<StockChart data={json} type="single" />
+		// 				<br />
+		// 				<ButtonToolbar className="center">
+		// 					<Button variant="success" onClick={this.addUserStock} disabled={this.state.btnDisable}>{this.state.btnText}</Button>
+		// 				</ButtonToolbar>
+		// 			</React.Fragment>
+		// 		);
+		// 	}
+
+		// 	// Default is to render the chart for the single stock
+		// 	return <StockChart data={json} type="single" />;
+		// }
+
+		// // Temporary DOM element until the date is ready
+		// return <LoadingSpinner />;
 	}
 }
 

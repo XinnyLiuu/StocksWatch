@@ -1,6 +1,5 @@
 'use strict';
-
-const db = require("./utils/db");
+const { Client } = require("pg");
 
 /** 
  * DELETE /api/user/watchlist
@@ -11,12 +10,29 @@ exports.handler = async (event, context) => {
     // Get the user info from request body
     let { stock, userId } = JSON.parse(event.body);
 
+    const postgres = new Client({
+        host: process.env.HOST,
+        port: process.env.PORT,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE
+    });
+
     try {
         // Connect to db
-        await db.connect();
+        await postgres.connect();
 
         // Delete user stock
-        const affected = await db.deleteUserStock(stock, userId);
+        let query = {
+            name: "delete-stock",
+            text: "delete from stockswatch.user_stocks where symbol = $1 and user_id = $2",
+            values: [stock, userId]
+        };
+
+        const affected = await (await postgres.query(query)).rowCount;
+
+        // Close connection 
+        await postgres.end();
 
         if (affected === 1) {
             return {

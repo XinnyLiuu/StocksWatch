@@ -1,84 +1,84 @@
 body {
-  margin: 0;
-  background-color: #343a40 !important;
+	margin: 0;
+	background-color: #343a40 !important;
 }
 
 #loading {
-  margin: 5px;
-  padding: 10px;
-  color: white;
+	margin: 5px;
+	padding: 10px;
+	color: white;
 }
 
 .spinner {
-  margin: 20% 0 0 45%;
+	margin: 20% 0 0 45%;
 }
 
 .spin {
-  padding: 3rem;
+	padding: 3rem;
 }
 
 #login,
 #settings,
 #watchlist {
-  margin: 80px;
-  padding: 50px;
-  background-color: white;
-  border-radius: 0.25rem;
-  border: 1px solid #ced4da;
+	margin: 80px;
+	padding: 50px;
+	background-color: white;
+	border-radius: 0.25rem;
+	border: 1px solid #ced4da;
 }
 
 #settings {
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .left {
-  margin: 10rem auto 0 auto;
-  text-align: center;
+	margin: 10rem auto 0 auto;
+	text-align: center;
 }
 
 .user-img {
-  border-radius: 50%;
+	border-radius: 50%;
 }
 
 .space {
-  margin: 10px;
+	margin: 10px;
 }
 
 #name {
-  color: #17a2b8 !important;
+	color: #17a2b8 !important;
 }
 
 #name a {
-  color: none;
-  text-decoration: none;
-  background-color: none;
+	color: none;
+	text-decoration: none;
+	background-color: none;
 }
 
 .cancel {
-  margin-left: 2rem;
+	margin-left: 2rem;
 }
 
 .float-right {
-  float: right;
+	float: right;
 }
 
 #toggleGroup {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 
 #toggleGroupWatchlist {
-  margin-left: 10px;
-  margin-right: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #watchlistInput {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 
 .center {
-  justify-content: center !important;
+	justify-content: center !important;
 }
 
 /**
@@ -86,29 +86,29 @@ body {
 */
 @media only screen and (max-width: 600px) {
 
-  #login,
-  #settings,
-  #watchlist {
-    margin: 50px;
-    padding: 20px;
-    width: inherit;
-  }
+	#login,
+	#settings,
+	#watchlist {
+		margin: 50px;
+		padding: 20px;
+		width: inherit;
+	}
 
-  .spinner {
-    margin: 50% 0 0 35%;
-  }
+	.spinner {
+		margin: 50% 0 0 35%;
+	}
 
-  #searchBtn {
-    margin-left: 10px;
-  }
+	#searchBtn {
+		margin-left: 10px;
+	}
 
-  #toggleGroup {
-    margin-bottom: 10px;
-  }
+	#toggleGroup {
+		margin-bottom: 10px;
+	}
 
-  #toggleGroupWatchlist {
-    margin-left: 0px;
-  }
+	#toggleGroupWatchlist {
+		margin-left: 0px;
+	}
 }
 
 /*# sourceMappingURL=main.css.map */

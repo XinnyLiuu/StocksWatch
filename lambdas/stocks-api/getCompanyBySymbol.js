@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
             values: [symbol]
         }
 
-        const rows = await postgres.query(query);
+        const rows = await (await postgres.query(query)).rows;
 
         // Close connection 
         await postgres.end();
@@ -41,7 +41,7 @@ exports.handler = async (event, context) => {
                 'Access-Control-Allow-Origin': '*', // Required for CORS support to work
                 'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS			
             },
-            body: JSON.stringify(rows)
+            body: JSON.stringify(rows[0].name)
         };
     } catch (e) {
         return {

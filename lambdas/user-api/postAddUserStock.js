@@ -1,6 +1,5 @@
 'use strict';
-
-const db = require("./utils/db");
+const { Client } = require("pg");
 
 /**
  * POST /api/user/watchlist
@@ -11,12 +10,29 @@ exports.handler = async (event, context) => {
     // Get the user info from request body
     let { stock, userId, username } = JSON.parse(event.body);
 
+    const postgres = new Client({
+        host: process.env.HOST,
+        port: process.env.PORT,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DATABASE
+    });
+
     try {
         // Connect to db
-        await db.connect();
+        await postgres.connect();
 
         // Add to user stock
-        const affected = await db.insertUserStock(stock, userId, username);
+        let query = {
+            name: "insert-stock",
+            text: "insert into stockswatch.user_stocks (symbol, user_id, username) values ($1, $2, $3)",
+            values: [stock, userId, username]
+        };
+
+        const affected = await (await postgres.query(query)).rowCount;
+
+        // Close connection 
+        await postgres.end();
 
         if (affected === 1) {
             return {

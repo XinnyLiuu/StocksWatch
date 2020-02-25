@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import Setting from '../../components/user/Setting';
 import Notfound from '../../components/alert/Notfound';
 
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 /**
  * https://nextjs.org/docs/routing/introduction
@@ -15,12 +15,12 @@ import { isAuthenticated } from '../utils/auth';
 const Settings = () => {
     return (
         isAuthenticated() ?
-        <Layout component={
-            <Setting />
-        } /> :
-        <Layout component={
-            <Notfound />
-        } />
+            <Layout component={
+                <Setting />
+            } /> :
+            <Layout component={
+                <Notfound />
+            } />
     )
 }
 

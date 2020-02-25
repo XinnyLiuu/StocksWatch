@@ -61,7 +61,7 @@ class Register extends React.Component {
 			"firstname": firstname,
 			"lastname": lastname
 		});
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/register`;
+		const url = `${process.env.REACT_APP_post_register_url}`;
 
 		// Fire POST request
 		try {
@@ -90,7 +90,7 @@ class Register extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) this.setState({ error: true });
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true });
 		}

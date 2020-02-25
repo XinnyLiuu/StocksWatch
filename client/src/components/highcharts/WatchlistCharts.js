@@ -23,24 +23,26 @@ class WatchlistCharts extends React.Component {
 	 * Sends a request to the server to retrieve all the user's stocks' data
 	 */
 	async fetchData() {
-		// Prepare data and url
-		const api = this.props.api;
-		const data = JSON.stringify(
-			{ "watchlist": localStorage.getItem("stocks") }
-		);
+		if (this.state.watchlist.length > 0) {
+			// Prepare data and url
+			const api = this.props.api;
+			const data = JSON.stringify(
+				{ "watchlist": JSON.parse(localStorage.getItem("stocks")) }
+			);
 
-		try {
-			const resp = await post(api, data);
+			try {
+				const resp = await post(api, data);
 
-			// Check HTTP status code
-			if (resp.status === 200) {
-				const json = await resp.json();
-				this.setState({ data: json });
+				// Check HTTP status code
+				if (resp.status === 200) {
+					const json = await resp.json();
+					this.setState({ data: json });
+				}
+
+				if (resp.status === 500) throw new Error();
+			} catch (err) {
+				this.setState({ error: true })
 			}
-
-			if (resp.status === 500) this.setState({ error: true });
-		} catch (err) {
-			this.setState({ error: true })
 		}
 	}
 

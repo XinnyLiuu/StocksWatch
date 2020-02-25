@@ -15,6 +15,7 @@ import {
     post,
     del
 } from "../../utils/requests";
+import Info from '../alert/Info';
 
 class Watchlist extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class Watchlist extends React.Component {
             data: [],
             dataType: '', // Type of data - symbol or company
             error: false,
+            searchDisabled: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -45,8 +47,12 @@ class Watchlist extends React.Component {
      * https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/Props.md
      */
     handleChange(event) {
-        // Encode the value since it will be used in the URL
-        this.setState({ searchValue: encodeURIComponent(event[0]) });
+        if (event[0] !== undefined) {
+            // Encode the value since it will be used in the URL
+            this.setState({
+                searchValue: encodeURIComponent(event[0])
+            })
+        }
     }
 
     /**
@@ -84,7 +90,7 @@ class Watchlist extends React.Component {
         if (!localStorage.getItem("symbols")) {
 
             // Get the list of symbols from the server
-            const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/symbols`;
+            const url = `${process.env.REACT_APP_get_symbols_url}`;
 
             try {
                 const resp = await fetch(url);
@@ -99,7 +105,7 @@ class Watchlist extends React.Component {
                     this.setState({ symbols: json })
                 }
 
-                if (resp.status === 500) this.setState({ error: true });
+                if (resp.status === 500) throw new Error();
             } catch (err) {
                 this.setState({ error: true })
             }
@@ -109,7 +115,7 @@ class Watchlist extends React.Component {
         if (!localStorage.getItem("companies")) {
 
             // Get the list of companies from the server
-            const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/companies`;
+            const url = `${process.env.REACT_APP_get_companies_url}`;
 
             try {
                 const resp = await fetch(url);
@@ -124,7 +130,7 @@ class Watchlist extends React.Component {
                     this.setState({ companies: json })
                 }
 
-                if (resp.status === 500) this.setState({ error: true });
+                if (resp.status === 500) throw new Error();
             } catch (err) {
                 this.setState({ error: true })
             }
@@ -146,7 +152,7 @@ class Watchlist extends React.Component {
 
     // Get the symbol for the selected company
     async getSymbolForCompany(company) {
-        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/convert/company/${company}`;
+        const url = `${process.env.REACT_APP_get_symbol_by_company_url}${company}`;
 
         try {
             const resp = await fetch(url);
@@ -156,7 +162,7 @@ class Watchlist extends React.Component {
                 return symbol;
             }
 
-            if (resp.status === 500) this.setState({ error: true });
+            if (resp.status === 500) throw new Error();
         } catch (err) {
             this.setState({ error: true });
         }
@@ -175,7 +181,6 @@ class Watchlist extends React.Component {
         if (this.state.dataType === "company") {
             try {
                 const symbol = await this.getSymbolForCompany(this.state.searchValue);
-
                 this.setState({ searchValue: symbol });
             } catch (err) {
                 this.setState({ error: true });
@@ -194,7 +199,7 @@ class Watchlist extends React.Component {
             "username": username
         });
 
-        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+        const url = `${process.env.REACT_APP_post_add_user_stock_url}`;
 
         try {
             const resp = await post(url, data);
@@ -210,16 +215,21 @@ class Watchlist extends React.Component {
                 stocks = JSON.stringify(stocks);
                 localStorage.setItem("stocks", stocks);
 
+                // Check if the number of stocks has passed 3 - the api does not allow anymore
+                stocks = JSON.parse(localStorage.getItem("stocks"));
+                if (stocks.length >= 3) this.setState({ searchDisabled: true });
+                else this.setState({ searchDisabled: false });
+
                 // Update state
                 this.setState({
                     searchValue: "",
                     error: false,
-                    prevStocks: JSON.parse(localStorage.getItem('stocks'))
+                    prevStocks: JSON.parse(localStorage.getItem('stocks')),
                 })
             }
 
             // On 500 status
-            if (resp.status === 500) this.setState({ error: true });
+            if (resp.status === 500) throw new Error();
         } catch (err) {
             this.setState({ error: true });
         }
@@ -238,7 +248,7 @@ class Watchlist extends React.Component {
             "stock": stock
         });
 
-        const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/watchlist`;
+        const url = `${process.env.REACT_APP_delete_user_stock_url}`;
 
         // Fires DELETE
         try {
@@ -261,14 +271,19 @@ class Watchlist extends React.Component {
                 stocks = JSON.stringify(stocks);
                 localStorage.setItem("stocks", stocks);
 
+                // Check if the number of stocks has passed 3 - the api does not allow anymore
+                stocks = JSON.parse(localStorage.getItem("stocks"));
+                if (stocks.length >= 3) this.setState({ searchDisabled: true });
+                else this.setState({ searchDisabled: false });
+
                 // Update state
                 this.setState({
                     error: false,
-                    prevStocks: JSON.parse(localStorage.getItem('stocks'))
+                    prevStocks: JSON.parse(localStorage.getItem('stocks')),
                 })
             }
 
-            if (resp.status === 500) this.setState({ error: true });
+            if (resp.status === 500) throw new Error();
         } catch (err) {
             this.setState({ error: true });
         }
@@ -280,6 +295,9 @@ class Watchlist extends React.Component {
         // Get the stocks of the user in localStorage 
         const stocks = JSON.parse(localStorage.getItem('stocks'));
         if (stocks.length > 0) this.setState({ prevStocks: stocks });
+
+        // Check if the number of stocks has passed 3 - the api does not allow anymore
+        if (stocks.length >= 3) this.setState({ searchDisabled: true });
     }
 
     render() {
@@ -295,6 +313,8 @@ class Watchlist extends React.Component {
             <React.Fragment>
                 {error}
 
+                <Info header={"Notice"} message={"Due to limitations in the API used for this application, only up to 3 stocks are allowed to be added."} />;
+
                 <Form.Label>Add to Watchlist</Form.Label>
                 <Form inline onSubmit={this.addUserStock}>
 
@@ -306,7 +326,7 @@ class Watchlist extends React.Component {
                         </ToggleButtonGroup>
                     </Form.Group>
 
-                    <Button variant="outline-success" type="submit">
+                    <Button variant="outline-success" type="submit" disabled={this.state.searchDisabled}>
                         Add
                     </Button>
                 </Form>

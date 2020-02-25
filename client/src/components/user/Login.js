@@ -57,7 +57,7 @@ class Login extends React.Component {
 			"password": password
 		});
 
-		let url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/login`;
+		let url = `${process.env.REACT_APP_post_login_url}`;
 
 		// Fire POST request
 		try {
@@ -85,9 +85,7 @@ class Login extends React.Component {
 			}
 
 			// On 500 status
-			if (resp.status === 500) {
-				this.setState({ error: true });
-			}
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.setState({ error: true });
 		}

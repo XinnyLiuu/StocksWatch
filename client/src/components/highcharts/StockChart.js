@@ -177,7 +177,8 @@ class StockChart extends React.Component {
 					},
 					labelStyle: {
 						color: 'silver'
-					}
+					},
+					selected: 2
 				},
 				navigator: {
 					handles: {

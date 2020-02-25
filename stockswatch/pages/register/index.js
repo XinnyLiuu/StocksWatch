@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import Register from '../../components/user/Register';
 import Notfound from '../../components/alert/Notfound';
 
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 /**
  * https://nextjs.org/docs/routing/introduction
@@ -12,7 +12,7 @@ import { isAuthenticated } from '../utils/auth';
  * Renders the register page
  */
 
-const Register = () => {
+const RegisterIndex = () => {
     return (
         !isAuthenticated() ?
         <Layout component={
@@ -24,4 +24,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default RegisterIndex;

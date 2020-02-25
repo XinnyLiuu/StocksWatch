@@ -34,7 +34,6 @@ class Header extends React.Component {
             dataType: '', // Type of data - symbol or company
             searchText: "Select a Symbol", // Text for the searchInput 
             searchValue: '', // Value to be searched
-            ready: false, // Check if the component is rendered on the client side
         };
 
         // Bind, so that 'this' can be used in the callback
@@ -205,16 +204,10 @@ class Header extends React.Component {
     }
 
     componentDidMount() {
-        if (localStorage !== undefined) {
-            this.setState({ ready: true });
-            this.prepareSearchbar();
-        }
+        this.prepareSearchbar();
     }
 
     render() {
-        // Check if the component has been rendered on the client
-        if (!this.state.ready) return "";
-
         let navbar = (
             <Navbar sticky="top" bg="dark" variant="dark" expand="lg">
                 <Navbar.Brand href="/">StocksWatch</Navbar.Brand>

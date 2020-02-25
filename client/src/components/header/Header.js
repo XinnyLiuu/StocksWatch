@@ -32,6 +32,7 @@ class Header extends React.Component {
 			dataType: '', // Type of data - symbol or company
 			searchText: "Select a Symbol", // Text for the searchInput 
 			searchValue: '', // Value to be searched
+			searchDisabled: true
 		};
 
 		// Bind, so that 'this' can be used in the callback
@@ -49,8 +50,16 @@ class Header extends React.Component {
 	 * https://github.com/ericgio/react-bootstrap-typeahead/blob/master/docs/Props.md
 	 */
 	handleChange(event) {
-		// Encode the value since it will be used in the URL
-		this.setState({ searchValue: encodeURIComponent(event[0]) });
+		if (event[0] !== undefined) {
+			// Encode the value since it will be used in the URL
+			this.setState({
+				searchValue: encodeURIComponent(event[0])
+			}, () => {
+
+				// Check that a search value is provided
+				if (this.state.searchValue !== undefined) this.setState({ searchDisabled: false });
+			});
+		}
 	}
 
 	/**
@@ -82,49 +91,13 @@ class Header extends React.Component {
 		}
 	}
 
-	// Fires when form is submitted
-	async searchStock(e) {
-		e.preventDefault();
-
-		// Validate search value
-		if (this.state.searchValue === "") {
-			return;
-		}
-
-		// Check the data type of the value entered into the search bar
-		if (this.state.dataType === "company") {
-
-			try {
-				const symbol = await this.getSymbolForCompany(this.state.searchValue);
-
-				this.setState({ searchValue: symbol })
-			} catch (err) {
-				this.props.history.push("/NotFound");
-			}
-		}
-
-		// Update `url` flag in state
-		this.setState({
-			url: `/search/${this.state.searchValue}`,
-			searchValue: ""
-		}, () => this.props.history.push(this.state.url));
-	}
-
-	// On click, log the user out
-	logout() {
-		destroySession();
-
-		// Redirect to home
-		this.props.history.push("/");
-	}
-
 	// Grabs the list of symbol / companies to search for
 	async prepareSearchbar() {
 		// Check if localStorage has symbols in store
 		if (!localStorage.getItem("symbols")) {
 
 			// Get the list of symbols from the server
-			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/symbols`;
+			const url = `${process.env.REACT_APP_get_symbols_url}`;
 
 			try {
 				const resp = await fetch(url);
@@ -138,6 +111,8 @@ class Header extends React.Component {
 					// Load the array into state
 					this.setState({ symbols: json })
 				}
+
+				if (resp.status === 500) throw new Error();
 			} catch (err) {
 				this.props.history.push("/NotFound");
 			}
@@ -147,7 +122,7 @@ class Header extends React.Component {
 		if (!localStorage.getItem("companies")) {
 
 			// Get the list of companies from the server
-			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/companies`;
+			const url = `${process.env.REACT_APP_get_companies_url}`;
 
 			try {
 				const resp = await fetch(url);
@@ -182,18 +157,54 @@ class Header extends React.Component {
 
 	// Get the symbol for the selected company
 	async getSymbolForCompany(company) {
-		const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/stocks/convert/company/${company}`;
+		const url = `${process.env.REACT_APP_get_symbol_by_company_url}${company}`;
 
 		try {
 			const resp = await fetch(url);
+
 			if (resp.status === 200) {
 				const symbol = await resp.json();
 				return symbol;
 			}
 
+			if (resp.status === 500) throw new Error();
 		} catch (err) {
 			this.props.history.push("/NotFound");
 		}
+	}
+
+	// Fires when form is submitted
+	async searchStock(e) {
+		e.preventDefault();
+
+		// Check the data type of the value entered into the search bar
+		if (this.state.dataType === "company") {
+			try {
+				const symbol = await this.getSymbolForCompany(this.state.searchValue);
+
+				this.setState({
+					searchValue: symbol,
+					searchDisabled: true
+				})
+			} catch (err) {
+				this.props.history.push("/NotFound");
+			}
+		}
+
+		// Update `url` flag in state
+		this.setState({
+			url: `/search/${this.state.searchValue}`,
+			searchValue: "",
+			searchDisabled: true
+		}, () => this.props.history.push(this.state.url));
+	}
+
+	// On click, log the user out
+	logout() {
+		destroySession();
+
+		// Redirect to home
+		this.props.history.push("/");
 	}
 
 	componentDidMount() {
@@ -216,7 +227,7 @@ class Header extends React.Component {
 							<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 						</ToggleButtonGroup>
 						<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} value={this.state.searchValue} />
-						<Button id="searchBtn" variant="outline-info" type="submit">Search</Button>
+						<Button id="searchBtn" variant="outline-info" type="submit" disabled={this.state.searchDisabled}>Search</Button>
 					</Form>
 				</Navbar.Collapse>
 			</Navbar>
@@ -246,7 +257,7 @@ class Header extends React.Component {
 								<ToggleButton variant="outline-info" value={2}>Company</ToggleButton>
 							</ToggleButtonGroup>
 							<Typeahead id="searchInput" className="mr-sm-2" onChange={this.handleChange} options={this.state.data} flip={true} placeholder={this.state.searchText} value={this.state.searchValue} />
-							<Button id="searchBtn" variant="outline-success" type="submit">Search</Button>
+							<Button id="searchBtn" variant="outline-success" type="submit" disabled={this.state.searchDisabled}>Search</Button>
 						</Form>
 					</Navbar.Collapse>
 				</Navbar>

@@ -72,7 +72,7 @@ class Setting extends React.Component {
 
 		if (!error) {
 			// Prepare url and data
-			const url = `${process.env.REACT_APP_SERVER_DOMAIN}/api/user/settings`;
+			const url = `${process.env.REACT_APP_put_settings_url}`;
 			const data = JSON.stringify({
 				"userId": localStorage.getItem("id"),
 				"ogUsername": this.state.ogUsername,
@@ -113,7 +113,7 @@ class Setting extends React.Component {
 				}
 
 				// On 500 status
-				if (resp.status === 500) this.setState({ error: true });
+				if (resp.status === 500) throw new Error();
 			} catch (err) {
 				this.setState({ error: true });
 			}
