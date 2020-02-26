@@ -313,7 +313,7 @@ class Watchlist extends React.Component {
             <React.Fragment>
                 {error}
 
-                <Info header={"Notice"} message={"Due to limitations in the API used for this application, only up to 3 stocks are allowed to be added."} />;
+                <Info header={"Notice"} message={"Due to limitations in the API used for this application, only up to 3 stocks are allowed to be added."} />
 
                 <Form.Label>Add to Watchlist</Form.Label>
                 <Form inline onSubmit={this.addUserStock}>
