@@ -174,17 +174,17 @@ class Wrapper extends React.Component {
 
 			// If the json does not have DOW30, then its a single stock
 			// Check if the user is logged in
-			if (isAuthenticated()) {
-				return (
-					<React.Fragment>
-						<StockChart data={json} type="single" />
-						<br />
-						<ButtonToolbar className="center">
-							<Button variant="success" onClick={this.addUserStock} disabled={this.state.btnDisable}>{this.state.btnText}</Button>
-						</ButtonToolbar>
-					</React.Fragment>
-				);
-			}
+			//if (isAuthenticated()) {
+				//return (
+					//<React.Fragment>
+						//<StockChart data={json} type="single" />
+						//<br />
+						//<ButtonToolbar className="center">
+							//<Button variant="success" onClick={this.addUserStock} disabled={this.state.btnDisable}>{this.state.btnText}</Button>
+						//</ButtonToolbar>
+					//</React.Fragment>
+				//);
+			//}
 
 			// Default is to render the chart for the single stock
 			return <StockChart data={json} type="single" />;
