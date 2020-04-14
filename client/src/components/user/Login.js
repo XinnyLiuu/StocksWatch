@@ -51,6 +51,8 @@ class Login extends React.Component {
 		username = username.trim().toLowerCase();
 		password = password.trim();
 
+		if (username.length === 0 || password.length === 0) throw new Error();
+
 		// Prepare data and url
 		const data = JSON.stringify({
 			"username": username,

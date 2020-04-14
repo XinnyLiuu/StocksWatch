@@ -54,6 +54,8 @@ class Register extends React.Component {
 		firstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
 		lastname = lastname.charAt(0).toUpperCase() + lastname.slice(1);
 
+		if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0) throw new Error();
+
 		// Prepare data and url
 		const data = JSON.stringify({
 			"username": username,
