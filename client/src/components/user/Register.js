@@ -45,28 +45,28 @@ class Register extends React.Component {
 	async register(e) {
 		e.preventDefault();
 
-		// Validate inputs
-		let username = this.state.username.trim().toLowerCase();
-		let password = this.state.password.trim();
-		let firstname = this.state.firstname.trim().toLowerCase();
-		let lastname = this.state.lastname.trim().toLowerCase();
-
-		firstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
-		lastname = lastname.charAt(0).toUpperCase() + lastname.slice(1);
-
-		if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0) throw new Error();
-
-		// Prepare data and url
-		const data = JSON.stringify({
-			"username": username,
-			"password": password,
-			"firstname": firstname,
-			"lastname": lastname
-		});
-		const url = `${process.env.REACT_APP_post_register_url}`;
-
-		// Fire POST request
 		try {
+			// Validate inputs
+			let username = this.state.username.trim().toLowerCase();
+			let password = this.state.password.trim();
+			let firstname = this.state.firstname.trim().toLowerCase();
+			let lastname = this.state.lastname.trim().toLowerCase();
+
+			firstname = firstname.charAt(0).toUpperCase() + firstname.slice(1);
+			lastname = lastname.charAt(0).toUpperCase() + lastname.slice(1);
+
+			if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0) throw new Error();
+
+			// Prepare data and url
+			const data = JSON.stringify({
+				"username": username,
+				"password": password,
+				"firstname": firstname,
+				"lastname": lastname
+			});
+			const url = `${process.env.REACT_APP_post_register_url}`;
+
+			// Fire POST request
 			const resp = await post(url, data);
 
 			// On 200 status

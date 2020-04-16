@@ -44,25 +44,25 @@ class Login extends React.Component {
 	async login(e) {
 		e.preventDefault();
 
-		// Validate the inputs
-		let username = this.state.username;
-		let password = this.state.password;
-
-		username = username.trim().toLowerCase();
-		password = password.trim();
-
-		if (username.length === 0 || password.length === 0) throw new Error();
-
-		// Prepare data and url
-		const data = JSON.stringify({
-			"username": username,
-			"password": password
-		});
-
-		let url = `${process.env.REACT_APP_post_login_url}`;
-
-		// Fire POST request
 		try {
+			// Validate the inputs
+			let username = this.state.username;
+			let password = this.state.password;
+
+			username = username.trim().toLowerCase();
+			password = password.trim();
+
+			if (username.length === 0 || password.length === 0) throw new Error();
+
+			// Prepare data and url
+			const data = JSON.stringify({
+				"username": username,
+				"password": password
+			});
+
+			let url = `${process.env.REACT_APP_post_login_url}`;
+
+			// Fire POST request
 			const resp = await post(url, data);
 
 			// Check for 200
