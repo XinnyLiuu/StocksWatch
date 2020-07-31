@@ -71,8 +71,7 @@ class Register extends React.Component {
 
 			// On 200 status
 			if (resp.status === 200) {
-				const json = await resp.json();
-				let id = json.id;
+				const id = await resp.json();
 
 				// Instantiate User
 				const user = new User(
