@@ -1,4 +1,5 @@
 # StocksWatch
+![StocksWatch](./stockswatch.png)
 
 ## Notice - Feb 2020
 Stockswatch has been updated to use AWS lambda functions and gone completely serverless. Read up on __[JAMStack](https://jamstack.org/)__.
