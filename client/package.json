@@ -5,7 +5,7 @@
 	"dependencies": {
 		"bootstrap": "^4.3.1",
 		"concurrently": "^5.0.0",
-		"highcharts": "^7.2.0",
+		"highcharts": "^9.0.0",
 		"highcharts-react-official": "^2.2.2",
 		"react": "^16.10.2",
 		"react-bootstrap": "^1.0.0-beta.14",
